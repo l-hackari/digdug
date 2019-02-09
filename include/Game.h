@@ -17,6 +17,10 @@ class Game {
         //creates a display (fullscreen) and sets it as main display
         void createDisplay();
 
+        //crea  una coda degli eventi e un listener in attesa del tasto "ESCAPE" per uscire dal gioco
+        //creates a event queue and a listener waiting for the "ESCAPE" key to exit from the game 
+        void initEvent();
+
     private:
         ALLEGRO_DISPLAY *mainDisplay;
         ALLEGRO_DISPLAY_MODE displayMode;
