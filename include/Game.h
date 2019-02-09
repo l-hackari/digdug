@@ -20,6 +20,7 @@ class Game {
     private:
         ALLEGRO_DISPLAY *mainDisplay;
         ALLEGRO_DISPLAY_MODE displayMode;
+        const int FPS = 60;
 
 };
 
