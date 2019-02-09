@@ -10,10 +10,7 @@ void Game::initGame(){
 
 void Game::createDisplay(){
 
-    ALLEGRO_DISPLAY_MODE dmode;
-    al_get_display_mode(0, &dmode);
-    ALLEGRO_DISPLAY *display = al_create_display(dmode.width, dmode.height);
-    displayMode = dmode;
-    mainDisplay = display;
+    al_get_display_mode(0, &displayMode);
+    mainDisplay = al_create_display(displayMode.width, displayMode.height);
     al_rest(2.0);
 }
