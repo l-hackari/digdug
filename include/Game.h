@@ -5,25 +5,39 @@
 
 //La classe principale del gioco
 //This is the main class of the game
+
 class Game {
 
     public:
         Game();
-        //inizializza gli strumenti necessari per sfruttare Allegro
-        //initializes tools needed to use Allegro
-        void initGame();
 
         //crea un display (fullscreen) e lo imposta come display principale
         //creates a display (fullscreen) and sets it as main display
         void createDisplay();
 
-        //crea  una coda degli eventi e un listener in attesa del tasto "ESCAPE" per uscire dal gioco
-        //creates a event queue and a listener waiting for the "ESCAPE" key to exit from the game 
-        void initEvent();
+        //se viene premuto il tasto "ESC" termina l'esecuzione del gioco
+        //if "ESC" key is pressed terminates game execution
+        void endGame();
+
+        //un metodo che gestisce tutti gli eventi, modificando una variabile globale in base al tipo di evento
+        //a method that manages all events, editing a global variable depending of the event type 
+        void eventManager();
+
+        //ritorna true se il gioco è in esecuzione, falso altrimenti
+        //returns true if game is running, false otherwise
+        bool isGameRunning();
+
+        //aggiorna la scena di gioco ridisegnanto le bitmap in base agli eventi
+        //updates the game scene redrawing bitmaps in base of the events
+        void updateGameScene();
 
     private:
         ALLEGRO_DISPLAY *mainDisplay;
         ALLEGRO_DISPLAY_MODE displayMode;
+        ALLEGRO_TIMER *mainTimer;
+        ALLEGRO_EVENT actualEvent;
+        ALLEGRO_EVENT_QUEUE *eventQueue;
+        bool isRunning;
         const int FPS = 60;
 
 };

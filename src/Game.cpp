@@ -1,39 +1,54 @@
 #include "../include/Game.h"
 
-Game::Game(){}
+Game::Game(){
 
-void Game::initGame(){
-    
+    isRunning = true;
     al_init();
+    al_set_new_display_flags(ALLEGRO_FULLSCREEN_WINDOW);
+    createDisplay();
     al_init_image_addon();
     al_install_keyboard();
-}
-
-void Game::initEvent(){
-
-    ALLEGRO_TIMER *timer = al_create_timer(1.0 / FPS);
-    ALLEGRO_EVENT_QUEUE *event_queque = al_create_event_queue();
-    al_register_event_source(event_queque,al_get_keyboard_event_source());
-    al_register_event_source(event_queque,al_get_timer_event_source(timer));
-    al_start_timer(timer);
-    while(true){
-        ALLEGRO_EVENT events;
-        al_wait_for_event(event_queque,&events);
-
-        if(events.type == ALLEGRO_EVENT_KEY_DOWN){
-
-            if(events.keyboard.keycode == ALLEGRO_KEY_ESCAPE){
-                break;
-            }
-        }
-    }
-
-    al_destroy_display(mainDisplay);
+    mainTimer = al_create_timer(1.0 / FPS);
+    al_start_timer(mainTimer);
+    eventQueue = al_create_event_queue();
+    al_register_event_source(eventQueue, al_get_display_event_source(mainDisplay));
+    al_register_event_source(eventQueue, al_get_keyboard_event_source());
+    al_register_event_source(eventQueue, al_get_timer_event_source(mainTimer));
 
 }
 
 void Game::createDisplay(){
     al_get_display_mode(0, &displayMode);
     mainDisplay = al_create_display(displayMode.width, displayMode.height);
-    al_rest(2.0);
+}
+
+void Game::endGame(){
+
+    if(actualEvent.type == ALLEGRO_EVENT_KEY_DOWN){
+        if(actualEvent.keyboard.keycode == ALLEGRO_KEY_ESCAPE){
+            isRunning = false;
+            al_destroy_display(mainDisplay);
+        }
+    }
+    
+
+}
+
+void Game::eventManager(){
+
+    al_wait_for_event(eventQueue, &actualEvent);
+
+}
+
+bool Game::isGameRunning(){
+
+    return isRunning;
+
+}
+
+void Game::updateGameScene(){
+
+    eventManager();
+    endGame();
+
 }
