@@ -2,12 +2,15 @@
 
 Game::Game(){
 
+    numGameObj = 0;
+    var = 0;
     isRunning = true;
     al_init();
     al_set_new_display_flags(ALLEGRO_FULLSCREEN_WINDOW);
     createDisplay();
     al_init_image_addon();
     al_install_keyboard();
+    initGameOjects();
     mainTimer = al_create_timer(1.0 / FPS);
     al_start_timer(mainTimer);
     eventQueue = al_create_event_queue();
@@ -46,9 +49,38 @@ bool Game::isGameRunning(){
 
 }
 
+void Game::initGameOjects(){
+
+    gameObjs.push_back(new StaticGameObject(10,10,"../res/images/player.png"));
+    gameObjs.push_back(new StaticGameObject(100,100,"../res/images/player2.png"));
+    numGameObj+=2;
+
+}
+
+void Game::drawScene(){
+
+    if(actualEvent.type == ALLEGRO_EVENT_TIMER){
+
+        al_clear_to_color(al_map_rgb(0, 0, 0));
+        for(int i = 0; i < numGameObj; i++)
+            gameObjs[i]->drawOnScreen();
+
+        al_flip_display();
+
+    } 
+
+}
+
 void Game::updateGameScene(){
 
+    drawScene();
     eventManager();
     endGame();
 
+}
+
+Game::~Game(){
+    for(int i = 0; i < numGameObj; i++){
+        delete gameObjs[i];
+    }
 }

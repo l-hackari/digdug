@@ -1,7 +1,8 @@
 #ifndef GAME_H
 #define GAME_H
-#include "allegro5/allegro.h"
-#include "allegro5/allegro_image.h"
+#include "StaticGameObject.h"
+#include <vector>
+using namespace std;
 
 //La classe principale del gioco
 //This is the main class of the game
@@ -10,7 +11,8 @@ class Game {
 
     public:
         Game();
-
+        ~Game();
+        
         //crea un display (fullscreen) e lo imposta come display principale
         //creates a display (fullscreen) and sets it as main display
         void createDisplay();
@@ -27,6 +29,14 @@ class Game {
         //returns true if game is running, false otherwise
         bool isGameRunning();
 
+        //disegna tutti gli oggetti di gioco esistenti in base agli FPS
+        //draws all game objects depending on FPS
+        void drawScene();
+
+        //inizializza tutti gli oggetti di gioco
+        //initializes all game object
+        void initGameOjects();
+
         //aggiorna la scena di gioco ridisegnanto le bitmap in base agli eventi
         //updates the game scene redrawing bitmaps in base of the events
         void updateGameScene();
@@ -37,8 +47,11 @@ class Game {
         ALLEGRO_TIMER *mainTimer;
         ALLEGRO_EVENT actualEvent;
         ALLEGRO_EVENT_QUEUE *eventQueue;
+        vector<GameObject *> gameObjs;
+        int numGameObj;
         bool isRunning;
         const int FPS = 60;
+        int var;
 
 };
 
