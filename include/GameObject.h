@@ -1,18 +1,27 @@
 #ifndef GAME_OBJECT_H
 #define GAME_OBJECT_H
-#include "allegro5/allegro.h"
-#include "allegro5/allegro_image.h"
+#include "GameTools.h"
 class GameObject {
 
     public:
-        GameObject(): x(0), y(0){}
-        GameObject(int _x, int _y): x(_x), y(_y){}
+        GameObject(): x(0), y(0), width(0), height(0){}
+        GameObject(int _id, int _x, int _y, int _width, int _height): id(_id), x(_x), y(_y), width(_width), height(_height){}
+        
+        //disegna su schermo l'oggetto di gioco
+        //draws the game objects on screen
         virtual void drawOnScreen() = 0;
+
+        //ritorna la coordinata x dell'oggetto di gioco
+        //returns the game object's x coordinate
         int getX(){ return x; }
+
+        //ritorna la coordinata y dell'oggetto di gioco
+        //returns the game object's y coordinate
         int getY(){ return y; }
 
     protected:
-        int x, y;
+        float x, y, width, height;
+        int id;
        
 
 };

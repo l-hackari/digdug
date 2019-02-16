@@ -6,9 +6,11 @@ class StaticGameObject : public GameObject{
 
     public:
         StaticGameObject() {}
-        StaticGameObject(int _x, int _y, const char *_bpath): GameObject(_x, _y), bitmap(al_load_bitmap(_bpath)){}
+        StaticGameObject(int _id, int _x, int _y, int _width, int _height, const char *_bpath): GameObject(_id, _x, _y, _width, _height), bitmap(al_load_bitmap(_bpath)){}
+        
+        //disegna su schermo l'oggetto di gioco
+        //draws the game objects on screen
         virtual void drawOnScreen();
-        ALLEGRO_BITMAP * getBitMap(){return bitmap;}
 
     private:
          ALLEGRO_BITMAP *bitmap;
