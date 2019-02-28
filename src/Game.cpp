@@ -1,5 +1,5 @@
 #include "../include/Game.h"
-#include "../include/Text.h"
+
 Game::Game(){
 
     numGameObj = 0;
@@ -86,13 +86,11 @@ void Game::eventManager(){
             case ALLEGRO_KEY_DOWN:
                 actualPressedKey = ALLEGRO_KEY_DOWN;
                 break;
-            case ALLEGRO_KEY_S:{
+            case ALLEGRO_KEY_S: {
                 actualPressedKey = ALLEGRO_KEY_S;
                 score++;
-                ALLEGRO_COLOR whiteColor = al_map_rgb(255,255,255);
-                gameObjs[2] = new Text(8,whiteColor,110,10,score);
-            }
                 break;
+            } 
             case ALLEGRO_KEY_D:
                 actualPressedKey = ALLEGRO_KEY_D;
                 break;
@@ -121,17 +119,17 @@ void Game::initGameOjects(){
     el4.push_back(al_load_bitmap("../res/images/player/al1.png"));
     el4.push_back(al_load_bitmap("../res/images/player/al2.png"));
     el5.push_back(al_load_bitmap("../res/images/player/at.png"));
-    gameObjs.push_back(new Player(1, 0, 0, 16, 16, al_load_bitmap("../res/images/player/fl.png"), al_load_bitmap("../res/images/player/di.png"), el2, el5, el4, el1, el3));
+    gameObjs.push_back(new Player(1, 0, 0, 16, 16, el2[0], al_load_bitmap("../res/images/player/fl.png"), al_load_bitmap("../res/images/player/di.png"), el2, el5, el4, el1, el3));
     background = al_load_bitmap("../res/images/background.png");
     string hs = "HIGH SCORE";
     string rd = "ROUND ";
     ALLEGRO_COLOR redColor = al_map_rgb(255,0,0);
     ALLEGRO_COLOR whiteColor = al_map_rgb(255,255,255);
-    gameObjs.push_back(new Text(10,redColor,110,0,hs));
-    gameObjs.push_back(new Text(10,whiteColor,110,12,score));
-    gameObjs.push_back(new Text(10,whiteColor,110,274,mapScore));
-    gameObjs.push_back(new Text(10,whiteColor,200,274,rd));
-    gameObjs.push_back(new Text(10,whiteColor,220,274,round));
+    gameObjs.push_back(new Text(2, 10, redColor, 110, 0, hs));
+    gameObjs.push_back(new Score(3, 10, whiteColor, 110, 12));
+    gameObjs.push_back(new Text(4, 10, whiteColor, 110, 274, mapScore));
+    gameObjs.push_back(new Text(5, 10, whiteColor, 200, 274, rd));
+    gameObjs.push_back(new Text(6, 10, whiteColor, 220, 274, round));
     numGameObj+=6;
 
 }

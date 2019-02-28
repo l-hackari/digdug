@@ -1,12 +1,12 @@
-#ifndef ANIMATED_GAME_OBJECT_H
-#define ANIMATED_GAME_OBJECT_H
-#include "GameObject.h"
+#ifndef ANIMATED_SPRITE_H
+#define ANIMATED_SPRITE_H
+#include "StaticSprite.h"
 
-class AnimatedGameObject : public GameObject{
+class AnimatedSprite : public StaticSprite{
 
     public:
-        AnimatedGameObject() {}
-        AnimatedGameObject(int _id, int _x, int _y, int _width, int _height, ALLEGRO_BITMAP *fl, vector<ALLEGRO_BITMAP*> ms, vector<ALLEGRO_BITMAP*> as, vector<ALLEGRO_BITMAP*> als,vector<ALLEGRO_BITMAP*> ds);
+        AnimatedSprite() {}
+        AnimatedSprite(int _id, int _x, int _y, int _width, int _height, ALLEGRO_BITMAP *idl, ALLEGRO_BITMAP *fl, vector<ALLEGRO_BITMAP*> ms, vector<ALLEGRO_BITMAP*> as, vector<ALLEGRO_BITMAP*> als,vector<ALLEGRO_BITMAP*> ds);
         
         //disegna su schermo l'oggetto di gioco
         //draws the game objects on screen

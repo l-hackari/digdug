@@ -1,7 +1,7 @@
 #ifndef GAME_H
 #define GAME_H
-#include "StaticGameObject.h"
 #include "Player.h"
+#include "Score.h"
 
 
 //La classe principale del gioco
@@ -66,10 +66,9 @@ class Game {
         const int FPS = 15;
         float scale;
         bool redraw;
-        int score = 0;
         int mapScore = 0;
         int round = 1;
-        int lifePoint = 3;
+        int lifePoints = 3;
 
 
 };

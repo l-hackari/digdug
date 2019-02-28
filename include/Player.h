@@ -1,12 +1,12 @@
 #ifndef PLAYER_H
 #define PLAYER_H
-#include "AnimatedGameObject.h"
+#include "AnimatedSprite.h"
 
-class Player : public AnimatedGameObject{
+class Player : public AnimatedSprite{
 
     public:
         Player() {}
-        Player(int _id, int _x, int _y, int _width, int _height, ALLEGRO_BITMAP *fl, ALLEGRO_BITMAP *di, vector<ALLEGRO_BITMAP*> ms, vector<ALLEGRO_BITMAP*> as, vector<ALLEGRO_BITMAP*> als ,vector<ALLEGRO_BITMAP*> ds, vector<ALLEGRO_BITMAP*> sw);
+        Player(int _id, int _x, int _y, int _width, int _height, ALLEGRO_BITMAP *idl, ALLEGRO_BITMAP *fl, ALLEGRO_BITMAP *di, vector<ALLEGRO_BITMAP*> ms, vector<ALLEGRO_BITMAP*> as, vector<ALLEGRO_BITMAP*> als ,vector<ALLEGRO_BITMAP*> ds, vector<ALLEGRO_BITMAP*> sw);
         
         //disegna su schermo l'oggetto di gioco
         //draws the game objects on screen

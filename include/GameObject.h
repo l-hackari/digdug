@@ -4,8 +4,8 @@
 class GameObject {
 
     public:
-        GameObject(): x(0), y(0), width(0), height(0){}
-        GameObject(int _id, int _x, int _y, int _width, int _height): id(_id), x(_x), y(_y), width(_width), height(_height){}
+        GameObject(): x(0), y(0){}
+        GameObject(int _id, int _x, int _y): id(_id), x(_x), y(_y){}
         
         //disegna su schermo l'oggetto di gioco
         //draws the game objects on screen
@@ -20,7 +20,7 @@ class GameObject {
         int getY(){ return y; }
 
     protected:
-        float x, y, width, height;
+        float x, y;
         int id;
        
 

@@ -1,6 +1,6 @@
 #include "../include/Player.h"
 
-Player::Player(int _id, int _x, int _y, int _width, int _height, ALLEGRO_BITMAP *fl, ALLEGRO_BITMAP *di, vector<ALLEGRO_BITMAP*> ms, vector<ALLEGRO_BITMAP*> as, vector<ALLEGRO_BITMAP*> als ,vector<ALLEGRO_BITMAP*> ds, vector<ALLEGRO_BITMAP*> sw): AnimatedGameObject(_id, _x, _y, _width, _height, fl, ms, as, als, ds), deathIdle(di), swallowSprites(sw){
+Player::Player(int _id, int _x, int _y, int _width, int _height, ALLEGRO_BITMAP *idl, ALLEGRO_BITMAP *fl, ALLEGRO_BITMAP *di, vector<ALLEGRO_BITMAP*> ms, vector<ALLEGRO_BITMAP*> as, vector<ALLEGRO_BITMAP*> als ,vector<ALLEGRO_BITMAP*> ds, vector<ALLEGRO_BITMAP*> sw): AnimatedSprite(_id, _x, _y, _width, _height, idl, fl, ms, as, als, ds), deathIdle(di), swallowSprites(sw){
     actualFrame = 0;
 }
 

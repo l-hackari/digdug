@@ -1,22 +1,21 @@
 #ifndef TEXT_H
 #define TEXT_H
-#include "Game.h"
-#include "AnimatedGameObject.h"
-    class Text : public AnimatedGameObject {
+#include "GameObject.h"
+
+    class Text : public GameObject {
 
         public:
             
-            Text(int size, ALLEGRO_COLOR c, int _x, int _y);
-            Text(int size, ALLEGRO_COLOR c, int _x, int _y, string _text);
-            Text(int size, ALLEGRO_COLOR c, int _x, int _y, int _text);
+            Text(int _id, int _size, ALLEGRO_COLOR _c, int _x, int _y);
+            Text(int _id, int _size, ALLEGRO_COLOR _c, int _x, int _y, string _text);
+            Text(int _id, int _size, ALLEGRO_COLOR _c, int _x, int _y, int _score);
             virtual void drawOnScreen();
 
-        private:
+        protected:
             
             ALLEGRO_FONT *font;
             ALLEGRO_COLOR color;
-            int x, y;
-            char text[20] = "";
+            string text;
             int font_size; 
     
     };
