@@ -1,7 +1,9 @@
 #ifndef STATIC_GAME_OBJECT_H
 #define STATIC_GAME_OBJECT_H
 #include "GameObject.h"
-
+#include<allegro5/allegro_ttf.h>
+#include<allegro5/allegro_font.h>
+#include <string>
 class StaticGameObject : public GameObject{
 
     public:
@@ -11,9 +13,12 @@ class StaticGameObject : public GameObject{
         //disegna su schermo l'oggetto di gioco
         //draws the game objects on screen
         virtual void drawOnScreen();
+        
 
     private:
          ALLEGRO_BITMAP *bitmap;
+
+     
 };
 
 #endif

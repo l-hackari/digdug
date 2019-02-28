@@ -27,6 +27,7 @@ class Player : public AnimatedGameObject{
     private:
         vector<ALLEGRO_BITMAP*> swallowSprites;
         ALLEGRO_BITMAP *deathIdle;
+        
 };
 
 #endif

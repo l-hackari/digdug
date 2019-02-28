@@ -3,6 +3,7 @@
 #include "StaticGameObject.h"
 #include "Player.h"
 
+
 //La classe principale del gioco
 //This is the main class of the game
 
@@ -65,6 +66,11 @@ class Game {
         const int FPS = 15;
         float scale;
         bool redraw;
+        int score = 0;
+        int mapScore = 0;
+        int round = 1;
+        int lifePoint = 3;
+
 
 };
 
