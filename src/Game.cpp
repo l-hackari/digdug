@@ -41,6 +41,13 @@ void Game::initGameMap(){
             gameMap[i][j] = 0;
         }
     }
+
+    //DECOMMENTA PER TESTARE LE COLLISIONI
+    /*for(int i = 64; i < 68; i++){
+        for(int j = 52; j < 56; j++){
+            gameMap[i][j] = 4;
+        }
+    }*/
 }
 
 void Game::endGame(){
@@ -112,6 +119,12 @@ void Game::initGameOjects(){
     el2.push_back(al_load_bitmap("../res/images/player/run1.png"));
     el3.push_back(al_load_bitmap("../res/images/player/sw1.png"));
     el3.push_back(al_load_bitmap("../res/images/player/sw2.png"));
+    el1.push_back(al_load_bitmap("../res/images/player/dei.png"));
+    el1.push_back(al_load_bitmap("../res/images/player/dei.png"));
+    el1.push_back(al_load_bitmap("../res/images/player/dei.png"));
+    el1.push_back(al_load_bitmap("../res/images/player/dei.png"));
+    el1.push_back(al_load_bitmap("../res/images/player/dei.png"));
+    el1.push_back(al_load_bitmap("../res/images/player/dei.png"));
     el1.push_back(al_load_bitmap("../res/images/player/de1.png"));
     el1.push_back(al_load_bitmap("../res/images/player/de2.png"));
     el1.push_back(al_load_bitmap("../res/images/player/de3.png"));
@@ -119,7 +132,7 @@ void Game::initGameOjects(){
     el4.push_back(al_load_bitmap("../res/images/player/al1.png"));
     el4.push_back(al_load_bitmap("../res/images/player/al2.png"));
     el5.push_back(al_load_bitmap("../res/images/player/at.png"));
-    gameObjs.push_back(new Player(1, 0, 0, 16, 16, el2[0], al_load_bitmap("../res/images/player/fl.png"), al_load_bitmap("../res/images/player/di.png"), el2, el5, el4, el1, el3));
+    gameObjs.push_back(new Player(1, 0, 24, 16, 16, el2[0], al_load_bitmap("../res/images/player/fl.png"), el2, el5, el4, el1, el3));
     background = al_load_bitmap("../res/images/background.png");
     string hs = "HIGH SCORE";
     string rd = "ROUND ";
@@ -142,7 +155,8 @@ void Game::drawScene(){
         al_draw_bitmap(background, 0, 0, 0);
 
         for(int i = 0; i < numGameObj; i++)
-            gameObjs[i]->drawOnScreen();
+            if(gameObjs[i]->getVisible())
+                gameObjs[i]->drawOnScreen();
 
         al_set_target_backbuffer(mainDisplay);
         al_clear_to_color(al_map_rgb(0, 0, 0));

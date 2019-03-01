@@ -61,7 +61,6 @@ class Game {
         vector<ALLEGRO_BITMAP *> el5;
         ALLEGRO_KEYBOARD_STATE keyboardState;
         int numGameObj;
-        int nativeScreenWidth = 224, nativeScreenHeight = 288;
         bool isRunning;
         const int FPS = 15;
         float scale;

@@ -5,7 +5,7 @@ class GameObject {
 
     public:
         GameObject(): x(0), y(0){}
-        GameObject(int _id, int _x, int _y): id(_id), x(_x), y(_y){}
+        GameObject(int _id, int _x, int _y): id(_id), x(_x), y(_y), isVisible(true){}
         
         //disegna su schermo l'oggetto di gioco
         //draws the game objects on screen
@@ -19,9 +19,14 @@ class GameObject {
         //returns the game object's y coordinate
         int getY(){ return y; }
 
+        //ritorna lo stato di visibilità dell'oggetto di gioco
+        //returns the game object's visibility state
+        bool getVisible(){ return isVisible; }
+
     protected:
         float x, y;
         int id;
+        bool isVisible;
        
 
 };

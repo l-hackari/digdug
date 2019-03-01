@@ -12,6 +12,14 @@ class AnimatedSprite : public StaticSprite{
         //draws the game objects on screen
         virtual void drawOnScreen();
 
+        //controlla se l'oggetto di gioco ha toccato un altro oggetto di gioco
+        //checks if the game object touched another game object
+        int isColliding();
+
+        //controlla se l'oggetto di gioco è stato toccato
+        //checks if the game object was touched
+        int isCollided();
+
     protected:
         vector<ALLEGRO_BITMAP*> movementSprites;
         vector<ALLEGRO_BITMAP*> attackSprites;
@@ -22,6 +30,7 @@ class AnimatedSprite : public StaticSprite{
         int previousAnimation;
         direction previousDirection;
         int actualFrame;
+        bool isDying;
 };
 
 #endif

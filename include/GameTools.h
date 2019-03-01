@@ -11,6 +11,8 @@
 using namespace std;
 
 enum direction {LEFT = 0, RIGHT, UP, DOWN};
+extern int nativeScreenWidth;
+extern int nativeScreenHeight;
 extern int actualPressedKey;
 extern int score;
 extern int gameMap[18*4][14*4];
