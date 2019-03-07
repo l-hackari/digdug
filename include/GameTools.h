@@ -16,5 +16,6 @@ extern int nativeScreenHeight;
 extern int actualPressedKey;
 extern int score;
 extern int gameMap[18*4][14*4];
+extern int lifePoints;
 
 #endif

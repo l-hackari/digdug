@@ -1,11 +1,9 @@
 #include "../include/Player.h"
 
-Player::Player(int _id, int _x, int _y, int _width, int _height, ALLEGRO_BITMAP *idl, ALLEGRO_BITMAP *fl, vector<ALLEGRO_BITMAP*> ms, vector<ALLEGRO_BITMAP*> as, vector<ALLEGRO_BITMAP*> als ,vector<ALLEGRO_BITMAP*> ds, vector<ALLEGRO_BITMAP*> sw): AnimatedSprite(_id, _x, _y, _width, _height, idl, fl, ms, as, als, ds), swallowSprites(sw){
-    actualFrame = 0;
+Player::Player(int _id, int _x, int _y, int _width, int _height, ALLEGRO_BITMAP *idl, ALLEGRO_BITMAP *fl, vector<ALLEGRO_BITMAP*> ms, vector<ALLEGRO_BITMAP*> as, vector<ALLEGRO_BITMAP*> als ,vector<ALLEGRO_BITMAP*> ds, vector<ALLEGRO_BITMAP*> sw): AnimatedSprite(_id, _x, _y, _width, _height, idl, fl, ms, als, ds), swallowSprites(sw), attackSprites(as) {
 }
 
 void Player::drawIdle(){
-
     switch (previousDirection)
     {
         case LEFT:
@@ -92,8 +90,9 @@ void Player::drawDying(){
 
 }
 
-void Player::drawOnScreen(){
 
+void Player::drawOnScreen(){
+    
     if(!isDying){
 
         if(actualFrame >= animationLimit){
@@ -172,6 +171,7 @@ void Player::drawOnScreen(){
             animationLimit = deathSprites.size();
             actualFrame = 0;
             isDying = true;
+            lifePoints--;
         }
 
     } else {

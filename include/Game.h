@@ -3,7 +3,6 @@
 #include "Player.h"
 #include "Score.h"
 
-
 //La classe principale del gioco
 //This is the main class of the game
 
@@ -45,6 +44,8 @@ class Game {
         //updates the game scene redrawing bitmaps in base of the events
         void updateGameScene();
 
+        void resetGameScene();
+
     private:
         ALLEGRO_DISPLAY *mainDisplay;
         ALLEGRO_DISPLAY_MODE displayMode;
@@ -54,6 +55,7 @@ class Game {
         ALLEGRO_EVENT actualEvent;
         ALLEGRO_EVENT_QUEUE *eventQueue;
         vector<GameObject *> gameObjs;
+        vector<GameObject *> lifePointsBitmap;
         vector<ALLEGRO_BITMAP *> el1;
         vector<ALLEGRO_BITMAP *> el3;
         vector<ALLEGRO_BITMAP *> el2;
@@ -67,7 +69,6 @@ class Game {
         bool redraw;
         int mapScore = 0;
         int round = 1;
-        int lifePoints = 3;
 
 
 };

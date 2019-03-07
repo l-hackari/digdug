@@ -43,11 +43,11 @@ void Game::initGameMap(){
     }
 
     //DECOMMENTA PER TESTARE LE COLLISIONI
-    /*for(int i = 64; i < 68; i++){
+    for(int i = 64; i < 68; i++){
         for(int j = 52; j < 56; j++){
             gameMap[i][j] = 4;
         }
-    }*/
+    }
 }
 
 void Game::endGame(){
@@ -133,6 +133,9 @@ void Game::initGameOjects(){
     el4.push_back(al_load_bitmap("../res/images/player/al2.png"));
     el5.push_back(al_load_bitmap("../res/images/player/at.png"));
     gameObjs.push_back(new Player(1, 0, 24, 16, 16, el2[0], al_load_bitmap("../res/images/player/fl.png"), el2, el5, el4, el1, el3));
+    lifePointsBitmap.push_back(new StaticSprite(2,0,274,16,16, al_load_bitmap("../res/images/player/al1.png")));
+    lifePointsBitmap.push_back(new StaticSprite(2,16,274,16,16, al_load_bitmap("../res/images/player/al1.png")));
+    lifePointsBitmap.push_back(new StaticSprite(2,32,274,16,16, al_load_bitmap("../res/images/player/al1.png")));
     background = al_load_bitmap("../res/images/background.png");
     string hs = "HIGH SCORE";
     string rd = "ROUND ";
@@ -157,6 +160,14 @@ void Game::drawScene(){
         for(int i = 0; i < numGameObj; i++)
             if(gameObjs[i]->getVisible())
                 gameObjs[i]->drawOnScreen();
+        
+        for(int i = 0; i < lifePointsBitmap.size(); i++){
+                lifePointsBitmap[i] -> drawOnScreen();
+        }
+
+        if(lifePoints < lifePointsBitmap.size()){
+            lifePointsBitmap.pop_back();
+        }
 
         al_set_target_backbuffer(mainDisplay);
         al_clear_to_color(al_map_rgb(0, 0, 0));
@@ -165,6 +176,10 @@ void Game::drawScene(){
         redraw = false;
     } 
 
+}
+
+void resetGameScene(){
+    
 }
 
 void Game::updateGameScene(){

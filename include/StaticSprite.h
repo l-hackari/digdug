@@ -11,7 +11,6 @@ class StaticSprite : public GameObject{
         //disegna su schermo l'oggetto di gioco
         //draws the game objects on screen
         virtual void drawOnScreen();
-        
 
     protected:
         ALLEGRO_BITMAP *bitmap;
