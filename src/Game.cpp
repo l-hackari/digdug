@@ -7,7 +7,7 @@ Game::Game(){
     redraw = false;
     actualPressedKey = ALLEGRO_KEY_SPACE;
     al_init();
-    initGameMap();
+    initGameMaps();
     createDisplay();
     al_init_image_addon();
     al_install_keyboard();
@@ -34,18 +34,30 @@ void Game::createDisplay(){
    
 }
 
-void Game::initGameMap(){
+void Game::initGameMaps(){
 
-    for(int i = 0; i < 14; i++){
-        for(int j = 0; j < 18; j++){
-            gameMap[i][j] = 0;
+    for(int i = 0; i < 18 * 4; i++){
+        for(int j = 0; j < 14 * 4; j++){
+            collisionMap[i][j] = 0;
+        }
+    }
+
+    for(int i = 0; i < 18 * 4; i++){
+        for(int j = 0; j < 14 * 4; j++){
+            groundMap[i][j] = 0;
+        }
+    }
+
+    for(int i = 0; i < 10; i++){
+        for(int j = 0; j < 14 * 4; j++){
+            groundMap[i][j] = 0;
         }
     }
 
     //DECOMMENTA PER TESTARE LE COLLISIONI
     for(int i = 64; i < 68; i++){
         for(int j = 52; j < 56; j++){
-            gameMap[i][j] = 4;
+            collisionMap[i][j] = 4;
         }
     }
 }
@@ -115,6 +127,10 @@ bool Game::isGameRunning(){
 
 void Game::initGameOjects(){
 
+    centerGround = al_load_bitmap("../res/images/ground/ground2.png");
+    middleGround = al_load_bitmap("../res/images/ground/ground1.png");
+    cornerGround = al_load_bitmap("../res/images/ground/ground3.png");
+    blueGround = al_load_bitmap("../res/images/ground/ground4.png");
     el2.push_back(al_load_bitmap("../res/images/player/run2.png"));
     el2.push_back(al_load_bitmap("../res/images/player/run1.png"));
     el3.push_back(al_load_bitmap("../res/images/player/sw1.png"));
@@ -150,16 +166,74 @@ void Game::initGameOjects(){
 
 }
 
+void Game::updateGround(){
+    for(int i = 10; i < 18 * 4; i++){
+        for(int j = 1; j < 14 * 4 - 1; j++){
+            if(groundMap[i][j] == 1 && groundMap[i + 1][j] == 0){
+                if(groundMap[i][j + 1] == 1 && groundMap[i][j - 1] == 1)
+                    al_draw_bitmap(middleGround, j * 4, i * 4, 0);
+                else if(groundMap[i][j + 1] == 0)
+                    al_draw_bitmap(cornerGround, j * 4, i * 4, 0);
+                else if(groundMap[i][j - 1] == 0)
+                    al_draw_bitmap(cornerGround, j * 4, i * 4, ALLEGRO_FLIP_HORIZONTAL);
+            } else if(groundMap[i][j] == 1 && groundMap[i - 1][j] == 0){
+                if(groundMap[i][j + 1] == 1 && groundMap[i][j - 1] == 1)
+                    al_draw_bitmap(middleGround, j * 4, i * 4, ALLEGRO_FLIP_VERTICAL);
+                else if(groundMap[i][j + 1] == 0)
+                    al_draw_bitmap(cornerGround, j * 4, i * 4, ALLEGRO_FLIP_VERTICAL);
+                else if(groundMap[i][j - 1] == 0)
+                    al_draw_bitmap(cornerGround, j * 4, i * 4, 3);
+            } else if(groundMap[i][j] == 1 && groundMap[i + 1][j] == 1 && groundMap[i - 1][j] == 1){
+                if(groundMap[i][j - 1] == 0)
+                    al_draw_rotated_bitmap(middleGround, 2, 2, j * 4 + 2, i * 4 + 2, 1.5708, 0);
+                else if(groundMap[i][j + 1] == 0)
+                    al_draw_rotated_bitmap(middleGround, 2, 2, j * 4 + 2, i * 4 + 2, 4.71239, 0);
+                else if(groundMap[i][j + 1] == 1 && groundMap[i][j - 1] == 1)
+                    al_draw_bitmap(centerGround, j * 4, i * 4, 0);
+            }
+        }
+    }
+
+    for(int j = 0; j < 14 * 4; j++){
+        if(groundMap[10][j] == 1){
+            al_draw_bitmap(centerGround, j * 4, 9 * 4 + 2, 0);
+        }
+    }
+
+    for(int i = 10; i < 18 * 4; i++){
+        if(groundMap[i][0] == 1){
+            if(groundMap[i + 1][0] == 1){
+                al_draw_rotated_bitmap(middleGround, 2, 2, 0 + 2, i * 4 + 2, 1.5708, 0);
+            } else if(groundMap[i + 1][0] == 0){
+                al_draw_bitmap(cornerGround, 0, i * 4, ALLEGRO_FLIP_HORIZONTAL);
+            }
+        }
+    }
+
+    for(int i = 10; i < 18 * 4; i++){
+        if(groundMap[i][14 * 4 - 1] == 1){
+            if(groundMap[i + 1][14 * 4 - 1] == 1){
+                al_draw_rotated_bitmap(middleGround, 2, 2, (14 * 4 - 1) * 4 + 2, i * 4 + 2, 4.71239, 0);
+            } else if(groundMap[i + 1][14 * 4 - 1] == 0){
+                al_draw_bitmap(cornerGround, (14 * 4 - 1) * 4, i * 4, 0);
+            }
+        }
+    }
+}
+
 void Game::drawScene(){
 
     if(redraw && al_is_event_queue_empty(eventQueue)){
         al_set_target_bitmap(buffer);
         al_clear_to_color(al_map_rgb(0, 0, 0));
         al_draw_bitmap(background, 0, 0, 0);
+        updateGround();
 
-        for(int i = 0; i < numGameObj; i++)
+        for(int i = 0; i < numGameObj; i++){
             if(gameObjs[i]->getVisible())
                 gameObjs[i]->drawOnScreen();
+        
+        }
         
         for(int i = 0; i < lifePointsBitmap.size(); i++){
                 lifePointsBitmap[i] -> drawOnScreen();

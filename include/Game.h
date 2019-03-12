@@ -16,9 +16,9 @@ class Game {
         //creates a display (fullscreen) and sets it as main display
         void createDisplay();
 
-        //inizializza a "0" tutte le celle della matrice che rappresenta la mappa di gioco
-        //initalize to "0" all cells of the matrix that represents the map of the game
-        void initGameMap();
+        //inizializza tutte le celle delle matrici che rappresentano mappa di gioco e del terreno di gioco
+        //initializes all cells of the matrices that represent the game's map and the game's ground
+        void initGameMaps();
 
         //se viene premuto il tasto "ESC" termina l'esecuzione del gioco
         //if "ESC" key is pressed terminates game execution
@@ -44,6 +44,10 @@ class Game {
         //updates the game scene redrawing bitmaps in base of the events
         void updateGameScene();
 
+        //disegna le zone scavate del terreno di gioco
+        //draws digged game's ground zones
+        void updateGround();
+
         void resetGameScene();
 
     private:
@@ -51,6 +55,10 @@ class Game {
         ALLEGRO_DISPLAY_MODE displayMode;
         ALLEGRO_BITMAP *background;
         ALLEGRO_BITMAP *buffer;
+        ALLEGRO_BITMAP *centerGround;
+        ALLEGRO_BITMAP *middleGround;
+        ALLEGRO_BITMAP *cornerGround;
+        ALLEGRO_BITMAP *blueGround;
         ALLEGRO_TIMER *mainTimer;
         ALLEGRO_EVENT actualEvent;
         ALLEGRO_EVENT_QUEUE *eventQueue;

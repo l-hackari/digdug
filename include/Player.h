@@ -7,13 +7,9 @@ class Player : public AnimatedSprite{
         Player() {}
         Player(int _id, int _x, int _y, int _width, int _height, ALLEGRO_BITMAP *idl, ALLEGRO_BITMAP *fl, vector<ALLEGRO_BITMAP*> ms, vector<ALLEGRO_BITMAP*> as, vector<ALLEGRO_BITMAP*> als ,vector<ALLEGRO_BITMAP*> ds, vector<ALLEGRO_BITMAP*> sw);
         
-        
-        virtual void drawOnScreen();
-        
-        
-        void LoadLifeBitmap();
         //disegna su schermo l'oggetto di gioco
         //draws the game objects on screen
+        virtual void drawOnScreen();
         
         //disegna l'animazione idle dell'oggetto di gioco
         //draws game object's idle animation
@@ -30,6 +26,14 @@ class Player : public AnimatedSprite{
         //disegna l'animazione di morte dell'oggetto di gioco
         //draws game object's dying animation
         void drawDying();
+
+        //segna le zone scavate dal giocatore
+        //marks the zones that are digged by the player
+        void digs();
+
+        //controlla se la zona attraversata è stata scavata
+        //checks if crossed zone was digged
+        bool checkDigged();
 
     private:
         vector<ALLEGRO_BITMAP*> swallowSprites;

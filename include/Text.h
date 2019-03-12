@@ -9,6 +9,9 @@
             Text(int _id, int _size, ALLEGRO_COLOR _c, int _x, int _y);
             Text(int _id, int _size, ALLEGRO_COLOR _c, int _x, int _y, string _text);
             Text(int _id, int _size, ALLEGRO_COLOR _c, int _x, int _y, int _score);
+
+            //disegna su schermo il testo
+            //draws text on screen
             virtual void drawOnScreen();
 
         protected:
