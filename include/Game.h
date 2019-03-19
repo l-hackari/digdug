@@ -2,6 +2,7 @@
 #define GAME_H
 #include "Player.h"
 #include "Score.h"
+#include "Monkey.h"
 
 //La classe principale del gioco
 //This is the main class of the game
@@ -10,8 +11,7 @@ class Game {
 
     public:
         Game();
-        ~Game();
-        
+        ~Game();       
         //crea un display (fullscreen) e lo imposta come display principale
         //creates a display (fullscreen) and sets it as main display
         void createDisplay();

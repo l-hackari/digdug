@@ -11,7 +11,7 @@ Game::Game(){
     createDisplay();
     al_init_image_addon();
     al_install_keyboard();
-    al_init_font_addon();
+    al_init_font_addon();   
     al_init_ttf_addon();
     initGameOjects();
     mainTimer = al_create_timer(1.0 / FPS);
@@ -130,28 +130,13 @@ void Game::initGameOjects(){
     centerGround = al_load_bitmap("../res/images/ground/ground2.png");
     middleGround = al_load_bitmap("../res/images/ground/ground1.png");
     cornerGround = al_load_bitmap("../res/images/ground/ground3.png");
-    blueGround = al_load_bitmap("../res/images/ground/ground4.png");
-    el2.push_back(al_load_bitmap("../res/images/player/run2.png"));
-    el2.push_back(al_load_bitmap("../res/images/player/run1.png"));
-    el3.push_back(al_load_bitmap("../res/images/player/sw1.png"));
-    el3.push_back(al_load_bitmap("../res/images/player/sw2.png"));
-    el1.push_back(al_load_bitmap("../res/images/player/dei.png"));
-    el1.push_back(al_load_bitmap("../res/images/player/dei.png"));
-    el1.push_back(al_load_bitmap("../res/images/player/dei.png"));
-    el1.push_back(al_load_bitmap("../res/images/player/dei.png"));
-    el1.push_back(al_load_bitmap("../res/images/player/dei.png"));
-    el1.push_back(al_load_bitmap("../res/images/player/dei.png"));
-    el1.push_back(al_load_bitmap("../res/images/player/de1.png"));
-    el1.push_back(al_load_bitmap("../res/images/player/de2.png"));
-    el1.push_back(al_load_bitmap("../res/images/player/de3.png"));
-    el1.push_back(al_load_bitmap("../res/images/player/de4.png"));
-    el4.push_back(al_load_bitmap("../res/images/player/al1.png"));
-    el4.push_back(al_load_bitmap("../res/images/player/al2.png"));
-    el5.push_back(al_load_bitmap("../res/images/player/at.png"));
-    gameObjs.push_back(new Player(1, 0, 24, 16, 16, el2[0], al_load_bitmap("../res/images/player/fl.png"), el2, el5, el4, el1, el3));
-    lifePointsBitmap.push_back(new StaticSprite(2,0,274,16,16, al_load_bitmap("../res/images/player/al1.png")));
+    gameObjs.push_back(new Player(1, 0, 24, 16, 16));
+    /*lifePointsBitmap.push_back(new StaticSprite(2,0,274,16,16, al_load_bitmap("../res/images/player/al1.png")));
     lifePointsBitmap.push_back(new StaticSprite(2,16,274,16,16, al_load_bitmap("../res/images/player/al1.png")));
     lifePointsBitmap.push_back(new StaticSprite(2,32,274,16,16, al_load_bitmap("../res/images/player/al1.png")));
+    */
+    gameObjs.push_back(new Monkey(4,50,24,16,16)); 
+   
     background = al_load_bitmap("../res/images/background.png");
     string hs = "HIGH SCORE";
     string rd = "ROUND ";
@@ -162,7 +147,7 @@ void Game::initGameOjects(){
     gameObjs.push_back(new Text(4, 10, whiteColor, 110, 274, mapScore));
     gameObjs.push_back(new Text(5, 10, whiteColor, 200, 274, rd));
     gameObjs.push_back(new Text(6, 10, whiteColor, 220, 274, round));
-    numGameObj+=6;
+    numGameObj+=7;
 
 }
 

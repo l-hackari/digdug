@@ -5,7 +5,7 @@ class Player : public AnimatedSprite{
 
     public:
         Player() {}
-        Player(int _id, int _x, int _y, int _width, int _height, ALLEGRO_BITMAP *idl, ALLEGRO_BITMAP *fl, vector<ALLEGRO_BITMAP*> ms, vector<ALLEGRO_BITMAP*> as, vector<ALLEGRO_BITMAP*> als ,vector<ALLEGRO_BITMAP*> ds, vector<ALLEGRO_BITMAP*> sw);
+        Player(int _id, int _x, int _y, int _width, int _height);
         
         //disegna su schermo l'oggetto di gioco
         //draws the game objects on screen

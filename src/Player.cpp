@@ -1,8 +1,30 @@
 #include "../include/Player.h"
 
-Player::Player(int _id, int _x, int _y, int _width, int _height, ALLEGRO_BITMAP *idl, ALLEGRO_BITMAP *fl, vector<ALLEGRO_BITMAP*> ms, vector<ALLEGRO_BITMAP*> as, vector<ALLEGRO_BITMAP*> als ,vector<ALLEGRO_BITMAP*> ds, vector<ALLEGRO_BITMAP*> sw): AnimatedSprite(_id, _x, _y, _width, _height, idl, fl, ms, als, ds), swallowSprites(sw), attackSprites(as) {
+Player::Player(int _id, int _x, int _y, int _width, int _height): AnimatedSprite(_id, _x, _y, _width, _height){
 
     speed = 4;
+    /*vector<ALLEGRO_BITMAP*> movementSprites;
+    vector<ALLEGRO_BITMAP*> alternativeSprites;
+    vector<ALLEGRO_BITMAP*> deathSprites;*/
+    
+    movementSprites.push_back(al_load_bitmap("../res/images/player/run2.png"));
+    movementSprites.push_back(al_load_bitmap("../res/images/player/run1.png"));
+    swallowSprites.push_back(al_load_bitmap("../res/images/player/sw1.png"));
+    swallowSprites.push_back(al_load_bitmap("../res/images/player/sw2.png"));
+    deathSprites.push_back(al_load_bitmap("../res/images/player/dei.png"));
+    deathSprites.push_back(al_load_bitmap("../res/images/player/dei.png"));
+    deathSprites.push_back(al_load_bitmap("../res/images/player/dei.png"));
+    deathSprites.push_back(al_load_bitmap("../res/images/player/dei.png"));
+    //DA CAMBIARE
+    deathSprites.push_back(al_load_bitmap("../res/images/player/dei.png")); 
+    deathSprites.push_back(al_load_bitmap("../res/images/player/dei.png"));
+    deathSprites.push_back(al_load_bitmap("../res/images/player/de1.png"));
+    deathSprites.push_back(al_load_bitmap("../res/images/player/de2.png"));
+    deathSprites.push_back(al_load_bitmap("../res/images/player/de3.png"));
+    deathSprites.push_back(al_load_bitmap("../res/images/player/de4.png"));
+    alternativeSprites.push_back(al_load_bitmap("../res/images/player/al1.png"));
+    alternativeSprites.push_back(al_load_bitmap("../res/images/player/al2.png"));
+    attackSprites.push_back(al_load_bitmap("../res/images/player/at.png"));
 
 }
 

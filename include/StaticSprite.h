@@ -6,7 +6,7 @@ class StaticSprite : public GameObject{
 
     public:
         StaticSprite() {}
-        StaticSprite(int _id, int _x, int _y, int _width, int _height, ALLEGRO_BITMAP *_bmap): GameObject(_id, _x, _y), width(_width), height(_height), bitmap(_bmap){}
+        StaticSprite(int _id, int _x, int _y, int _width, int _height): GameObject(_id, _x, _y), width(_width), height(_height){}
         
         //disegna su schermo l'oggetto di gioco
         //draws the game objects on screen
