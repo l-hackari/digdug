@@ -18,5 +18,8 @@ extern int score;
 extern int collisionMap[18*4][14*4];
 extern int groundMap[18*4][14*4];
 extern int lifePoints;
+extern ALLEGRO_TIMER *swallowTimer;
+extern bool isSwallowTimerActive;
+extern int swallowValue;
 
 #endif

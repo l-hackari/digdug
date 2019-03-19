@@ -7,4 +7,7 @@ int score = 0;
 int collisionMap[18 * 4][14 * 4];
 int groundMap[18 * 4][14 * 4];
 int lifePoints = 3;
+ALLEGRO_TIMER *swallowTimer;
+bool isSwallowTimerActive = false;
+int swallowValue = 0;
  

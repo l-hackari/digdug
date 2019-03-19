@@ -15,11 +15,13 @@ Game::Game(){
     al_init_ttf_addon();
     initGameOjects();
     mainTimer = al_create_timer(1.0 / FPS);
+    swallowTimer = al_create_timer(3);
     al_start_timer(mainTimer);
     eventQueue = al_create_event_queue();
     al_register_event_source(eventQueue, al_get_display_event_source(mainDisplay));
     al_register_event_source(eventQueue, al_get_keyboard_event_source());
     al_register_event_source(eventQueue, al_get_timer_event_source(mainTimer));
+    al_register_event_source(eventQueue, al_get_timer_event_source(swallowTimer));
 
 }
 
@@ -77,14 +79,22 @@ void Game::eventManager(){
     al_wait_for_event(eventQueue, &actualEvent);
 
     if(actualEvent.type == ALLEGRO_EVENT_TIMER){
+        if(actualEvent.any.source == al_get_timer_event_source(mainTimer)){
+            redraw = true;
+            al_get_keyboard_state(&keyboardState);
 
-        redraw = true;
-        al_get_keyboard_state(&keyboardState);
+            if(!al_key_down(&keyboardState, actualPressedKey))
+                actualPressedKey = ALLEGRO_KEY_SPACE;
 
-        if(!al_key_down(&keyboardState, actualPressedKey))
-            actualPressedKey = ALLEGRO_KEY_SPACE;
-        
-        
+            if(swallowValue > 3){
+                isSwallowTimerActive = false;
+                al_stop_timer(swallowTimer);
+                swallowValue = 0;
+            }
+        } else if(actualEvent.any.source == al_get_timer_event_source(swallowTimer)) {
+            isSwallowTimerActive = false;
+            al_stop_timer(swallowTimer);
+        }
 
     } else if(actualEvent.type == ALLEGRO_EVENT_KEY_DOWN){
 

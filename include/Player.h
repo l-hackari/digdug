@@ -19,6 +19,10 @@ class Player : public AnimatedSprite{
         //draws game object's attack animation
         void drawAttack();
 
+        //disegna l'animazione di gonfiamento del player
+        //draws player's swallow animation
+        void drawSwallowing();
+
         //disegna l'animazione alternativa dell'oggetto di gioco
         //draws game object's alternative animation
         void drawAlternative();
@@ -35,9 +39,30 @@ class Player : public AnimatedSprite{
         //checks if crossed zone was digged
         bool checkDigged();
 
+        //controlla se l'oggetto di attacco ha toccato un altro oggetto di gioco
+        //checks if the attack object touched another game object
+        int isArrowColliding();
+
+        //controlla se l'oggetto di attacco è stato toccato
+        //checks if the attack object was touched
+        int isArrowCollided();
+
+        //setta a '0' tutte le celle della collisionMatrix che erano state settate a '-1' (funzione isArrowColliding)
+        //sets to '0' all collisionMatrix's cells that were set to '-1' (isArrowColliding function)
+        void arrowFree();
+
+
     private:
         vector<ALLEGRO_BITMAP*> swallowSprites;
         vector<ALLEGRO_BITMAP*> attackSprites;
+        ALLEGRO_BITMAP *harrow;
+        ALLEGRO_BITMAP *varrow;
+        bool isSwallowing = false;
+        int arrowX;
+        int arrowY;
+        int arrowCounter = 4;
+        int arrowHeight = 16;
+        int arrowWidth = 32;
 };
 
 #endif

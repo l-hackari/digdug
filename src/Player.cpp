@@ -3,10 +3,8 @@
 Player::Player(int _id, int _x, int _y, int _width, int _height): AnimatedSprite(_id, _x, _y, _width, _height){
 
     speed = 4;
-    /*vector<ALLEGRO_BITMAP*> movementSprites;
-    vector<ALLEGRO_BITMAP*> alternativeSprites;
-    vector<ALLEGRO_BITMAP*> deathSprites;*/
-    
+    varrow = al_load_bitmap("../res/images/arrow/varrow.png");
+    harrow = al_load_bitmap("../res/images/arrow/harrow.png");
     movementSprites.push_back(al_load_bitmap("../res/images/player/run2.png"));
     movementSprites.push_back(al_load_bitmap("../res/images/player/run1.png"));
     swallowSprites.push_back(al_load_bitmap("../res/images/player/sw1.png"));
@@ -26,6 +24,90 @@ Player::Player(int _id, int _x, int _y, int _width, int _height): AnimatedSprite
     alternativeSprites.push_back(al_load_bitmap("../res/images/player/al2.png"));
     attackSprites.push_back(al_load_bitmap("../res/images/player/at.png"));
 
+}
+
+int Player::isArrowColliding(){
+
+    if(previousDirection == LEFT || previousDirection == RIGHT){
+
+        int i = (((arrowY + arrowHeight) / 4) - 1) - (((arrowHeight / 4)) / 2);
+        for(int j = arrowX / 4; j < (arrowX + arrowWidth) / 4; j++){
+            if(collisionMap[i][j] != 0 && collisionMap[i][j] != -1){
+                return collisionMap[i][j];
+            }
+        }
+
+        for(int j = arrowX / 4; j < (arrowX + arrowWidth) / 4; j++){
+            collisionMap[i][j] = -1;
+        }
+    } else {
+
+        int j = (((arrowX + arrowWidth) / 4) - 1) - (((arrowWidth / 4)) / 2);
+        for(int i = arrowY / 4; i < (arrowY + arrowHeight) / 4; i++){
+            if(collisionMap[i][j] != 0 && collisionMap[i][j] != -1){
+                return collisionMap[i][j];
+            }
+        }
+
+        for(int i = arrowY / 4; i < (arrowY + arrowHeight) / 4; i++){
+            collisionMap[i][j] = -1;
+        }
+    }
+
+    return 0;
+
+}
+
+int Player::isArrowCollided(){
+
+    if(previousDirection == LEFT || previousDirection == RIGHT){
+
+        int i = (((arrowY + arrowHeight) / 4) - 1) - (((arrowHeight / 4)) / 2);
+        for(int j = arrowX / 4; j < (arrowX + arrowWidth) / 4; j++){
+            if(collisionMap[i][j] != 0 && collisionMap[i][j] != -1){
+                return collisionMap[i][j];
+            }
+        }
+
+        for(int j = arrowX / 4; j < (arrowX + arrowWidth) / 4; j++){
+            collisionMap[i][j] = 0;
+        }
+    } else {
+
+        int j = (((arrowX + arrowWidth) / 4) - 1) - (((arrowWidth / 4)) / 2);
+        for(int i = arrowY / 4; i < (arrowY + arrowHeight) / 4; i++){
+            if(collisionMap[i][j] != 0 && collisionMap[i][j] != -1){
+                return collisionMap[i][j];
+            }
+        }
+
+        for(int i = arrowY / 4; i < (arrowY + arrowHeight) / 4; i++){
+            collisionMap[i][j] = 0;
+        }
+    }
+
+    return 0;
+
+}
+
+void Player::arrowFree(){
+
+    if(previousDirection == LEFT || previousDirection == RIGHT){
+
+        int i = (((arrowY + arrowHeight) / 4) - 1) - (((arrowHeight / 4)) / 2);
+
+        for(int j = arrowX / 4; j < (arrowX + arrowWidth) / 4; j++){
+            collisionMap[i][j] = 0;
+        }
+
+    } else {
+
+        int j = (((arrowX + arrowWidth) / 4) - 1) - (((arrowWidth / 4)) / 2);
+
+        for(int i = arrowY / 4; i < (arrowY + arrowHeight) / 4; i++){
+            collisionMap[i][j] = 0;
+        }
+    }
 }
 
 void Player::drawIdle(){
@@ -60,22 +142,44 @@ void Player::drawAttack(){
     switch (previousDirection)
     {
         case LEFT:
+            arrowWidth = 32 / arrowCounter;
+            arrowHeight = 16;
+            arrowX = x - arrowWidth;
+            arrowY = y;
             al_draw_bitmap(attackSprites[actualFrame], x, y, ALLEGRO_FLIP_HORIZONTAL);
+            al_draw_bitmap_region(harrow, 32 - arrowWidth, 0, arrowWidth, arrowHeight, arrowX, arrowY, ALLEGRO_FLIP_HORIZONTAL);
             break;
         case RIGHT:
+            arrowWidth = 32 / arrowCounter;
+            arrowHeight = 16;
+            arrowX = x + width;
+            arrowY = y;
             al_draw_bitmap(attackSprites[actualFrame], x, y, 0);
+            al_draw_bitmap_region(harrow, 32 - arrowWidth, 0, arrowWidth, arrowHeight, arrowX, arrowY, 0);
             break;
         case UP:
             if(orientation == LEFT)
                 al_draw_rotated_bitmap(attackSprites[actualFrame], width / 2, height / 2, x + (width / 2), y + (height / 2), 4.71239, ALLEGRO_FLIP_VERTICAL);
             else
                 al_draw_rotated_bitmap(attackSprites[actualFrame], width / 2, height / 2, x + (width / 2), y + (height / 2), 4.71239, 0);
+            
+            arrowWidth = 16;
+            arrowHeight = 32 / arrowCounter;
+            arrowX = x;
+            arrowY = y - arrowHeight;
+            al_draw_bitmap_region(varrow, 0, 0, arrowWidth, arrowHeight, arrowX, arrowY, 0);
             break;
         case DOWN:
             if(orientation == LEFT)
                 al_draw_rotated_bitmap(attackSprites[actualFrame], width / 2, height / 2, x + (width / 2), y + (height / 2), 1.5708, ALLEGRO_FLIP_VERTICAL);
             else
                 al_draw_rotated_bitmap(attackSprites[actualFrame], width / 2, height / 2, x + (width / 2), y + (height / 2), 1.5708, 0);
+            
+            arrowWidth = 16;
+            arrowHeight = 32 / arrowCounter;
+            arrowX = x;
+            arrowY = y + width;
+            al_draw_bitmap_region(varrow, 0, 0, arrowWidth, arrowHeight, arrowX, arrowY, ALLEGRO_FLIP_VERTICAL);
             break;
         default:
             break;
@@ -139,6 +243,63 @@ void Player::drawDying(){
 
 }
 
+void Player::drawSwallowing(){
+
+    if(actualPressedKey == ALLEGRO_KEY_D){
+        al_stop_timer(swallowTimer);
+        al_start_timer(swallowTimer);
+        swallowValue++;
+        switch (previousDirection)
+        {
+            case LEFT:
+                al_draw_bitmap(swallowSprites[actualFrame], x, y, ALLEGRO_FLIP_HORIZONTAL);
+                break;
+            case RIGHT:
+                al_draw_bitmap(swallowSprites[actualFrame], x, y, 0);
+                break;
+            case UP:
+                if(orientation == LEFT)
+                    al_draw_rotated_bitmap(swallowSprites[actualFrame], width / 2, height / 2, x + (width / 2), y + (height / 2), 4.71239, ALLEGRO_FLIP_VERTICAL);
+                else
+                    al_draw_rotated_bitmap(swallowSprites[actualFrame], width / 2, height / 2, x + (width / 2), y + (height / 2), 4.71239, 0);
+                break;
+            case DOWN:
+                if(orientation == LEFT)
+                    al_draw_rotated_bitmap(swallowSprites[actualFrame], width / 2, height / 2, x + (width / 2), y + (height / 2), 1.5708, ALLEGRO_FLIP_VERTICAL);
+                else
+                    al_draw_rotated_bitmap(swallowSprites[actualFrame], width / 2, height / 2, x + (width / 2), y + (height / 2), 1.5708, 0);
+                break;
+            default:
+                break;
+        }
+    } else {
+        switch (previousDirection)
+        {
+            case LEFT:
+                al_draw_bitmap(swallowSprites[0], x, y, ALLEGRO_FLIP_HORIZONTAL);
+                break;
+            case RIGHT:
+                al_draw_bitmap(swallowSprites[0], x, y, 0);
+                break;
+            case UP:
+                if(orientation == LEFT)
+                    al_draw_rotated_bitmap(swallowSprites[0], width / 2, height / 2, x + (width / 2), y + (height / 2), 4.71239, ALLEGRO_FLIP_VERTICAL);
+                else
+                    al_draw_rotated_bitmap(swallowSprites[0], width / 2, height / 2, x + (width / 2), y + (height / 2), 4.71239, 0);
+                break;
+            case DOWN:
+                if(orientation == LEFT)
+                    al_draw_rotated_bitmap(swallowSprites[0], width / 2, height / 2, x + (width / 2), y + (height / 2), 1.5708, ALLEGRO_FLIP_VERTICAL);
+                else
+                    al_draw_rotated_bitmap(swallowSprites[0], width / 2, height / 2, x + (width / 2), y + (height / 2), 1.5708, 0);
+                break;
+            default:
+                break;
+        }
+    }
+    
+}
+
 bool Player::checkDigged(){
 
     for(int i = y / 4; i < (y + height) / 4; i++){
@@ -163,14 +324,19 @@ void Player::digs(){
 
 void Player::drawOnScreen(){
     
-    if(!isDying){
+    if(!isDying && !isSwallowing){
 
         if(actualFrame >= animationLimit){
             actualFrame = 0;
         }
         
-        if(previousAnimation != actualPressedKey)
+        if(previousAnimation != actualPressedKey){
             actualFrame = 0;
+            if(previousAnimation == ALLEGRO_KEY_D)
+                arrowFree();
+            
+            arrowCounter = 4;  
+        }
 
         if(isCollided()){
             animationLimit = deathSprites.size();
@@ -280,9 +446,29 @@ void Player::drawOnScreen(){
                 break;
             case ALLEGRO_KEY_D:
                 animationLimit = attackSprites.size();
+                if(isArrowCollided()){
+                    animationLimit = swallowSprites.size();
+                    actualFrame = 0;
+                    arrowFree();
+                    isSwallowing = true;
+                    isSwallowTimerActive = true;
+                    al_start_timer(swallowTimer);
+                }
+
+                arrowCounter--;
+                if(arrowCounter == 0)
+                    arrowCounter = 4;
                 drawAttack();
                 actualFrame++;
                 previousAnimation = ALLEGRO_KEY_D;
+                if(isArrowColliding()){
+                    animationLimit = swallowSprites.size();
+                    actualFrame = 0;
+                    arrowFree();
+                    isSwallowTimerActive = true;
+                    al_start_timer(swallowTimer);
+                    isSwallowing = true;
+                }
                 break;
             case ALLEGRO_KEY_S:
                 animationLimit = alternativeSprites.size();
@@ -291,6 +477,7 @@ void Player::drawOnScreen(){
                 actualFrame++;
                 break;
             default:
+                previousAnimation = ALLEGRO_KEY_SPACE;
                 drawIdle();
                 break;
         }
@@ -302,13 +489,28 @@ void Player::drawOnScreen(){
             lifePoints--;
         }
 
-    } else {
+    } else if(isDying) {
 
         if(actualFrame >= animationLimit){
             isVisible = false;
         } else {
             drawDying();
             actualFrame++;
+        }
+
+    } else if(isSwallowing) {
+            
+        
+        if(actualFrame >= animationLimit)
+            actualFrame = 0;
+
+        drawSwallowing();
+
+        actualFrame++;
+
+        if(!isSwallowTimerActive){
+            isSwallowing = false;
+            actualFrame = 0;
         }
 
     }
