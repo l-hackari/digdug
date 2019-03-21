@@ -54,7 +54,6 @@ class Player : public AnimatedSprite{
 
     private:
         vector<ALLEGRO_BITMAP*> swallowSprites;
-        vector<ALLEGRO_BITMAP*> attackSprites;
         ALLEGRO_BITMAP *harrow;
         ALLEGRO_BITMAP *varrow;
         bool isSwallowing = false;

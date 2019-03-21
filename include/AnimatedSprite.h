@@ -24,6 +24,7 @@ class AnimatedSprite : public StaticSprite{
         vector<ALLEGRO_BITMAP*> movementSprites;
         vector<ALLEGRO_BITMAP*> alternativeSprites;
         vector<ALLEGRO_BITMAP*> deathSprites;
+        vector<ALLEGRO_BITMAP*> attackSprites;
         ALLEGRO_BITMAP *flatten;
         int animationLimit;
         int previousAnimation;
