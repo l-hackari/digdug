@@ -140,11 +140,8 @@ void Game::initGameOjects(){
     centerGround = al_load_bitmap("../res/images/ground/ground2.png");
     middleGround = al_load_bitmap("../res/images/ground/ground1.png");
     cornerGround = al_load_bitmap("../res/images/ground/ground3.png");
+    gameObjs.push_back(new LifePoints(2,0,274,16,16));
     gameObjs.push_back(new Player(1, 0, 24, 16, 16));
-    /*lifePointsBitmap.push_back(new StaticSprite(2,0,274,16,16, al_load_bitmap("../res/images/player/al1.png")));
-    lifePointsBitmap.push_back(new StaticSprite(2,16,274,16,16, al_load_bitmap("../res/images/player/al1.png")));
-    lifePointsBitmap.push_back(new StaticSprite(2,32,274,16,16, al_load_bitmap("../res/images/player/al1.png")));
-    */
     gameObjs.push_back(new Monkey(4,50,24,16,16)); 
    
     background = al_load_bitmap("../res/images/background.png");
@@ -228,14 +225,6 @@ void Game::drawScene(){
             if(gameObjs[i]->getVisible())
                 gameObjs[i]->drawOnScreen();
         
-        }
-        
-        for(int i = 0; i < lifePointsBitmap.size(); i++){
-                lifePointsBitmap[i] -> drawOnScreen();
-        }
-
-        if(lifePoints < lifePointsBitmap.size()){
-            lifePointsBitmap.pop_back();
         }
 
         al_set_target_backbuffer(mainDisplay);

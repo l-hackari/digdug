@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "Score.h"
 #include "Monkey.h"
+#include "LifePoints.h"
 
 //La classe principale del gioco
 //This is the main class of the game
@@ -63,12 +64,6 @@ class Game {
         ALLEGRO_EVENT actualEvent;
         ALLEGRO_EVENT_QUEUE *eventQueue;
         vector<GameObject *> gameObjs;
-        vector<GameObject *> lifePointsBitmap;
-        vector<ALLEGRO_BITMAP *> el1;
-        vector<ALLEGRO_BITMAP *> el3;
-        vector<ALLEGRO_BITMAP *> el2;
-        vector<ALLEGRO_BITMAP *> el4;
-        vector<ALLEGRO_BITMAP *> el5;
         ALLEGRO_KEYBOARD_STATE keyboardState;
         int numGameObj;
         bool isRunning;
