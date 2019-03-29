@@ -27,66 +27,83 @@ Player::Player(int _id, int _x, int _y, int _width, int _height): AnimatedSprite
 }
 
 int Player::isArrowColliding(){
-
+    int collidedID = 0;
     if(previousDirection == LEFT || previousDirection == RIGHT){
 
         int i = (((arrowY + arrowHeight) / 4) - 1) - (((arrowHeight / 4)) / 2);
         for(int j = arrowX / 4; j < (arrowX + arrowWidth) / 4; j++){
-            if(collisionMap[i][j] != 0 && collisionMap[i][j] != -1){
-                return collisionMap[i][j];
-            }
+            if(j > 0 && j < 14 * 4 - 1){
+                if(collisionMap[i][j] != 0 && collisionMap[i][j] != -1){
+                    collidedID = collisionMap[i][j];
+                }
+            } 
         }
 
         for(int j = arrowX / 4; j < (arrowX + arrowWidth) / 4; j++){
-            collisionMap[i][j] = -1;
+            if(j > 0 && j < 14 * 4 - 1){
+                collisionMap[i][j] = -1;
+            }
         }
     } else {
 
         int j = (((arrowX + arrowWidth) / 4) - 1) - (((arrowWidth / 4)) / 2);
         for(int i = arrowY / 4; i < (arrowY + arrowHeight) / 4; i++){
-            if(collisionMap[i][j] != 0 && collisionMap[i][j] != -1){
-                return collisionMap[i][j];
+            if(i >= 6){
+                if(collisionMap[i][j] != 0 && collisionMap[i][j] != -1){
+                    collidedID = collisionMap[i][j];
+                }
             }
         }
 
         for(int i = arrowY / 4; i < (arrowY + arrowHeight) / 4; i++){
-            collisionMap[i][j] = -1;
+            if(i >= 6){
+                collisionMap[i][j] = -1;
+            }
         }
     }
 
-    return 0;
+    return collidedID;
 
 }
 
 int Player::isArrowCollided(){
 
+    int collidedID = 0;
     if(previousDirection == LEFT || previousDirection == RIGHT){
 
         int i = (((arrowY + arrowHeight) / 4) - 1) - (((arrowHeight / 4)) / 2);
         for(int j = arrowX / 4; j < (arrowX + arrowWidth) / 4; j++){
-            if(collisionMap[i][j] != 0 && collisionMap[i][j] != -1){
-                return collisionMap[i][j];
+            if(j > 0 && j < 14 * 4 - 1){
+                if(collisionMap[i][j] != 0 && collisionMap[i][j] != -1){
+                    collidedID = collisionMap[i][j];
+                }
             }
         }
 
         for(int j = arrowX / 4; j < (arrowX + arrowWidth) / 4; j++){
-            collisionMap[i][j] = 0;
+            if(j > 0 && j < 14 * 4 - 1){
+                collisionMap[i][j] = 0;
+            }
         }
     } else {
 
         int j = (((arrowX + arrowWidth) / 4) - 1) - (((arrowWidth / 4)) / 2);
         for(int i = arrowY / 4; i < (arrowY + arrowHeight) / 4; i++){
-            if(collisionMap[i][j] != 0 && collisionMap[i][j] != -1){
-                return collisionMap[i][j];
+            if(i >= 6){
+                if(collisionMap[i][j] != 0 && collisionMap[i][j] != -1){
+                    collidedID = collisionMap[i][j];
+                }
             }
         }
 
         for(int i = arrowY / 4; i < (arrowY + arrowHeight) / 4; i++){
-            collisionMap[i][j] = 0;
+            if(i >= 6){
+                collisionMap[i][j] = 0;
+            }
         }
     }
 
-    return 0;
+    return collidedID;
 
 }
 
@@ -323,7 +340,10 @@ void Player::digs(){
 
 
 void Player::drawOnScreen(){
-    
+
+    playerX = x;
+    playerY = y;
+
     if(!isDying && !isSwallowing){
 
         if(actualFrame >= animationLimit){
@@ -337,14 +357,13 @@ void Player::drawOnScreen(){
             
             arrowCounter = 4;  
         }
-
-        if(isCollided()){
+        
+        int collID = isCollided();
+        if(collID != -1 && collID != 0){
             animationLimit = deathSprites.size();
             actualFrame = 0;
             isDying = true;
         }
-
-
         switch (actualPressedKey)
         {
             case ALLEGRO_KEY_UP:
@@ -449,7 +468,6 @@ void Player::drawOnScreen(){
                 if(isArrowCollided()){
                     animationLimit = swallowSprites.size();
                     actualFrame = 0;
-                    arrowFree();
                     isSwallowing = true;
                     isSwallowTimerActive = true;
                     al_start_timer(swallowTimer);
@@ -464,11 +482,11 @@ void Player::drawOnScreen(){
                 if(isArrowColliding()){
                     animationLimit = swallowSprites.size();
                     actualFrame = 0;
-                    arrowFree();
                     isSwallowTimerActive = true;
                     al_start_timer(swallowTimer);
                     isSwallowing = true;
                 }
+
                 break;
             case ALLEGRO_KEY_S:
                 animationLimit = alternativeSprites.size();
@@ -482,7 +500,8 @@ void Player::drawOnScreen(){
                 break;
         }
 
-        if(isColliding()){
+        collID = isColliding();
+        if(collID != -1 && collID != 0){
             animationLimit = deathSprites.size();
             actualFrame = 0;
             isDying = true;
@@ -500,7 +519,11 @@ void Player::drawOnScreen(){
 
     } else if(isSwallowing) {
             
-        
+        if(!isArrowFree){
+            arrowFree();
+            isArrowFree = true;
+        }
+
         if(actualFrame >= animationLimit)
             actualFrame = 0;
 
@@ -510,6 +533,7 @@ void Player::drawOnScreen(){
 
         if(!isSwallowTimerActive){
             isSwallowing = false;
+            isArrowFree = false;
             actualFrame = 0;
         }
 

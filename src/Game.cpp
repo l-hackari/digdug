@@ -50,16 +50,27 @@ void Game::initGameMaps(){
         }
     }
 
-    for(int i = 0; i < 10; i++){
+    for(int i = 0; i < 18 * 4; i++){
         for(int j = 0; j < 14 * 4; j++){
-            groundMap[i][j] = 0;
+            pathMap[i][j] = 0;
         }
     }
 
-    //DECOMMENTA PER TESTARE LE COLLISIONI
-    for(int i = 64; i < 68; i++){
-        for(int j = 52; j < 56; j++){
-            collisionMap[i][j] = 4;
+    for(int i = 0; i < 10; i++){
+        for(int j = 0; j < 14 * 4; j++){
+            groundMap[i][j] = 1;
+        }
+    }
+
+    for(int i = 30; i < 50; i++){
+        for(int j = 10; j < 14; j++){
+            groundMap[i][j] = 1;
+        }
+    }
+
+    for(int i = 30; i < 50; i++){
+        for(int j = 14 * 4 - 14; j < 14 * 4 - 10; j++){
+            groundMap[i][j] = 1;
         }
     }
 }
@@ -143,6 +154,7 @@ void Game::initGameOjects(){
     gameObjs.push_back(new LifePoints(2,0,274,16,16));
     gameObjs.push_back(new Player(1, 0, 24, 16, 16));
     gameObjs.push_back(new Monkey(4,50,24,16,16)); 
+    gameObjs.push_back(new Dragon(7,12 * 4, 40 * 4,16,16));
    
     background = al_load_bitmap("../res/images/background.png");
     string hs = "HIGH SCORE";
@@ -189,6 +201,7 @@ void Game::updateGround(){
     for(int j = 0; j < 14 * 4; j++){
         if(groundMap[10][j] == 1){
             al_draw_bitmap(centerGround, j * 4, 9 * 4 + 2, 0);
+            al_draw_bitmap(centerGround, j * 4, 10 * 4, 0);
         }
     }
 
@@ -221,7 +234,7 @@ void Game::drawScene(){
         al_draw_bitmap(background, 0, 0, 0);
         updateGround();
 
-        for(int i = 0; i < numGameObj; i++){
+        for(int i = 0; i < gameObjs.size(); i++){
             if(gameObjs[i]->getVisible())
                 gameObjs[i]->drawOnScreen();
         

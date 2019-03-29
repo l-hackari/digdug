@@ -4,40 +4,64 @@ AnimatedSprite::AnimatedSprite(int _id, int _x, int _y, int _width, int _height)
 
 void AnimatedSprite::drawOnScreen(){}
 
+void AnimatedSprite::freeCollisionMap(){
+    for(int i = 0; i < 18 * 4; i++){
+        for(int j = 0; j < 14 * 4; j++){
+            if(collisionMap[i][j] == id)
+                collisionMap[i][j] = 0;
+        }
+    }
+}
 int AnimatedSprite::isCollided(){
 
+    int collidedID = 0;
     for(int i = y / 4; i < (y + height) / 4; i++){
         for(int j = x / 4; j < (x + width) / 4; j++){
-            if(collisionMap[i][j] != 0 && collisionMap[i][j] != id){
-                return collisionMap[i][j];
+            if(j < 14 * 4 - 1){
+                if(collisionMap[i][j] != 0 && collisionMap[i][j] != id){
+                    if(collidedID == 0)
+                        collidedID = collisionMap[i][j];
+                    else if(collisionMap[i][j] == -1)
+                        collidedID = collisionMap[i][j];
+
+                }
             }
         }
     }
 
     for(int i = y / 4; i < (y + height) / 4; i++){
         for(int j = x / 4; j < (x + width) / 4; j++){
-            collisionMap[i][j] = 0;
+            if(j < 14 * 4 - 1)
+                collisionMap[i][j] = 0;
         }
     }
 
-    return 0;
+    return collidedID;
 }
 
 int AnimatedSprite::isColliding(){
+    int collidedID = 0;
+
     for(int i = y / 4; i < (y + height) / 4; i++){
         for(int j = x / 4; j < (x + width) / 4; j++){
-            if(collisionMap[i][j] != 0 && collisionMap[i][j] != id){
-                return collisionMap[i][j];
+            if(j < 14 * 4 - 1){
+                if(collisionMap[i][j] != 0 && collisionMap[i][j] != id){
+                    if(collidedID == 0)
+                        collidedID = collisionMap[i][j];
+                    else if(collisionMap[i][j] == -1)
+                        collidedID = collisionMap[i][j];
+                }
             }
         }
     }
 
     for(int i = y / 4; i < (y + height) / 4; i++){
         for(int j = x / 4; j < (x + width) / 4; j++){
-            collisionMap[i][j] = id;
+            if(j < 14 * 4 - 1)
+                collisionMap[i][j] = id;
         }
     }
 
-    return 0;
+    return collidedID;
 }
 

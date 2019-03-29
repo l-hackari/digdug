@@ -20,6 +20,10 @@ class AnimatedSprite : public StaticSprite{
         //checks if the game object was touched
         int isCollided();
 
+        //setta a '0' tutte le celle della collisionMatrix che erano state settate a 'id' (funzione isColliding)
+        //sets to '0' all collisionMatrix's cells that were set to 'id' (isColliding function)
+        void freeCollisionMap();
+
     protected:
         vector<ALLEGRO_BITMAP*> movementSprites;
         vector<ALLEGRO_BITMAP*> alternativeSprites;

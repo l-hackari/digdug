@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "Score.h"
 #include "Monkey.h"
+#include "Dragon.h"
 #include "LifePoints.h"
 
 //La classe principale del gioco
@@ -67,7 +68,7 @@ class Game {
         ALLEGRO_KEYBOARD_STATE keyboardState;
         int numGameObj;
         bool isRunning;
-        const int FPS = 15;
+        const int FPS = 10;
         float scale;
         bool redraw;
         int mapScore = 0;

@@ -57,6 +57,7 @@ class Player : public AnimatedSprite{
         ALLEGRO_BITMAP *harrow;
         ALLEGRO_BITMAP *varrow;
         bool isSwallowing = false;
+        bool isArrowFree = false;
         int arrowX;
         int arrowY;
         int arrowCounter = 4;
