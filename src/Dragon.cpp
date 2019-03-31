@@ -3,7 +3,11 @@
 Dragon::Dragon(int _id, int _x, int _y, int _width, int _height): AnimatedSprite(_id, _x, _y, _width, _height){
 
     speed = 4;
+    alternativeMode = false;
     previousDirection = LEFT;
+    orientation = LEFT;
+    lockedPathCounter = 0;
+    initPathMap();
     movementSprites.push_back(al_load_bitmap("../res/images/dragon/run2.png"));
     movementSprites.push_back(al_load_bitmap("../res/images/dragon/run1.png"));
     deathSprites.push_back(al_load_bitmap("../res/images/dragon/de1.png"));
@@ -19,27 +23,36 @@ Dragon::Dragon(int _id, int _x, int _y, int _width, int _height): AnimatedSprite
 
 }
 
+void Dragon::initPathMap(){
+    
+    for(int i = 0; i < 18 * 4; i++){
+        for(int j = 0; j < 14 * 4; j++){
+            pathMap[i][j] = 0;
+        }
+    }
+}
+
 void Dragon::drawDying(){
 
     switch (previousDirection)
     {
         case LEFT:
-            al_draw_bitmap(deathSprites[swallowValue], x, y, ALLEGRO_FLIP_HORIZONTAL);
+            al_draw_bitmap(deathSprites[swallowValue / 2], x, y, ALLEGRO_FLIP_HORIZONTAL);
             break;
         case RIGHT:
-            al_draw_bitmap(deathSprites[swallowValue], x, y, 0);
+            al_draw_bitmap(deathSprites[swallowValue / 2], x, y, 0);
             break;
         case UP:
             if(orientation == LEFT)
-                al_draw_rotated_bitmap(deathSprites[swallowValue], width / 2, height / 2, x + (width / 2), y + (height / 2), 4.71239, ALLEGRO_FLIP_VERTICAL);
+                al_draw_bitmap(deathSprites[swallowValue / 2], x, y, ALLEGRO_FLIP_HORIZONTAL);
             else
-                al_draw_rotated_bitmap(deathSprites[swallowValue], width / 2, height / 2, x + (width / 2), y + (height / 2), 4.71239, 0);
+                al_draw_bitmap(deathSprites[swallowValue / 2], x, y, 0);
             break;
         case DOWN:
             if(orientation == LEFT)
-                al_draw_rotated_bitmap(deathSprites[swallowValue], width / 2, height / 2, x + (width / 2), y + (height / 2), 1.5708, ALLEGRO_FLIP_VERTICAL);
+                al_draw_bitmap(deathSprites[swallowValue / 2], x, y, ALLEGRO_FLIP_HORIZONTAL);
             else
-                al_draw_rotated_bitmap(deathSprites[swallowValue], width / 2, height / 2, x + (width / 2), y + (height / 2), 1.5708, 0);
+                al_draw_bitmap(deathSprites[swallowValue / 2], x, y, 0);
             break;
         default:
             break;
@@ -47,31 +60,59 @@ void Dragon::drawDying(){
 
 }
 
+void Dragon::fillVoidDirections(){
+    if(availableDirections.size() == 1){
+        if(availableDirections[0] == LEFT){
+
+            availableDirections.push_back(UP);
+            availableDirections.push_back(DOWN);
+
+        } else if(availableDirections[0] == RIGHT){
+
+            availableDirections.push_back(UP);
+            availableDirections.push_back(DOWN);
+
+        } else if(availableDirections[0] == UP){
+
+            availableDirections.push_back(RIGHT);
+            availableDirections.push_back(LEFT);
+
+        } else if(availableDirections[0] == DOWN){
+
+            availableDirections.push_back(RIGHT);
+            availableDirections.push_back(LEFT);
+        }
+        
+    } else {
+        while(availableDirections.size() < 4){
+            if(find(availableDirections.begin(), availableDirections.end(), RIGHT) == availableDirections.end())
+                availableDirections.push_back(RIGHT);
+            else if(find(availableDirections.begin(), availableDirections.end(), LEFT) == availableDirections.end())
+                availableDirections.push_back(LEFT);
+            else if(find(availableDirections.begin(), availableDirections.end(), UP) == availableDirections.end())
+                availableDirections.push_back(UP);
+            else if(find(availableDirections.begin(), availableDirections.end(), DOWN) == availableDirections.end())
+                availableDirections.push_back(DOWN);
+        }
+    }
+    
+}
+
 void Dragon::nearestDirections(int _x, int _y){
 
     availableDirections.clear();
 
     if(playerX == _x){
-        if(playerY > _y){
+        if(playerY > _y)
             availableDirections.push_back(DOWN);
-            availableDirections.push_back(RIGHT);
-            availableDirections.push_back(LEFT);
-        } else {
+        else 
             availableDirections.push_back(UP);
-            availableDirections.push_back(RIGHT);
-            availableDirections.push_back(LEFT);
-        }
 
     } else if(playerY == _y){
-        if(playerX > _x){
+        if(playerX > _x)
             availableDirections.push_back(RIGHT);
-            availableDirections.push_back(UP);
-            availableDirections.push_back(DOWN);
-        } else {
+        else 
             availableDirections.push_back(LEFT);
-            availableDirections.push_back(UP);
-            availableDirections.push_back(DOWN);
-        }
 
     } else {
 
@@ -112,17 +153,6 @@ void Dragon::nearestDirections(int _x, int _y){
                 availableDirections.push_back(LEFT);
         }
     }
-
-    while(availableDirections.size() < 4){
-        if(find(availableDirections.begin(), availableDirections.end(), RIGHT) == availableDirections.end())
-            availableDirections.push_back(RIGHT);
-        else if(find(availableDirections.begin(), availableDirections.end(), LEFT) == availableDirections.end())
-            availableDirections.push_back(LEFT);
-        else if(find(availableDirections.begin(), availableDirections.end(), UP) == availableDirections.end())
-            availableDirections.push_back(UP);
-        else if(find(availableDirections.begin(), availableDirections.end(), DOWN) == availableDirections.end())
-            availableDirections.push_back(DOWN);
-    }
 }
 
 int Dragon::findPath(direction prevDiretion, int _x, int _y, int n){
@@ -133,6 +163,8 @@ int Dragon::findPath(direction prevDiretion, int _x, int _y, int n){
                 return 1;
 
     nearestDirections(_x, _y);
+    fillVoidDirections();
+
     bool find = false;
     int rCost = INT_MAX;
     int lCost = INT_MAX;
@@ -273,14 +305,10 @@ int Dragon::findPath(direction prevDiretion, int _x, int _y, int n){
 
 void Dragon::calculateDirection(){
 
-    for(int i = 0; i < 18 * 4; i++){
-        for(int j = 0; j < 14 * 4; j++){
-            pathMap[i][j] = 0;
-        }
-    }
+    initPathMap();
 
     if(findPath(previousDirection, x, y, 0) == 0){
-
+        lockedPathCounter++;
         bool rightDir = true, leftDir = true, upDir = true, downDir = true, chosed = false;
         int j = (x + width) / 4;
         if(j <= 14 * 4){
@@ -347,11 +375,180 @@ void Dragon::calculateDirection(){
                 previousDirection = UP;
         }
     }
+
+    if(lockedPathCounter > 30){
+        lockedPathCounter = 0;
+        alternativeMode = true;
+    }
+}
+
+void Dragon::drawAlternative(){
+    nearestDirections(x, y);
+    if(find(availableDirections.begin(), availableDirections.end(), RIGHT) != availableDirections.end()){
+            x ++;
+            if(find(availableDirections.begin(), availableDirections.end(), UP) != availableDirections.end())
+                y--;
+            else if(find(availableDirections.begin(), availableDirections.end(), DOWN) != availableDirections.end())
+                y++;
+
+            al_draw_bitmap(alternativeSprites[actualFrame], x, y, 0);
+            actualFrame++;
+            orientation = RIGHT;
+            animationLimit = alternativeSprites.size();
+
+    } else if(find(availableDirections.begin(), availableDirections.end(), LEFT) != availableDirections.end()){
+
+            x--;
+            if(find(availableDirections.begin(), availableDirections.end(), UP) != availableDirections.end())
+                y--;
+            else if(find(availableDirections.begin(), availableDirections.end(), DOWN) != availableDirections.end())
+                y++;
+
+            al_draw_bitmap(alternativeSprites[actualFrame], x, y, ALLEGRO_FLIP_HORIZONTAL);
+            actualFrame++;
+            orientation = LEFT;
+            animationLimit = alternativeSprites.size();
+
+    } else if(find(availableDirections.begin(), availableDirections.end(), DOWN) != availableDirections.end()){
+
+        if(y < 256){
+            y++;
+        } else {
+            previousDirection = UP;
+            y--;
+        }
+
+        if(orientation == RIGHT)
+            al_draw_bitmap(alternativeSprites[actualFrame], x, y, 0);
+        else
+            al_draw_bitmap(alternativeSprites[actualFrame], x, y, ALLEGRO_FLIP_HORIZONTAL);
+        
+        actualFrame++;
+        animationLimit = alternativeSprites.size();
+
+    } else if(find(availableDirections.begin(), availableDirections.end(), UP) != availableDirections.end()){
+
+        if(y > 24){
+            y--;
+        } else {
+            previousDirection = DOWN;
+            y ++;
+            
+        }
+
+        if(orientation == RIGHT)
+            al_draw_bitmap(alternativeSprites[actualFrame], x, y, 0);
+        else
+            al_draw_bitmap(alternativeSprites[actualFrame], x, y, ALLEGRO_FLIP_HORIZONTAL);
+        
+        actualFrame++;
+        animationLimit = alternativeSprites.size();
+    }
+
+    int count = 0;
+    for(int i = y / 4; i < (y + height) / 4; i++){
+        for(int j = x / 4; j < (x + width) / 4; j++){
+            if(groundMap[i][j] == 1)
+                count++;
+        }
+    }
+
+    if(count == 16){
+        alternativeMode = false;
+        int rem = static_cast<int>(x) % 4;
+        if(rem != 0){
+            x += 4 - rem;
+        }
+
+        rem = static_cast<int>(y) % 4;
+        if(rem != 0){
+            y += 4 - rem;
+        }
+    }
+}
+
+
+void Dragon::drawNormal(){
+    calculateDirection();
+
+    if(previousDirection == RIGHT){
+        if(x + width < nativeScreenWidth){
+            animationLimit = movementSprites.size();
+            x += speed;
+            al_draw_bitmap(movementSprites[actualFrame], x, y, 0);
+            actualFrame++;
+            orientation = RIGHT;
+        } else {
+            previousDirection = LEFT;
+            orientation = LEFT;
+            animationLimit = movementSprites.size();
+            x -= speed;
+            al_draw_bitmap(movementSprites[actualFrame], x, y, ALLEGRO_FLIP_HORIZONTAL);
+            actualFrame++;
+        }
+
+    } else if(previousDirection == LEFT){
+        if(x > 0){
+            animationLimit = movementSprites.size();
+            x -= speed;
+            al_draw_bitmap(movementSprites[actualFrame], x, y, ALLEGRO_FLIP_HORIZONTAL);
+            actualFrame++;
+            orientation = LEFT;
+        } else {
+            previousDirection = RIGHT;
+            orientation = RIGHT;
+            animationLimit = movementSprites.size();
+            x += speed;
+            al_draw_bitmap(movementSprites[actualFrame], x, y, 0);
+            actualFrame++;
+        }
+        
+    } else if(previousDirection == DOWN){
+        if(y < 256){
+            animationLimit = movementSprites.size();
+            y += speed;
+            if(orientation == RIGHT)
+                al_draw_bitmap(movementSprites[actualFrame], x, y, 0);
+            else
+                al_draw_bitmap(movementSprites[actualFrame], x, y, ALLEGRO_FLIP_HORIZONTAL);
+            actualFrame++;
+        } else {
+            previousDirection = UP;
+            animationLimit = movementSprites.size();
+            y -= speed;
+            if(orientation == RIGHT)
+                al_draw_bitmap(movementSprites[actualFrame], x, y, 0);
+            else
+                al_draw_bitmap(movementSprites[actualFrame], x, y, ALLEGRO_FLIP_HORIZONTAL);
+            actualFrame++;
+        }
+
+    } else if(previousDirection == UP){
+        if(y > 24){
+            animationLimit = movementSprites.size();
+            y -= speed;
+            if(orientation == RIGHT)
+                al_draw_bitmap(movementSprites[actualFrame], x, y, 0);
+            else
+                al_draw_bitmap(movementSprites[actualFrame], x, y, ALLEGRO_FLIP_HORIZONTAL);
+            actualFrame++;
+        } else {
+            previousDirection = DOWN;
+            animationLimit = movementSprites.size();
+            y += speed;
+            if(orientation == RIGHT)
+                al_draw_bitmap(movementSprites[actualFrame], x, y, 0);
+            else
+                al_draw_bitmap(movementSprites[actualFrame], x, y, ALLEGRO_FLIP_HORIZONTAL);
+            actualFrame++;
+        }
+        
+    }
 }
 
 void Dragon::drawOnScreen(){
-    
-    if(!isDying){
+
+    if(!isDying && !died){
 
         if(actualFrame >= animationLimit){
             actualFrame = 0;
@@ -365,66 +562,11 @@ void Dragon::drawOnScreen(){
             al_start_timer(swallowTimer);
         }
 
+        if(alternativeMode)
+            drawAlternative();
+        else
+            drawNormal();
         
-        calculateDirection();
-
-        if(previousDirection == RIGHT){
-            if(x + width < nativeScreenWidth){
-                animationLimit = movementSprites.size();
-                x += speed;
-                al_draw_bitmap(movementSprites[actualFrame], x, y, 0);
-                actualFrame++;
-            } else {
-                previousDirection = LEFT;
-                animationLimit = movementSprites.size();
-                x -= speed;
-                al_draw_bitmap(movementSprites[actualFrame], x, y, ALLEGRO_FLIP_HORIZONTAL);
-                actualFrame++;
-            }
-
-        } else if(previousDirection == LEFT){
-            if(x > 0){
-                animationLimit = movementSprites.size();
-                x -= speed;
-                al_draw_bitmap(movementSprites[actualFrame], x, y, ALLEGRO_FLIP_HORIZONTAL);
-                actualFrame++;
-            } else {
-                previousDirection = RIGHT;
-                animationLimit = movementSprites.size();
-                x += speed;
-                al_draw_bitmap(movementSprites[actualFrame], x, y, ALLEGRO_FLIP_HORIZONTAL);
-                actualFrame++;
-            }
-            
-        } else if(previousDirection == DOWN){
-            if(y < 256){
-                animationLimit = movementSprites.size();
-                y += speed;
-                al_draw_bitmap(movementSprites[actualFrame], x, y, 0);
-                actualFrame++;
-            } else {
-                previousDirection = UP;
-                animationLimit = movementSprites.size();
-                y -= speed;
-                al_draw_bitmap(movementSprites[actualFrame], x, y, ALLEGRO_FLIP_HORIZONTAL);
-                actualFrame++;
-            }
-
-        } else if(previousDirection == UP){
-            if(y > 24){
-                animationLimit = movementSprites.size();
-                y -= speed;
-                al_draw_bitmap(movementSprites[actualFrame], x, y, ALLEGRO_FLIP_HORIZONTAL);
-                actualFrame++;
-            } else {
-                previousDirection = DOWN;
-                animationLimit = movementSprites.size();
-                y += speed;
-                al_draw_bitmap(movementSprites[actualFrame], x, y, ALLEGRO_FLIP_HORIZONTAL);
-                actualFrame++;
-            }
-            
-        }
 
         if(isColliding() == -1){
             animationLimit = deathSprites.size();
@@ -434,9 +576,9 @@ void Dragon::drawOnScreen(){
             al_start_timer(swallowTimer);
         }
 
-    } else {
+    } else if(isDying) {
 
-        if(swallowValue > 3){
+        if(swallowValue > 6){
             isVisible = false;
             freeCollisionMap();
         } else {
@@ -446,5 +588,10 @@ void Dragon::drawOnScreen(){
                 drawDying();
         }
 
+    } else if(died){
+        if(orientation == RIGHT)
+            al_draw_bitmap(movementSprites[0], x, y, 0);
+        else
+            al_draw_bitmap(movementSprites[0], x, y, ALLEGRO_FLIP_HORIZONTAL);
     }
 }

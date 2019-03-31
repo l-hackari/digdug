@@ -15,13 +15,13 @@
 using namespace std;
 
 enum direction {NONE = 0, LEFT, RIGHT, UP, DOWN};
+extern bool died;
 extern int nativeScreenWidth;
 extern int nativeScreenHeight;
 extern int actualPressedKey;
 extern int score;
 extern int collisionMap[18*4][14*4];
 extern int groundMap[18*4][14*4];
-extern int pathMap[18*4][14*4];
 extern int lifePoints;
 extern ALLEGRO_TIMER *swallowTimer;
 extern bool isSwallowTimerActive;

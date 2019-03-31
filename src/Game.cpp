@@ -50,12 +50,6 @@ void Game::initGameMaps(){
         }
     }
 
-    for(int i = 0; i < 18 * 4; i++){
-        for(int j = 0; j < 14 * 4; j++){
-            pathMap[i][j] = 0;
-        }
-    }
-
     for(int i = 0; i < 10; i++){
         for(int j = 0; j < 14 * 4; j++){
             groundMap[i][j] = 1;
@@ -97,7 +91,7 @@ void Game::eventManager(){
             if(!al_key_down(&keyboardState, actualPressedKey))
                 actualPressedKey = ALLEGRO_KEY_SPACE;
 
-            if(swallowValue > 3){
+            if(swallowValue > 6){
                 isSwallowTimerActive = false;
                 al_stop_timer(swallowTimer);
                 swallowValue = 0;
@@ -155,6 +149,7 @@ void Game::initGameOjects(){
     gameObjs.push_back(new Player(1, 0, 24, 16, 16));
     gameObjs.push_back(new Monkey(4,50,24,16,16)); 
     gameObjs.push_back(new Dragon(7,12 * 4, 40 * 4,16,16));
+    gameObjs.push_back(new Dragon(8, 200, 40 * 4,16,16));
    
     background = al_load_bitmap("../res/images/background.png");
     string hs = "HIGH SCORE";

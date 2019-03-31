@@ -363,6 +363,7 @@ void Player::drawOnScreen(){
             animationLimit = deathSprites.size();
             actualFrame = 0;
             isDying = true;
+            died = true;
         }
         switch (actualPressedKey)
         {
@@ -505,6 +506,7 @@ void Player::drawOnScreen(){
             animationLimit = deathSprites.size();
             actualFrame = 0;
             isDying = true;
+            died = true;
             lifePoints--;
         }
 

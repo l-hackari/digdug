@@ -1,4 +1,5 @@
 #include "AnimatedSprite.h"
+
 class Dragon : public AnimatedSprite{
     
     public:
@@ -16,20 +17,43 @@ class Dragon : public AnimatedSprite{
         //calcola la direzione da prendere in base alla posizione del giocatore
         //calculates the direction to take depending on player's position
         void calculateDirection();
+
+        //disegna l'animazione alternativa dell'oggetto di gioco
+        //draws game object's alternative animation
+        void drawAlternative();
         
     private:
         //funzione ricorsiva che calcola il costo di tutti i percorsi disponibili per arrivare al player
         //recursive function that calculates the cost of all available paths to arrive to the player
         int findPath(direction prevDirection, int x, int y, int n);
 
+        //calcola le direzioni da prendere per raggiungere il player in modalità alternatva
+        //calculates directions to take to reach the player in alternative mode
+        void findAlternativePath();
+
         //calcola le direzioni da prendere per raggiungere il player
         //calculates directions to take to reach the player
         void nearestDirections(int _x, int _y);
+
+        //assegna le direzioni rimaste al vettore che contiene le direzioni preferenziali
+        //assigns remained directions to the vector that contains preferential directions
+        void fillVoidDirections();
+
+        //disegna l'animazione normale di movimento dell'oggetto di gioco
+        //draws game object's normal movement animation
+        void drawNormal();
+
+        //inializza la mappa usata per calcolare i percorsi migliori
+        //initializes the map used to calculate best paths
+        void initPathMap();
 
 
     protected:
         ALLEGRO_BITMAP *alternativeFlatten;
         vector<direction> availableDirections;
+        bool alternativeMode;
+        int lockedPathCounter;
+        int pathMap[18*4][14*4];
 
 
 };
