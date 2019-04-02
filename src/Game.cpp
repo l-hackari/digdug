@@ -147,9 +147,9 @@ void Game::initGameOjects(){
     cornerGround = al_load_bitmap("../res/images/ground/ground3.png");
     gameObjs.push_back(new LifePoints(2,0,274,16,16));
     gameObjs.push_back(new Player(1, 0, 24, 16, 16));
-    gameObjs.push_back(new Monkey(4,50,24,16,16)); 
+    gameObjs.push_back(new Monkey(4,200, 40 * 4,16,16)); 
     gameObjs.push_back(new Dragon(7,12 * 4, 40 * 4,16,16));
-    gameObjs.push_back(new Dragon(8, 200, 40 * 4,16,16));
+    //gameObjs.push_back(new Dragon(8, 200, 40 * 4,16,16));
    
     background = al_load_bitmap("../res/images/background.png");
     string hs = "HIGH SCORE";

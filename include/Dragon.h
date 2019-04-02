@@ -73,6 +73,7 @@ class Dragon : public AnimatedSprite{
         int flameWidth = 16;
         int flameX;
         int flameY;
+        int rallenty = 0;
 
 
 };

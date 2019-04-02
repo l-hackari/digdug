@@ -68,7 +68,7 @@ class Game {
         ALLEGRO_KEYBOARD_STATE keyboardState;
         int numGameObj;
         bool isRunning;
-        const int FPS = 10;
+        const int FPS = 8;
         float scale;
         bool redraw;
         int mapScore = 0;
