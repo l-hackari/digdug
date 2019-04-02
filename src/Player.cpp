@@ -526,17 +526,28 @@ void Player::drawOnScreen(){
             isArrowFree = true;
         }
 
-        if(actualFrame >= animationLimit)
+        int collID = isCollided();
+
+        if(collID != -1 && collID != 0){
+            animationLimit = deathSprites.size();
             actualFrame = 0;
-
-        drawSwallowing();
-
-        actualFrame++;
-
-        if(!isSwallowTimerActive){
+            isDying = true;
+            died = true;
             isSwallowing = false;
-            isArrowFree = false;
-            actualFrame = 0;
+        } else {
+
+            if(actualFrame >= animationLimit)
+                actualFrame = 0;
+
+            drawSwallowing();
+
+            actualFrame++;
+
+            if(!isSwallowTimerActive){
+                isSwallowing = false;
+                isArrowFree = false;
+                actualFrame = 0;
+            }
         }
 
     }

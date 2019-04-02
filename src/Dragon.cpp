@@ -35,6 +35,26 @@ void Dragon::initPathMap(){
     }
 }
 
+void Dragon::clearFlameCollisionMap(){
+    for(int i = flameY / 4; i < (flameY + flameHeight) / 4; i++){
+        for(int j = flameX / 4; j < (flameX + flameWidth) / 4; j++){
+            if(j > 0 && j < 14 * 4 - 1 && i >= 6){
+                collisionMap[i][j] = 0;
+            }
+        }
+    }
+}
+
+void Dragon::fillFlameCollisionMap(){
+    for(int i = flameY / 4; i < (flameY + flameHeight) / 4; i++){
+        for(int j = flameX / 4; j < (flameX + flameWidth) / 4; j++){
+            if(j > 0 && j < 14 * 4 - 1 && i >= 6){
+                collisionMap[i][j] = id;
+            }
+        }
+    }
+}
+
 void Dragon::drawAttack(){
 
     if(attackCounter < 8){
@@ -45,7 +65,7 @@ void Dragon::drawAttack(){
 
         attackCounter++;
     } else {
-
+        clearFlameCollisionMap();
         switch (previousDirection)
         {
             case LEFT:
@@ -65,6 +85,8 @@ void Dragon::drawAttack(){
             default:
                 break;
         }
+
+        fillFlameCollisionMap();
 
         flameCounter++;
 

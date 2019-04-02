@@ -59,6 +59,14 @@ class Dragon : public AnimatedSprite{
         //initializes the map used to calculate best paths
         void initPathMap();
 
+        //cancella le celle occupate dalle fiamme nella collisionMap
+        //erases collisionMap's cells occupied by flames
+        void clearFlameCollisionMap();
+
+        //riempie la collisionMap in base alla posizione delle fiamme
+        //fills collisionMap depending on flames' position
+        void fillFlameCollisionMap();
+
 
     protected:
         ALLEGRO_BITMAP *alternativeFlatten;
