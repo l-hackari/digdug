@@ -20,6 +20,9 @@ Dragon::Dragon(int _id, int _x, int _y, int _width, int _height): AnimatedSprite
     attackSprites.push_back(al_load_bitmap("../res/images/dragon/at2.png"));
     flatten = al_load_bitmap("../res/images/dragon/fl.png");
     alternativeFlatten = al_load_bitmap("../res/images/dragon/flal.png");
+    flames.push_back(al_load_bitmap("../res/images/dragon/flame1.png"));
+    flames.push_back(al_load_bitmap("../res/images/dragon/flame2.png"));
+    flames.push_back(al_load_bitmap("../res/images/dragon/flame3.png"));
 
 }
 
@@ -28,6 +31,46 @@ void Dragon::initPathMap(){
     for(int i = 0; i < 18 * 4; i++){
         for(int j = 0; j < 14 * 4; j++){
             pathMap[i][j] = 0;
+        }
+    }
+}
+
+void Dragon::drawAttack(){
+
+    if(attackCounter < 8){
+        if(attackCounter % 2 == 0)
+            drawAttackIdle();
+        else
+            drawIdle();
+
+        attackCounter++;
+    } else {
+
+        switch (previousDirection)
+        {
+            case LEFT:
+                flameWidth = 16 * flameCounter;
+                flameX = x - flameWidth;
+                flameY = y;
+                al_draw_bitmap(attackSprites[actualFrame], x, y, ALLEGRO_FLIP_HORIZONTAL);
+                al_draw_bitmap(flames[flameCounter - 1], flameX, flameY, ALLEGRO_FLIP_HORIZONTAL);
+                break;
+            case RIGHT:
+                flameWidth = 16 * flameCounter;
+                flameX = x + width;
+                flameY = y;
+                al_draw_bitmap(attackSprites[actualFrame], x, y, 0);
+                al_draw_bitmap(flames[flameCounter - 1], flameX, flameY, 0);
+                break;
+            default:
+                break;
+        }
+
+        flameCounter++;
+
+        if(flameCounter > 3){
+            flameCounter = 1;
+            attackCounter = 0;
         }
     }
 }
@@ -155,7 +198,7 @@ void Dragon::nearestDirections(int _x, int _y){
     }
 }
 
-int Dragon::findPath(direction prevDiretion, int _x, int _y, int n){
+int Dragon::findPath(direction prevDiretion, int _x, int _y){
 
     for(int i = _y / 4; i < ((_y + height) / 4 ); i++)
         for(int j = _x / 4; j < ((_x + width) / 4); j++)
@@ -166,10 +209,10 @@ int Dragon::findPath(direction prevDiretion, int _x, int _y, int n){
     fillVoidDirections();
 
     bool find = false;
-    int rCost = INT_MAX;
-    int lCost = INT_MAX;
-    int uCost = INT_MAX;
-    int dCost = INT_MAX;
+    int rightCost = INT_MAX;
+    int leftCost = INT_MAX;
+    int upCost = INT_MAX;
+    int downCost = INT_MAX;
 
     for(int i = 0; i < availableDirections.size(); i++){
         if(availableDirections[i] == RIGHT){
@@ -191,9 +234,9 @@ int Dragon::findPath(direction prevDiretion, int _x, int _y, int n){
                     if(rightDir){
                         for(int i = _y / 4; i < ((_y + height) / 4); i++)
                             pathMap[i][j] = 1;
-                        int tCost = findPath(RIGHT,_x + 4, _y, n + 1);
+                        int tCost = findPath(RIGHT,_x + 4, _y);
                         if(tCost)
-                            rCost = tCost + 1;
+                            rightCost = tCost + 1;
                     }
                 } 
             }
@@ -219,9 +262,9 @@ int Dragon::findPath(direction prevDiretion, int _x, int _y, int n){
                         for(int i = _y / 4; i < ((_y + height) / 4); i++)
                             pathMap[i][j] = 1;
                         
-                        int tCost = findPath(LEFT, _x - 4, _y, n + 1);
+                        int tCost = findPath(LEFT, _x - 4, _y);
                         if(tCost)
-                            lCost = tCost + 1;
+                            leftCost = tCost + 1;
                             
                     }
 
@@ -248,9 +291,9 @@ int Dragon::findPath(direction prevDiretion, int _x, int _y, int n){
                     if(upDir){
                         for(int j = _x / 4; j < ((_x + width) / 4); j++)
                             pathMap[i][j] = 1;
-                        int tCost = findPath(UP, _x, _y - 4, n + 1);
+                        int tCost = findPath(UP, _x, _y - 4);
                         if(tCost)
-                            uCost = tCost + 1;
+                            upCost = tCost + 1;
                     }
                 }
             }
@@ -274,10 +317,10 @@ int Dragon::findPath(direction prevDiretion, int _x, int _y, int n){
                     if(downDir){
                         for(j = _x / 4; j < ((_x + width) / 4 ); j++)
                             pathMap[i][j] = 1;
-                        int tCost = findPath(DOWN, _x, _y + 4, n + 1);
+                        int tCost = findPath(DOWN, _x, _y + 4);
                         
                         if(tCost)
-                            dCost = tCost + 1;
+                            downCost = tCost + 1;
                     }
                 }   
             }
@@ -285,18 +328,18 @@ int Dragon::findPath(direction prevDiretion, int _x, int _y, int n){
     }
     
 
-    if(rCost <= lCost && rCost <= uCost && rCost <= dCost && rCost != INT_MAX){
+    if(rightCost <= leftCost && rightCost <= upCost && rightCost <= downCost && rightCost != INT_MAX){
         previousDirection = RIGHT;
-        return rCost;
-    } else if(lCost <= rCost && lCost <= uCost && lCost <= dCost && lCost != INT_MAX){
+        return rightCost;
+    } else if(leftCost <= rightCost && leftCost <= upCost && leftCost <= downCost && leftCost != INT_MAX){
         previousDirection = LEFT;
-        return lCost;
-    } else if(uCost <= rCost && uCost <= lCost && uCost <= dCost && uCost != INT_MAX){
+        return leftCost;
+    } else if(upCost <= rightCost && upCost <= leftCost && upCost <= downCost && upCost != INT_MAX){
         previousDirection = UP;
-        return uCost;
-    } else if(dCost <= rCost && dCost <= lCost && dCost <= uCost && dCost != INT_MAX){
+        return upCost;
+    } else if(downCost <= rightCost && downCost <= leftCost && downCost <= upCost && downCost != INT_MAX){
         previousDirection = DOWN;
-        return dCost;
+        return downCost;
     }
 
     return 0;
@@ -307,7 +350,7 @@ void Dragon::calculateDirection(){
 
     initPathMap();
 
-    if(findPath(previousDirection, x, y, 0) == 0){
+    if(findPath(previousDirection, x, y) == 0){
         lockedPathCounter++;
         bool rightDir = true, leftDir = true, upDir = true, downDir = true, chosed = false;
         int j = (x + width) / 4;
@@ -380,6 +423,22 @@ void Dragon::calculateDirection(){
         lockedPathCounter = 0;
         alternativeMode = true;
     }
+}
+
+void Dragon::drawIdle(){
+
+    if(orientation == RIGHT)
+        al_draw_bitmap(movementSprites[0], x, y, 0);
+    else
+        al_draw_bitmap(movementSprites[0], x, y, ALLEGRO_FLIP_HORIZONTAL);
+}
+
+void Dragon::drawAttackIdle(){
+    
+    if(orientation == RIGHT)
+        al_draw_bitmap(attackSprites[0], x, y, 0);
+    else
+        al_draw_bitmap(attackSprites[0], x, y, ALLEGRO_FLIP_HORIZONTAL);
 }
 
 void Dragon::drawAlternative(){
@@ -562,10 +621,15 @@ void Dragon::drawOnScreen(){
             al_start_timer(swallowTimer);
         }
 
-        if(alternativeMode)
+        if(alternativeMode){
             drawAlternative();
-        else
-            drawNormal();
+        } else{
+            if((previousDirection == LEFT || previousDirection == RIGHT) && y == playerY && abs(x - playerX) <= 48)
+                drawAttack();
+            else
+                drawNormal();
+        }
+            
         
 
         if(isColliding() == -1){
@@ -589,9 +653,6 @@ void Dragon::drawOnScreen(){
         }
 
     } else if(died){
-        if(orientation == RIGHT)
-            al_draw_bitmap(movementSprites[0], x, y, 0);
-        else
-            al_draw_bitmap(movementSprites[0], x, y, ALLEGRO_FLIP_HORIZONTAL);
+        drawIdle();
     }
 }

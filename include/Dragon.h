@@ -18,14 +18,26 @@ class Dragon : public AnimatedSprite{
         //calculates the direction to take depending on player's position
         void calculateDirection();
 
+        //disegna l'animazione idle dell'oggetto di gioco
+        //draws game object's idle animation
+        void drawIdle();
+
+        //disegna l'animazione idle di attacco dell'oggetto di gioco
+        //draws game object's attack idle animation
+        void drawAttackIdle();
+
         //disegna l'animazione alternativa dell'oggetto di gioco
         //draws game object's alternative animation
         void drawAlternative();
+
+        //disegna l'animazione di attacco dell'oggetto di gioco
+        //draws game object's attack animation
+        void drawAttack();
         
     private:
         //funzione ricorsiva che calcola il costo di tutti i percorsi disponibili per arrivare al player
         //recursive function that calculates the cost of all available paths to arrive to the player
-        int findPath(direction prevDirection, int x, int y, int n);
+        int findPath(direction prevDirection, int x, int y);
 
         //calcola le direzioni da prendere per raggiungere il player in modalità alternatva
         //calculates directions to take to reach the player in alternative mode
@@ -50,10 +62,17 @@ class Dragon : public AnimatedSprite{
 
     protected:
         ALLEGRO_BITMAP *alternativeFlatten;
+        vector<ALLEGRO_BITMAP*> flames;
         vector<direction> availableDirections;
         bool alternativeMode;
         int lockedPathCounter;
         int pathMap[18*4][14*4];
+        int attackCounter = 0;
+        int flameCounter = 1;
+        int flameHeight = 16;
+        int flameWidth = 16;
+        int flameX;
+        int flameY;
 
 
 };
