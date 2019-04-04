@@ -149,6 +149,7 @@ void Game::initGameOjects(){
     gameObjs.push_back(new Player(1, 0, 24, 16, 16));
     gameObjs.push_back(new Monkey(4,200, 40 * 4,16,16)); 
     gameObjs.push_back(new Dragon(7,12 * 4, 40 * 4,16,16));
+    enemiesCounter = 2;
     //gameObjs.push_back(new Dragon(8, 200, 40 * 4,16,16));
    
     background = al_load_bitmap("../res/images/background.png");

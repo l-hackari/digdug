@@ -28,5 +28,6 @@ extern bool isSwallowTimerActive;
 extern int swallowValue;
 extern int playerX;
 extern int playerY;
+extern int enemiesCounter;
 
 #endif

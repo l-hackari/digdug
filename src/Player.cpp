@@ -33,14 +33,14 @@ int Player::isArrowColliding(){
         int i = (((arrowY + arrowHeight) / 4) - 1) - (((arrowHeight / 4)) / 2);
         for(int j = arrowX / 4; j < (arrowX + arrowWidth) / 4; j++){
             if(j > 0 && j < 14 * 4 - 1){
-                if(collisionMap[i][j] != 0 && collisionMap[i][j] != -1){
+                if(collisionMap[i][j] != 0 && collisionMap[i][j] != -1 && groundMap[i][j] == 1){
                     collidedID = collisionMap[i][j];
                 }
             } 
         }
 
         for(int j = arrowX / 4; j < (arrowX + arrowWidth) / 4; j++){
-            if(j > 0 && j < 14 * 4 - 1){
+            if(j > 0 && j < 14 * 4 - 1 && groundMap[i][j] == 1){
                 collisionMap[i][j] = -1;
             }
         }
@@ -49,14 +49,14 @@ int Player::isArrowColliding(){
         int j = (((arrowX + arrowWidth) / 4) - 1) - (((arrowWidth / 4)) / 2);
         for(int i = arrowY / 4; i < (arrowY + arrowHeight) / 4; i++){
             if(i >= 6){
-                if(collisionMap[i][j] != 0 && collisionMap[i][j] != -1){
+                if(collisionMap[i][j] != 0 && collisionMap[i][j] != -1 && groundMap[i][j] == 1){
                     collidedID = collisionMap[i][j];
                 }
             }
         }
 
         for(int i = arrowY / 4; i < (arrowY + arrowHeight) / 4; i++){
-            if(i >= 6){
+            if(i >= 6 && groundMap[i][j] == 1){
                 collisionMap[i][j] = -1;
             }
         }
@@ -74,14 +74,14 @@ int Player::isArrowCollided(){
         int i = (((arrowY + arrowHeight) / 4) - 1) - (((arrowHeight / 4)) / 2);
         for(int j = arrowX / 4; j < (arrowX + arrowWidth) / 4; j++){
             if(j > 0 && j < 14 * 4 - 1){
-                if(collisionMap[i][j] != 0 && collisionMap[i][j] != -1){
+                if(collisionMap[i][j] != 0 && collisionMap[i][j] != -1 && groundMap[i][j] == 1){
                     collidedID = collisionMap[i][j];
                 }
             }
         }
 
         for(int j = arrowX / 4; j < (arrowX + arrowWidth) / 4; j++){
-            if(j > 0 && j < 14 * 4 - 1){
+            if(j > 0 && j < 14 * 4 - 1 && groundMap[i][j] == 1){
                 collisionMap[i][j] = 0;
             }
         }
@@ -89,7 +89,7 @@ int Player::isArrowCollided(){
 
         int j = (((arrowX + arrowWidth) / 4) - 1) - (((arrowWidth / 4)) / 2);
         for(int i = arrowY / 4; i < (arrowY + arrowHeight) / 4; i++){
-            if(i >= 6){
+            if(i >= 6 && groundMap[i][j] == 1){
                 if(collisionMap[i][j] != 0 && collisionMap[i][j] != -1){
                     collidedID = collisionMap[i][j];
                 }
@@ -97,7 +97,7 @@ int Player::isArrowCollided(){
         }
 
         for(int i = arrowY / 4; i < (arrowY + arrowHeight) / 4; i++){
-            if(i >= 6){
+            if(i >= 6 && groundMap[i][j] == 1){
                 collisionMap[i][j] = 0;
             }
         }
@@ -154,8 +154,7 @@ void Player::drawIdle(){
 
 }
 
-void Player::drawAttack(){
-
+void Player::drawArrow(){
     switch (previousDirection)
     {
         case LEFT:
@@ -163,7 +162,6 @@ void Player::drawAttack(){
             arrowHeight = 16;
             arrowX = x - arrowWidth;
             arrowY = y;
-            al_draw_bitmap(attackSprites[actualFrame], x, y, ALLEGRO_FLIP_HORIZONTAL);
             al_draw_bitmap_region(harrow, 32 - arrowWidth, 0, arrowWidth, arrowHeight, arrowX, arrowY, ALLEGRO_FLIP_HORIZONTAL);
             break;
         case RIGHT:
@@ -171,15 +169,9 @@ void Player::drawAttack(){
             arrowHeight = 16;
             arrowX = x + width;
             arrowY = y;
-            al_draw_bitmap(attackSprites[actualFrame], x, y, 0);
             al_draw_bitmap_region(harrow, 32 - arrowWidth, 0, arrowWidth, arrowHeight, arrowX, arrowY, 0);
             break;
         case UP:
-            if(orientation == LEFT)
-                al_draw_rotated_bitmap(attackSprites[actualFrame], width / 2, height / 2, x + (width / 2), y + (height / 2), 4.71239, ALLEGRO_FLIP_VERTICAL);
-            else
-                al_draw_rotated_bitmap(attackSprites[actualFrame], width / 2, height / 2, x + (width / 2), y + (height / 2), 4.71239, 0);
-            
             arrowWidth = 16;
             arrowHeight = 32 / arrowCounter;
             arrowX = x;
@@ -187,16 +179,40 @@ void Player::drawAttack(){
             al_draw_bitmap_region(varrow, 0, 0, arrowWidth, arrowHeight, arrowX, arrowY, 0);
             break;
         case DOWN:
-            if(orientation == LEFT)
-                al_draw_rotated_bitmap(attackSprites[actualFrame], width / 2, height / 2, x + (width / 2), y + (height / 2), 1.5708, ALLEGRO_FLIP_VERTICAL);
-            else
-                al_draw_rotated_bitmap(attackSprites[actualFrame], width / 2, height / 2, x + (width / 2), y + (height / 2), 1.5708, 0);
-            
             arrowWidth = 16;
             arrowHeight = 32 / arrowCounter;
             arrowX = x;
             arrowY = y + width;
             al_draw_bitmap_region(varrow, 0, 0, arrowWidth, arrowHeight, arrowX, arrowY, ALLEGRO_FLIP_VERTICAL);
+            break;
+        default:
+            break;
+    }
+}
+
+void Player::drawAttack(){
+
+    drawArrow();
+    switch (previousDirection)
+    {
+        case LEFT:
+            al_draw_bitmap(attackSprites[actualFrame], x, y, ALLEGRO_FLIP_HORIZONTAL);
+            break;
+        case RIGHT:
+            al_draw_bitmap(attackSprites[actualFrame], x, y, 0);
+            break;
+        case UP:
+            if(orientation == LEFT)
+                al_draw_rotated_bitmap(attackSprites[actualFrame], width / 2, height / 2, x + (width / 2), y + (height / 2), 4.71239, ALLEGRO_FLIP_VERTICAL);
+            else
+                al_draw_rotated_bitmap(attackSprites[actualFrame], width / 2, height / 2, x + (width / 2), y + (height / 2), 4.71239, 0);
+            break;
+        case DOWN:
+            if(orientation == LEFT)
+                al_draw_rotated_bitmap(attackSprites[actualFrame], width / 2, height / 2, x + (width / 2), y + (height / 2), 1.5708, ALLEGRO_FLIP_VERTICAL);
+            else
+                al_draw_rotated_bitmap(attackSprites[actualFrame], width / 2, height / 2, x + (width / 2), y + (height / 2), 1.5708, 0);
+            
             break;
         default:
             break;
@@ -539,6 +555,7 @@ void Player::drawOnScreen(){
             if(actualFrame >= animationLimit)
                 actualFrame = 0;
 
+            drawArrow();
             drawSwallowing();
 
             actualFrame++;

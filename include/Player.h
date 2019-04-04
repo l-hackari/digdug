@@ -19,6 +19,10 @@ class Player : public AnimatedSprite{
         //draws game object's attack animation
         void drawAttack();
 
+        //disegna lo strumento di attacco
+        //draws attack tool
+        void drawArrow();
+
         //disegna l'animazione di gonfiamento del player
         //draws player's swallow animation
         void drawSwallowing();

@@ -163,26 +163,26 @@ void Dragon::fillVoidDirections(){
     
 }
 
-void Dragon::nearestDirections(int _x, int _y){
+void Dragon::nearestDirections(int _start_x, int _start_y, int _arrive_x, int _arrive_y){
 
     availableDirections.clear();
 
-    if(playerX == _x){
-        if(playerY > _y)
+    if(_arrive_x == _start_x){
+        if(_arrive_y > _start_y)
             availableDirections.push_back(DOWN);
         else 
             availableDirections.push_back(UP);
 
-    } else if(playerY == _y){
-        if(playerX > _x)
+    } else if(_arrive_y == _start_y){
+        if(_arrive_x > _start_x)
             availableDirections.push_back(RIGHT);
         else 
             availableDirections.push_back(LEFT);
 
     } else {
 
-        int xDiff = playerX - _x;
-        int yDiff = playerY - _y;
+        int xDiff = _arrive_x - _start_x;
+        int yDiff = _arrive_y - _start_y;
         int posXDiff;
         int posYDiff;
 
@@ -220,14 +220,23 @@ void Dragon::nearestDirections(int _x, int _y){
     }
 }
 
-int Dragon::findPath(direction prevDiretion, int _x, int _y){
+int Dragon::findPath(direction prevDiretion, int _x, int _y, objective objectiveToReach){
 
-    for(int i = _y / 4; i < ((_y + height) / 4 ); i++)
-        for(int j = _x / 4; j < ((_x + width) / 4); j++)
-            if(collisionMap[i][j] == 1)
-                return 1;
+    if(objectiveToReach == PLAYER){
+        for(int i = _y / 4; i < ((_y + height) / 4 ); i++)
+            for(int j = _x / 4; j < ((_x + width) / 4); j++)
+                if(collisionMap[i][j] == 1)
+                    return 1;
 
-    nearestDirections(_x, _y);
+        nearestDirections(_x, _y, playerX, playerY);
+
+    } else if(objectiveToReach == EXIT){
+        if(_x == 0 && _y == 24)
+            return 1;
+
+        nearestDirections(_x, _y, 0, 24);
+    }
+    
     fillVoidDirections();
 
     bool find = false;
@@ -256,7 +265,7 @@ int Dragon::findPath(direction prevDiretion, int _x, int _y){
                     if(rightDir){
                         for(int i = _y / 4; i < ((_y + height) / 4); i++)
                             pathMap[i][j] = 1;
-                        int tCost = findPath(RIGHT,_x + 4, _y);
+                        int tCost = findPath(RIGHT,_x + 4, _y, objectiveToReach);
                         if(tCost)
                             rightCost = tCost + 1;
                     }
@@ -284,7 +293,7 @@ int Dragon::findPath(direction prevDiretion, int _x, int _y){
                         for(int i = _y / 4; i < ((_y + height) / 4); i++)
                             pathMap[i][j] = 1;
                         
-                        int tCost = findPath(LEFT, _x - 4, _y);
+                        int tCost = findPath(LEFT, _x - 4, _y, objectiveToReach);
                         if(tCost)
                             leftCost = tCost + 1;
                             
@@ -313,7 +322,7 @@ int Dragon::findPath(direction prevDiretion, int _x, int _y){
                     if(upDir){
                         for(int j = _x / 4; j < ((_x + width) / 4); j++)
                             pathMap[i][j] = 1;
-                        int tCost = findPath(UP, _x, _y - 4);
+                        int tCost = findPath(UP, _x, _y - 4, objectiveToReach);
                         if(tCost)
                             upCost = tCost + 1;
                     }
@@ -339,7 +348,7 @@ int Dragon::findPath(direction prevDiretion, int _x, int _y){
                     if(downDir){
                         for(j = _x / 4; j < ((_x + width) / 4 ); j++)
                             pathMap[i][j] = 1;
-                        int tCost = findPath(DOWN, _x, _y + 4);
+                        int tCost = findPath(DOWN, _x, _y + 4, objectiveToReach);
                         
                         if(tCost)
                             downCost = tCost + 1;
@@ -368,11 +377,11 @@ int Dragon::findPath(direction prevDiretion, int _x, int _y){
     
 }
 
-void Dragon::calculateDirection(){
+void Dragon::calculateDirection(objective objectiveToReach){
 
     initPathMap();
 
-    if(findPath(previousDirection, x, y) == 0){
+    if(findPath(previousDirection, x, y, objectiveToReach) == 0){
         lockedPathCounter++;
         bool rightDir = true, leftDir = true, upDir = true, downDir = true, chosed = false;
         int j = (x + width) / 4;
@@ -464,9 +473,14 @@ void Dragon::drawAttackIdle(){
 }
 
 void Dragon::drawAlternative(){
-    nearestDirections(x, y);
+
+    if(enemiesCounter > 1)
+        nearestDirections(x, y, playerX, playerY);
+    else
+        nearestDirections(x, y, 0, 24);
+    
     if(find(availableDirections.begin(), availableDirections.end(), RIGHT) != availableDirections.end()){
-            x ++;
+            x++;
             if(find(availableDirections.begin(), availableDirections.end(), UP) != availableDirections.end())
                 y--;
             else if(find(availableDirections.begin(), availableDirections.end(), DOWN) != availableDirections.end())
@@ -550,7 +564,19 @@ void Dragon::drawAlternative(){
 
 
 void Dragon::drawNormal(){
-    calculateDirection();
+
+    if(enemiesCounter > 1){
+        calculateDirection(PLAYER);
+    } else {
+        if(x <= 0 && y == 24){
+            previousDirection = LEFT;
+            exitReached = true;
+            if(x <= 16)
+                isVisible = false;
+        } else {
+            calculateDirection(EXIT);
+        }
+    }
 
     if(previousDirection == RIGHT){
         if(x + width < nativeScreenWidth){
@@ -569,7 +595,7 @@ void Dragon::drawNormal(){
         }
 
     } else if(previousDirection == LEFT){
-        if(x > 0){
+        if(x > 0 || exitReached){
             animationLimit = movementSprites.size();
             x -= speed;
             al_draw_bitmap(movementSprites[actualFrame], x, y, ALLEGRO_FLIP_HORIZONTAL);
@@ -666,6 +692,7 @@ void Dragon::drawOnScreen(){
 
         if(swallowValue > 6){
             isVisible = false;
+            enemiesCounter--;
             freeCollisionMap();
         } else {
             if(!isSwallowTimerActive)

@@ -13,4 +13,5 @@ bool isSwallowTimerActive = false;
 int swallowValue = 0;
 int playerX;
 int playerY;
+int enemiesCounter;
  

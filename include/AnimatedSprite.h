@@ -2,6 +2,8 @@
 #define ANIMATED_SPRITE_H
 #include "StaticSprite.h"
 
+enum objective {PLAYER = 0, EXIT};
+
 class AnimatedSprite : public StaticSprite{
 
     public:
