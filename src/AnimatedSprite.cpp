@@ -4,6 +4,20 @@ AnimatedSprite::AnimatedSprite(int _id, int _x, int _y, int _width, int _height)
 
 void AnimatedSprite::drawOnScreen(){}
 
+
+bool AnimatedSprite::itsCrashing(){
+    
+    int i = (y-1)/4;
+    for(int j = x/4; j < (x+width)/4; j++){
+        if(collisionMap[i][j] == STONE){
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
 void AnimatedSprite::freeCollisionMap(){
     for(int i = 0; i < 18 * 4; i++){
         for(int j = 0; j < 14 * 4; j++){

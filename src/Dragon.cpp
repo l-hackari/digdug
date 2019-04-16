@@ -655,7 +655,7 @@ void Dragon::drawNormal(){
 
 void Dragon::drawOnScreen(){
 
-    if(!isDying && !died){
+    if(!isDying && !died && !isFlatten){
 
         if(actualFrame >= animationLimit){
             actualFrame = 0;
@@ -668,6 +668,9 @@ void Dragon::drawOnScreen(){
             isSwallowTimerActive = true;
             al_start_timer(swallowTimer);
         }
+
+        if(itsCrashing() && !isFlatten)
+            isFlatten = true;
 
         if(alternativeMode){
             drawAlternative();
@@ -701,7 +704,21 @@ void Dragon::drawOnScreen(){
                 drawDying();
         }
 
-    } else if(died){
+    }   
+     else if(!isDying && isFlatten){
+        if(rallenty < 16){
+            al_draw_bitmap(flatten,x,y,0);
+            rallenty++;
+        }
+        else{
+            isDying = true;
+            isVisible = false;
+            enemiesCounter--;
+        }
+     }
+
+    else if(died){
         drawIdle();
     }
+
 }

@@ -3,6 +3,7 @@
 Player::Player(int _id, int _x, int _y, int _width, int _height): AnimatedSprite(_id, _x, _y, _width, _height){
 
     speed = 4;
+    flatten = al_load_bitmap("../res/images/player/fl.png");
     varrow = al_load_bitmap("../res/images/arrow/varrow.png");
     harrow = al_load_bitmap("../res/images/arrow/harrow.png");
     movementSprites.push_back(al_load_bitmap("../res/images/player/run2.png"));
@@ -25,6 +26,64 @@ Player::Player(int _id, int _x, int _y, int _width, int _height): AnimatedSprite
     attackSprites.push_back(al_load_bitmap("../res/images/player/at.png"));
 
 }
+
+
+void Player::possibleDirection(){
+
+
+        bool isDirection = true;
+        possibleDirections.clear();
+
+        for(int i = (y/4);  i < (y+height)/4; i++){
+            int j = (x+width+1)/4;
+            if(groundMap[i][j] == STONE){
+                isDirection = false;
+            }
+        }
+
+        if(isDirection)
+            possibleDirections.push_back(RIGHT);
+        else
+            isDirection = true;
+        
+
+        for(int i = (y/4);  i < (y+height)/4; i++){
+            int j = (x-1)/4;
+            if(groundMap[i][j] == STONE)
+                isDirection = false;
+        }
+        
+        if(isDirection)
+            possibleDirections.push_back(LEFT);
+        else
+            isDirection = true;
+
+        
+        for(int j = x/4;  j < (x+width)/4; j++){
+            int i = (y+height+1)/4;  
+            if(groundMap[i][j] == STONE)
+                isDirection = false;
+        }
+        
+        if(isDirection)
+            possibleDirections.push_back(DOWN);
+        else
+            isDirection = true;
+
+
+        for(int j = x/4;  j < (x+width)/4; j++){
+            int i = (y-1)/4;  
+            if(groundMap[i][j] == STONE)
+                isDirection = false;
+        }
+        
+        if(isDirection)
+            possibleDirections.push_back(UP);
+        else
+            isDirection = true;
+        
+}
+
 
 int Player::isArrowColliding(){
     int collidedID = 0;
@@ -360,7 +419,7 @@ void Player::drawOnScreen(){
     playerX = x;
     playerY = y;
 
-    if(!isDying && !isSwallowing){
+    if(!isDying && !isSwallowing && !isFlatten){
 
         if(actualFrame >= animationLimit){
             actualFrame = 0;
@@ -373,9 +432,16 @@ void Player::drawOnScreen(){
             
             arrowCounter = 4;  
         }
-        
+    
         int collID = isCollided();
-        if(collID != -1 && collID != 0){
+        if(itsCrashing() && !isFlatten){
+                isFlatten = true;
+                animationLimit = deathSprites.size();
+                actualFrame = 0;
+                died = true;
+                lifePoints--;
+                }
+        else if(collID != -1 && collID != 0 && collID != STONE){
             animationLimit = deathSprites.size();
             actualFrame = 0;
             isDying = true;
@@ -384,8 +450,11 @@ void Player::drawOnScreen(){
         switch (actualPressedKey)
         {
             case ALLEGRO_KEY_UP:
-                if(y > 24)
-                    y -= speed;
+                if(y > 24){
+                    possibleDirection();
+                    if(find(possibleDirections.begin(), possibleDirections.end(), UP) != possibleDirections.end())
+                        y -= speed;
+                }
                 
                 if(!checkDigged()){
 
@@ -414,8 +483,11 @@ void Player::drawOnScreen(){
                 actualFrame++;
                 break;
             case ALLEGRO_KEY_DOWN:
-                if(y < 256)
-                    y += speed;
+                if(y < 256){
+                    possibleDirection();
+                    if(find(possibleDirections.begin(), possibleDirections.end(), DOWN) != possibleDirections.end())
+                        y += speed;
+                }
                 
                 if(!checkDigged()){
 
@@ -444,9 +516,11 @@ void Player::drawOnScreen(){
                 actualFrame++;
                 break;
             case ALLEGRO_KEY_RIGHT:
-                if(x + width < nativeScreenWidth)
-                    x += speed;
-
+                if(x + width < nativeScreenWidth){
+                    possibleDirection();
+                    if(find(possibleDirections.begin(), possibleDirections.end(), RIGHT) != possibleDirections.end())
+                        x += speed;
+                }
                 if(!checkDigged()){
                     al_draw_bitmap(alternativeSprites[actualFrame], x, y, 0);
                     animationLimit = alternativeSprites.size();
@@ -462,10 +536,11 @@ void Player::drawOnScreen(){
                 actualFrame++;
                 break;
             case ALLEGRO_KEY_LEFT:
-                if(x > 0)
-                    x -= speed;
-                
-
+                if(x > 0){
+                    possibleDirection();
+                    if(find(possibleDirections.begin(), possibleDirections.end(), LEFT) != possibleDirections.end())
+                        x -= speed;
+                }
                 if(!checkDigged()){
                     al_draw_bitmap(alternativeSprites[actualFrame], x, y, ALLEGRO_FLIP_HORIZONTAL);
                     animationLimit = alternativeSprites.size();
@@ -517,17 +592,27 @@ void Player::drawOnScreen(){
                 break;
         }
 
-        collID = isColliding();
-        if(collID != -1 && collID != 0){
-            animationLimit = deathSprites.size();
-            actualFrame = 0;
-            isDying = true;
-            died = true;
-            lifePoints--;
+            if(itsCrashing() && !isFlatten){
+                isFlatten = true;
+                animationLimit = deathSprites.size();
+                actualFrame = 0;
+                cout << "qui";
+                died = true;
+                lifePoints--;
+            }
+            else{
+                collID = isColliding();
+                if(collID != -1 && collID != 0&& collID != STONE){
+                animationLimit = deathSprites.size();
+                actualFrame = 0;
+                isDying = true;
+                died = true;
+                lifePoints--;
+            }
         }
 
-    } else if(isDying) {
-
+    } 
+    else if(isDying && !isFlatten) {
         if(actualFrame >= animationLimit){
             isVisible = false;
         } else {
@@ -535,7 +620,21 @@ void Player::drawOnScreen(){
             actualFrame++;
         }
 
-    } else if(isSwallowing) {
+    }
+    else if(!isDying && isFlatten){
+        if(actualFrame >= animationLimit){
+            isVisible = false;
+        } 
+        if(rallenty < 16){
+            al_draw_bitmap(flatten,x,y,0);
+            rallenty++;
+        }
+        else{
+            isFlatten = false;
+            isDying = true;
+        }
+    } 
+     else if(isSwallowing) {
             
         if(!isArrowFree){
             arrowFree();
@@ -543,8 +642,7 @@ void Player::drawOnScreen(){
         }
 
         int collID = isCollided();
-
-        if(collID != -1 && collID != 0){
+        if(collID != -1 && collID != 0 && collID != STONE){
             animationLimit = deathSprites.size();
             actualFrame = 0;
             isDying = true;

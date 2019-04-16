@@ -5,6 +5,7 @@
 #include "Monkey.h"
 #include "Dragon.h"
 #include "LifePoints.h"
+#include "Stone.h"
 
 //La classe principale del gioco
 //This is the main class of the game

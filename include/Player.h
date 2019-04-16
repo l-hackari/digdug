@@ -55,9 +55,15 @@ class Player : public AnimatedSprite{
         //sets to '0' all collisionMatrix's cells that were set to '-1' (isArrowColliding function)
         void arrowFree();
 
+        
+        void possibleDirection();
+
+        
+
 
     private:
         vector<ALLEGRO_BITMAP*> swallowSprites;
+        vector<direction>possibleDirections;
         ALLEGRO_BITMAP *harrow;
         ALLEGRO_BITMAP *varrow;
         bool isSwallowing = false;
@@ -67,6 +73,7 @@ class Player : public AnimatedSprite{
         int arrowCounter = 4;
         int arrowHeight = 16;
         int arrowWidth = 32;
+        int rallenty = 0;
 };
 
 #endif

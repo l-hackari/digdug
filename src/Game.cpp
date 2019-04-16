@@ -146,9 +146,12 @@ void Game::initGameOjects(){
     middleGround = al_load_bitmap("../res/images/ground/ground1.png");
     cornerGround = al_load_bitmap("../res/images/ground/ground3.png");
     gameObjs.push_back(new LifePoints(2,0,274,16,16));
-    gameObjs.push_back(new Player(1, 0, 24, 16, 16));
-    gameObjs.push_back(new Monkey(4,200, 40 * 4,16,16)); 
-    gameObjs.push_back(new Dragon(7,12 * 4, 40 * 4,16,16));
+    gameObjs.push_back(new Player(PLAYER_, 0, 24, 16, 16));
+    gameObjs.push_back(new Monkey(MONKEY,200, 40 * 4,16,16)); 
+    gameObjs.push_back(new Dragon(DRAGON,12 * 4, 40 * 4,16,16));
+    gameObjs.push_back(new Stone(STONE,100,100,16,16));
+    gameObjs.push_back(new Stone(STONE,168, 25 * 4,16,16));
+    gameObjs.push_back(new Stone(STONE,10 * 4, 25 * 4,16,16));
     enemiesCounter = 2;
     //gameObjs.push_back(new Dragon(8, 200, 40 * 4,16,16));
    
@@ -162,31 +165,31 @@ void Game::initGameOjects(){
     gameObjs.push_back(new Text(4, 10, whiteColor, 110, 274, mapScore));
     gameObjs.push_back(new Text(5, 10, whiteColor, 200, 274, rd));
     gameObjs.push_back(new Text(6, 10, whiteColor, 220, 274, round));
-    numGameObj+=7;
+    numGameObj+=12;
 
 }
 
 void Game::updateGround(){
     for(int i = 10; i < 18 * 4; i++){
         for(int j = 1; j < 14 * 4 - 1; j++){
-            if(groundMap[i][j] == 1 && groundMap[i + 1][j] == 0){
+            if(groundMap[i][j] == 1 && (groundMap[i + 1][j] == 0 || groundMap[i + 1][j] == STONE)){
                 if(groundMap[i][j + 1] == 1 && groundMap[i][j - 1] == 1)
                     al_draw_bitmap(middleGround, j * 4, i * 4, 0);
-                else if(groundMap[i][j + 1] == 0)
+                else if(groundMap[i][j + 1] == 0 || groundMap[i][j + 1] == STONE)
                     al_draw_bitmap(cornerGround, j * 4, i * 4, 0);
-                else if(groundMap[i][j - 1] == 0)
+                else if(groundMap[i][j - 1] == 0 || groundMap[i][j - 1] == STONE)
                     al_draw_bitmap(cornerGround, j * 4, i * 4, ALLEGRO_FLIP_HORIZONTAL);
-            } else if(groundMap[i][j] == 1 && groundMap[i - 1][j] == 0){
+            } else if(groundMap[i][j] == 1 && (groundMap[i - 1][j] == 0 || groundMap[i - 1][j] == STONE)){
                 if(groundMap[i][j + 1] == 1 && groundMap[i][j - 1] == 1)
                     al_draw_bitmap(middleGround, j * 4, i * 4, ALLEGRO_FLIP_VERTICAL);
-                else if(groundMap[i][j + 1] == 0)
+                else if(groundMap[i][j + 1] == 0 || groundMap[i][j + 1] == STONE)
                     al_draw_bitmap(cornerGround, j * 4, i * 4, ALLEGRO_FLIP_VERTICAL);
-                else if(groundMap[i][j - 1] == 0)
+                else if(groundMap[i][j - 1] == 0 || groundMap[i][j - 1] == STONE)
                     al_draw_bitmap(cornerGround, j * 4, i * 4, 3);
             } else if(groundMap[i][j] == 1 && groundMap[i + 1][j] == 1 && groundMap[i - 1][j] == 1){
-                if(groundMap[i][j - 1] == 0)
+                if(groundMap[i][j - 1] == 0 || groundMap[i][j - 1] == STONE)
                     al_draw_rotated_bitmap(middleGround, 2, 2, j * 4 + 2, i * 4 + 2, 1.5708, 0);
-                else if(groundMap[i][j + 1] == 0)
+                else if(groundMap[i][j + 1] == 0 || groundMap[i][j + 1] == STONE)
                     al_draw_rotated_bitmap(middleGround, 2, 2, j * 4 + 2, i * 4 + 2, 4.71239, 0);
                 else if(groundMap[i][j + 1] == 1 && groundMap[i][j - 1] == 1)
                     al_draw_bitmap(centerGround, j * 4, i * 4, 0);
@@ -232,8 +235,7 @@ void Game::drawScene(){
 
         for(int i = 0; i < gameObjs.size(); i++){
             if(gameObjs[i]->getVisible())
-                gameObjs[i]->drawOnScreen();
-        
+                gameObjs[i]->drawOnScreen();                
         }
 
         al_set_target_backbuffer(mainDisplay);

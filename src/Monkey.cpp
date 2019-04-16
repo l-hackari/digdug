@@ -592,7 +592,7 @@ void Monkey::drawNormal(){
 
 void Monkey::drawOnScreen(){
 
-    if(!isDying && !died){
+    if(!isDying && !died && !isFlatten){
 
         if(actualFrame >= animationLimit){
             actualFrame = 0;
@@ -605,6 +605,9 @@ void Monkey::drawOnScreen(){
             isSwallowTimerActive = true;
             al_start_timer(swallowTimer);
         }
+
+        if(itsCrashing() && !isFlatten)
+                isFlatten = true;
 
         if(alternativeMode){
             drawAlternative();
@@ -622,8 +625,7 @@ void Monkey::drawOnScreen(){
             al_start_timer(swallowTimer);
         }
 
-    } else if(isDying) {
-
+    } else if(isDying && !isFlatten) {
         if(swallowValue > 6){
             isVisible = false;
             enemiesCounter--;
@@ -633,6 +635,18 @@ void Monkey::drawOnScreen(){
                 isDying = false;
             else
                 drawDying();
+        }
+    }
+
+    else if(!isDying && isFlatten){
+        if(rallenty < 16){
+            al_draw_bitmap(flatten,x,y,0);
+            rallenty++;
+        }
+        else{
+            isDying = true;
+            isVisible = false;
+            enemiesCounter--;
         }
 
     } else if(died){

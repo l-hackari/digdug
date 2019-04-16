@@ -14,4 +14,5 @@ int swallowValue = 0;
 int playerX;
 int playerY;
 int enemiesCounter;
+bool stoneIsFalling = false;
  

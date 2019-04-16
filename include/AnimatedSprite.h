@@ -26,6 +26,8 @@ class AnimatedSprite : public StaticSprite{
         //sets to '0' all collisionMatrix's cells that were set to 'id' (isColliding function)
         void freeCollisionMap();
 
+        bool itsCrashing();
+
     protected:
         vector<ALLEGRO_BITMAP*> movementSprites;
         vector<ALLEGRO_BITMAP*> alternativeSprites;
@@ -39,6 +41,8 @@ class AnimatedSprite : public StaticSprite{
         int actualFrame = 0;
         bool isDying;
         int speed;
+        bool isFlatten = false;
+        bool loop = false;
 };
 
 #endif

@@ -15,6 +15,7 @@
 using namespace std;
 
 enum direction {NONE = 0, LEFT, RIGHT, UP, DOWN};
+enum object {PLAYER_ = 0, DRAGON, MONKEY,STONE};
 extern bool died;
 extern int nativeScreenWidth;
 extern int nativeScreenHeight;
@@ -29,5 +30,7 @@ extern int swallowValue;
 extern int playerX;
 extern int playerY;
 extern int enemiesCounter;
+extern  bool stoneIsFalling;
+
 
 #endif
