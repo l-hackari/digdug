@@ -47,7 +47,6 @@ class Monkey : public AnimatedSprite{
             vector<direction> availableDirections;
             bool exitReached = false;
             int lockedPathCounter;
-            bool alternativeMode;
             int rallenty = 0;
 
 

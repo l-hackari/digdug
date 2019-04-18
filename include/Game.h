@@ -1,11 +1,8 @@
 #ifndef GAME_H
 #define GAME_H
-#include "Player.h"
 #include "Score.h"
-#include "Monkey.h"
-#include "Dragon.h"
+#include "Level.h"
 #include "LifePoints.h"
-#include "Stone.h"
 
 //La classe principale del gioco
 //This is the main class of the game
@@ -25,11 +22,19 @@ class Game {
 
         //se viene premuto il tasto "ESC" termina l'esecuzione del gioco
         //if "ESC" key is pressed terminates game execution
-        void endGame();
+        void checkendGame();
+
+        //termina l'esecuzione del gioco
+        //terminates game executon
+        void quit();
 
         //un metodo che gestisce tutti gli eventi, modificando una variabile globale in base al tipo di evento
         //a method that manages all events, editing a global variable depending of the event type 
         void eventManager();
+
+        //metodo per caricare i file audio che verranno riprodotti
+        //method to load audio files that will be reproduced
+        void loadAudios();
 
         //ritorna true se il gioco è in esecuzione, falso altrimenti
         //returns true if game is running, false otherwise
@@ -38,6 +43,10 @@ class Game {
         //disegna tutti gli oggetti di gioco esistenti in base agli FPS
         //draws all game objects depending on FPS
         void drawScene();
+
+        //draws a scene where a 'Game Over' sentence is written
+        //disegna una scena dove viene scritta la frase 'Game Over'
+        void drawFinalScene();
 
         //inizializza tutti gli oggetti di gioco
         //initializes all game object
@@ -51,8 +60,22 @@ class Game {
         //draws digged game's ground zones
         void updateGround();
 
+        //carica tutte le impostazioni generate dal livello creato
+        //loads all settings generted by created level
+        void loadLevel();
+
+        //resetta tutte le impostazioni in modo da avviare un nuovo livello
+        //resets all setting to start a new level
         void resetGameScene();
 
+        //elimina tutti i gameObject allocati
+        //deletes all allocated gameObject
+        void deleteGameObjects();
+
+        //ripristina la posizione iniziale degli oggetti di gioco
+        //restores the initial position of game objects
+        void resetGameObjects();
+        
     private:
         ALLEGRO_DISPLAY *mainDisplay;
         ALLEGRO_DISPLAY_MODE displayMode;
@@ -66,8 +89,8 @@ class Game {
         ALLEGRO_EVENT actualEvent;
         ALLEGRO_EVENT_QUEUE *eventQueue;
         vector<GameObject *> gameObjs;
+        Level *actualLevel;
         ALLEGRO_KEYBOARD_STATE keyboardState;
-        int numGameObj;
         bool isRunning;
         const int FPS = 8;
         float scale;

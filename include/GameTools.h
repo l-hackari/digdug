@@ -4,6 +4,8 @@
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_ttf.h>
 #include <allegro5/allegro_font.h>
+#include <allegro5/allegro_audio.h>
+#include <allegro5/allegro_acodec.h>
 #include <string>
 #include <ctime>
 #include <vector>
@@ -15,7 +17,9 @@
 using namespace std;
 
 enum direction {NONE = 0, LEFT, RIGHT, UP, DOWN};
-enum object {PLAYER_ = 0, DRAGON, MONKEY,STONE};
+enum object {PLAYER_ = 1, DRAGON, MONKEY, STONE};
+enum audio {BACKGROUND_SOUND = 0, ATTACK = 1, SWALLOW = 2, MONSTER_TOUCHED = 3, DIED = 4, MONSTER_DIED = 5, GAME_OVER = 6};
+extern vector<ALLEGRO_SAMPLE*> audios;
 extern bool died;
 extern int nativeScreenWidth;
 extern int nativeScreenHeight;
@@ -24,6 +28,8 @@ extern int score;
 extern int collisionMap[18*4][14*4];
 extern int groundMap[18*4][14*4];
 extern int lifePoints;
+extern ALLEGRO_SAMPLE_ID ret;
+extern bool isBackgroundAudioOn;
 extern ALLEGRO_TIMER *swallowTimer;
 extern bool isSwallowTimerActive;
 extern int swallowValue;

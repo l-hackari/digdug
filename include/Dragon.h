@@ -73,7 +73,6 @@ class Dragon : public AnimatedSprite{
         ALLEGRO_BITMAP *alternativeFlatten;
         vector<ALLEGRO_BITMAP*> flames;
         vector<direction> availableDirections;
-        bool alternativeMode;
         bool exitReached = false;
         int lockedPathCounter;
         int pathMap[18*4][14*4];

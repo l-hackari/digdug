@@ -196,7 +196,7 @@ int Monkey::findPath(direction prevDiretion, int _x, int _y, objective objective
                             rightDir = false;
                         else if(collisionMap[i][j] == 1)
                             find = true;
-                        else if(groundMap[i][j] == 0)
+                        else if(groundMap[i][j] == 0 || groundMap[i][j] == STONE)
                             rightDir = false;
                     }
 
@@ -223,7 +223,7 @@ int Monkey::findPath(direction prevDiretion, int _x, int _y, objective objective
                             leftDir = false;
                         else if(collisionMap[i][j] == 1)
                             find = true;
-                        else if(groundMap[i][j] == 0)
+                        else if(groundMap[i][j] == 0 || groundMap[i][j] == STONE)
                             leftDir = false;
                     }
 
@@ -253,7 +253,7 @@ int Monkey::findPath(direction prevDiretion, int _x, int _y, objective objective
                             upDir = false;
                         else if(collisionMap[i][j] == 1)
                             find = true;
-                        else if(groundMap[i][j] == 0)
+                        else if(groundMap[i][j] == 0 || groundMap[i][j] == STONE)
                             upDir = false;
                     }
 
@@ -279,7 +279,7 @@ int Monkey::findPath(direction prevDiretion, int _x, int _y, objective objective
                             downDir = false;
                         else if(collisionMap[i][j] == 1)
                             find = true;
-                        else if(groundMap[i][j] == 0)
+                        else if(groundMap[i][j] == 0 || groundMap[i][j] == STONE)
                             downDir = false;
                     }
 
@@ -396,10 +396,16 @@ void Monkey::calculateDirection(objective objectiveToReach){
 
 void Monkey::drawIdle(){
 
-    if(orientation == RIGHT)
-        al_draw_bitmap(movementSprites[0], x, y, 0);
+    if(alternativeMode)
+        if(orientation == RIGHT)
+            al_draw_bitmap(alternativeSprites[0], x, y, 0);
+        else
+            al_draw_bitmap(alternativeSprites[0], x, y, ALLEGRO_FLIP_HORIZONTAL);
     else
-        al_draw_bitmap(movementSprites[0], x, y, ALLEGRO_FLIP_HORIZONTAL);
+        if(orientation == RIGHT)
+            al_draw_bitmap(movementSprites[0], x, y, 0);
+        else
+            al_draw_bitmap(movementSprites[0], x, y, ALLEGRO_FLIP_HORIZONTAL);
 }
 
 void Monkey::drawAttackIdle(){
@@ -508,8 +514,11 @@ void Monkey::drawNormal(){
         if(x <= 0 && y == 24){
             previousDirection = LEFT;
             exitReached = true;
-            if(x <= 16)
+            if(x <= -16){
                 isVisible = false;
+                enemiesCounter--;
+            }
+
         } else {
             calculateDirection(EXIT);
         }
@@ -609,11 +618,10 @@ void Monkey::drawOnScreen(){
         if(itsCrashing() && !isFlatten)
                 isFlatten = true;
 
-        if(alternativeMode){
+        if(alternativeMode)
             drawAlternative();
-        } else{
-                drawNormal();
-        }
+        else
+            drawNormal();
             
         
 
@@ -626,24 +634,28 @@ void Monkey::drawOnScreen(){
         }
 
     } else if(isDying && !isFlatten) {
-        if(swallowValue > 6){
+
+        if(swallowValue >= 6){
+            drawDying();
             isVisible = false;
             enemiesCounter--;
+            al_stop_sample(&ret);
+            al_play_sample(audios[MONSTER_DIED], 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, &ret);
             freeCollisionMap();
         } else {
+            isCollided();
             if(!isSwallowTimerActive)
                 isDying = false;
             else
                 drawDying();
+            isColliding();
         }
-    }
 
-    else if(!isDying && isFlatten){
+    } else if(!isDying && isFlatten){
         if(rallenty < 16){
             al_draw_bitmap(flatten,x,y,0);
             rallenty++;
-        }
-        else{
+        } else{
             isDying = true;
             isVisible = false;
             enemiesCounter--;
