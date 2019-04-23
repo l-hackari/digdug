@@ -64,6 +64,14 @@ class Game {
         //loads all settings generted by created level
         void loadLevel();
 
+        //carica il punteggio migliore registrato
+        //loads the best registered score
+        void loadBestScore();
+
+        //controlla se il punteggio fatto è superiore al punteggio migliore e lo salva
+        //checks if the actual score is higher than the best score and saves it
+        void saveBestScore();
+
         //resetta tutte le impostazioni in modo da avviare un nuovo livello
         //resets all setting to start a new level
         void resetGameScene();
@@ -91,7 +99,9 @@ class Game {
         vector<GameObject *> gameObjs;
         Level *actualLevel;
         ALLEGRO_KEYBOARD_STATE keyboardState;
+        int bestScore;
         bool isRunning;
+        bool lastEnemySong = false;
         const int FPS = 8;
         float scale;
         bool redraw;

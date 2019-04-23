@@ -45,14 +45,19 @@ void Dragon::clearFlameCollisionMap(){
     }
 }
 
-void Dragon::fillFlameCollisionMap(){
+bool Dragon::fillFlameCollisionMap(){
     for(int i = flameY / 4; i < (flameY + flameHeight) / 4; i++){
         for(int j = flameX / 4; j < (flameX + flameWidth) / 4; j++){
             if(j > 0 && j < 14 * 4 - 1 && i >= 6){
+                if(groundMap[i][j] == 0 || groundMap[i][j] == STONE)
+                    return false;
+                
                 collisionMap[i][j] = id;
             }
         }
     }
+
+    return true;
 }
 
 void Dragon::drawAttack(){
@@ -86,13 +91,19 @@ void Dragon::drawAttack(){
                 break;
         }
 
-        fillFlameCollisionMap();
+        if(fillFlameCollisionMap()){
+            flameCounter++;
 
-        flameCounter++;
+            if(flameCounter > 3){
+                flameCounter = 1;
+                attackCounter = 0;
+                needToFreeFlameMap = true;
+            }
 
-        if(flameCounter > 3){
+        } else {
             flameCounter = 1;
             attackCounter = 0;
+            clearFlameCollisionMap();
         }
     }
 }
@@ -670,12 +681,18 @@ void Dragon::drawOnScreen(){
             actualFrame = 0;
         }
 
-        if(isCollided() == -1){
+        if(needToFreeFlameMap){
+            clearFlameCollisionMap();
+            needToFreeFlameMap = false;
+        }
+
+        if(isCollided() == -1 && !isEnemySwallowing){
             animationLimit = deathSprites.size();
             actualFrame = 0;
             isDying = true;
             isSwallowTimerActive = true;
             al_start_timer(swallowTimer);
+            isEnemySwallowing = true;
         }
 
         if(itsCrashing() && !isFlatten)
@@ -684,7 +701,7 @@ void Dragon::drawOnScreen(){
         if(alternativeMode){
             drawAlternative();
         } else{
-            if((previousDirection == LEFT || previousDirection == RIGHT) && y == playerY && abs(x - playerX) <= 48){
+            if((previousDirection == LEFT && y == playerY && (x - playerX) <= 48 && x > playerX) || (previousDirection == RIGHT && y == playerY && (playerX - x) <= 48 && x < playerX)){
                 drawAttack();
             } else {
                 flameCounter = 1;
@@ -693,31 +710,33 @@ void Dragon::drawOnScreen(){
             }
                 
         }
-            
         
-
-        if(isColliding() == -1){
+        if(isColliding() == -1 && !isEnemySwallowing){
             animationLimit = deathSprites.size();
             actualFrame = 0;
             isDying = true;
             isSwallowTimerActive = true;
             al_start_timer(swallowTimer);
+            isEnemySwallowing = true;
         }
 
     } else if(isDying && !isFlatten) {
         
         if(swallowValue >= 6){
+            isEnemySwallowing = false;
             drawDying();
             isVisible = false;
             enemiesCounter--;
             al_stop_sample(&ret);
             al_play_sample(audios[MONSTER_DIED], 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, &ret);
+            score += 300;
             freeCollisionMap();
         } else {
             isCollided();
             if(!isSwallowTimerActive){
                 drawNormal();
                 isDying = false;
+                isEnemySwallowing = false;
             } else {
                 drawDying();
             }
@@ -731,6 +750,7 @@ void Dragon::drawOnScreen(){
         } else{
             isDying = true;
             isVisible = false;
+            score += 1000;
             enemiesCounter--;
         }
 

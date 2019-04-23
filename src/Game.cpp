@@ -15,6 +15,7 @@ Game::Game(){
     al_install_audio();
     initGameMaps();
     loadLevel();
+    loadBestScore();
     loadAudios();
     initGameOjects();
     mainTimer = al_create_timer(1.0 / FPS);
@@ -29,7 +30,6 @@ Game::Game(){
     middleGround = al_load_bitmap("../res/images/ground/ground1.png");
     cornerGround = al_load_bitmap("../res/images/ground/ground3.png");
     background = al_load_bitmap("../res/images/background.png");
-
 }
 
 void Game::createDisplay(){
@@ -41,6 +41,16 @@ void Game::createDisplay(){
     float scaleH = static_cast<float>(displayMode.height) / static_cast<float>(nativeScreenHeight);
     scale = min(scaleW, scaleH);
    
+}
+
+void Game::loadBestScore(){
+    ifstream bScoreFile;
+    bScoreFile.open("../score/best_score.txt", ios::in);
+    bScoreFile >> bestScore;
+    if(bestScore < 0)
+        bestScore = 0;
+    
+    bScoreFile.close();
 }
 
 void Game::initGameMaps(){
@@ -156,6 +166,8 @@ void Game::loadAudios(){
     audios.push_back(al_load_sample("../res/audio/10-DidDug Disappearing.wav"));
     audios.push_back(al_load_sample("../res/audio/17-Monster Squashed.wav"));
     audios.push_back(al_load_sample("../res/audio/11-Game Over Music.wav"));
+    audios.push_back(al_load_sample("../res/audio/08-DigDug Walking.wav"));
+    audios.push_back(al_load_sample("../res/audio/05-Round Clear Music.wav"));
 }
 
 void Game::updateGround(){
@@ -233,8 +245,17 @@ void Game::drawScene(){
         al_flip_display();
         redraw = false;
 
-        if(enemiesCounter == 0 || !gameObjs[0]->getVisible())
+        if(enemiesCounter == 0 || !gameObjs[0]->getVisible()){
             resetGameScene();
+        } else if(enemiesCounter == 1 && !lastEnemySong) {
+            al_stop_sample(&ret);
+            ALLEGRO_SAMPLE* temp = audios[BACKGROUND_SOUND];
+            audios[BACKGROUND_SOUND] = audios[LAST_ENEMY];
+            audios[LAST_ENEMY] = temp;
+            al_play_sample(audios[BACKGROUND_SOUND], 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, &ret);
+            lastEnemySong = true;
+        }
+
     } 
 
 }
@@ -257,9 +278,15 @@ void Game::resetGameScene(){
     if(lifePoints > 0 && enemiesCounter == 0){
         al_rest(1.0);
         al_stop_sample(&ret);
+        al_play_sample(audios[ROUND_WIN], 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, &ret);
+        al_rest(3.0);
         deleteGameObjects();
         initGameMaps();
         loadLevel();
+        ALLEGRO_SAMPLE* temp = audios[LAST_ENEMY];
+        audios[LAST_ENEMY] = audios[BACKGROUND_SOUND];
+        audios[BACKGROUND_SOUND] = temp;
+        lastEnemySong = false;
         initGameOjects();
     } else if(lifePoints > 0 && enemiesCounter != 0) {
         al_rest(1.0);
@@ -272,6 +299,7 @@ void Game::resetGameScene(){
         al_stop_sample(&ret);
         al_play_sample(audios[GAME_OVER], 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, &ret);
         drawFinalScene();
+        saveBestScore();
         al_rest(2.0);
         quit();
     }
@@ -309,6 +337,14 @@ void Game::deleteGameObjects(){
     }
 
     delete actualLevel;
+}
+
+void Game::saveBestScore(){
+    if(score > bestScore){
+        ofstream bScoreFile;
+        bScoreFile.open("../score/best_score.txt", ios::trunc);
+        bScoreFile << score;
+    }
 }
 
 Game::~Game(){

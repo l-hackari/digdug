@@ -66,7 +66,7 @@ class Dragon : public AnimatedSprite{
 
         //riempie la collisionMap in base alla posizione delle fiamme
         //fills collisionMap depending on flames' position
-        void fillFlameCollisionMap();
+        bool fillFlameCollisionMap();
 
 
     protected:
@@ -74,6 +74,7 @@ class Dragon : public AnimatedSprite{
         vector<ALLEGRO_BITMAP*> flames;
         vector<direction> availableDirections;
         bool exitReached = false;
+        bool needToFreeFlameMap = false;
         int lockedPathCounter;
         int pathMap[18*4][14*4];
         int attackCounter = 0;

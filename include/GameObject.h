@@ -21,11 +21,11 @@ class GameObject {
 
         //setta il valore della coordinata x dell'oggetto di gioco
         //sets the value of the x coordinate of the game object
-        float setX(float _x){ x = _x; }
+        void setX(float _x){ x = _x; }
 
         //setta il valore della coordinata y dell'oggetto di gioco
         //sets the value of the y coordinate of the game object
-        float setY(float _y){ y = _y; }
+        void setY(float _y){ y = _y; }
 
         //ritorna lo stato di visibilità dell'oggetto di gioco
         //returns the game object's visibility state

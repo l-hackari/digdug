@@ -18,7 +18,7 @@ using namespace std;
 
 enum direction {NONE = 0, LEFT, RIGHT, UP, DOWN};
 enum object {PLAYER_ = 1, DRAGON, MONKEY, STONE};
-enum audio {BACKGROUND_SOUND = 0, ATTACK = 1, SWALLOW = 2, MONSTER_TOUCHED = 3, DIED = 4, MONSTER_DIED = 5, GAME_OVER = 6};
+enum audio {BACKGROUND_SOUND = 0, ATTACK = 1, SWALLOW = 2, MONSTER_TOUCHED = 3, DIED = 4, MONSTER_DIED = 5, GAME_OVER = 6, LAST_ENEMY = 7, ROUND_WIN = 8};
 extern vector<ALLEGRO_SAMPLE*> audios;
 extern bool died;
 extern int nativeScreenWidth;
@@ -36,7 +36,8 @@ extern int swallowValue;
 extern int playerX;
 extern int playerY;
 extern int enemiesCounter;
-extern  bool stoneIsFalling;
+extern bool stoneIsFalling;
+extern bool isEnemySwallowing;
 
 
 #endif

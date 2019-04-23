@@ -76,37 +76,40 @@ void Player::possibleDirection(){
 
 
 int Player::isArrowColliding(){
-    int collidedID = 0;
-    if(previousDirection == LEFT || previousDirection == RIGHT){
 
+    int collidedID = 0;
+    bool obstacle = false;
+    if(previousDirection == LEFT || previousDirection == RIGHT){
         int i = (((arrowY + arrowHeight) / 4) - 1) - (((arrowHeight / 4)) / 2);
-        for(int j = arrowX / 4; j < (arrowX + arrowWidth) / 4; j++){
+        for(int j = arrowX / 4; j < (arrowX + arrowWidth) / 4 && !obstacle; j++){
             if(j > 0 && j < 14 * 4 - 1){
-                if(collisionMap[i][j] != 0 && collisionMap[i][j] != -1 && collisionMap[i][j] != STONE && groundMap[i][j] == 1){
-                    collidedID = collisionMap[i][j];
+                if(groundMap[i][j] == STONE || groundMap[i][j] == 0){
+                    obstacle = true;
+                } else {
+                    if(collisionMap[i][j] != 0 && collisionMap[i][j] != -1 && collisionMap[i][j] != STONE){
+                        collidedID = collisionMap[i][j];
+                    }
+
+                    collisionMap[i][j] = -1;
                 }
+                
             } 
         }
 
-        for(int j = arrowX / 4; j < (arrowX + arrowWidth) / 4; j++){
-            if(j > 0 && j < 14 * 4 - 1 && groundMap[i][j] == 1){
-                collisionMap[i][j] = -1;
-            }
-        }
     } else {
 
         int j = (((arrowX + arrowWidth) / 4) - 1) - (((arrowWidth / 4)) / 2);
-        for(int i = arrowY / 4; i < (arrowY + arrowHeight) / 4; i++){
+        for(int i = arrowY / 4; i < (arrowY + arrowHeight) / 4 && !obstacle; i++){
             if(i >= 6){
-                if(collisionMap[i][j] != 0 && collisionMap[i][j] != -1 && collisionMap[i][j] != STONE && groundMap[i][j] == 1){
-                    collidedID = collisionMap[i][j];
-                }
-            }
-        }
+                if(groundMap[i][j] == STONE || groundMap[i][j] == 0){
+                    obstacle = true;
+                } else {
+                    if(collisionMap[i][j] != 0 && collisionMap[i][j] != -1 && collisionMap[i][j] != STONE){
+                        collidedID = collisionMap[i][j];
+                    }
 
-        for(int i = arrowY / 4; i < (arrowY + arrowHeight) / 4; i++){
-            if(i >= 6 && groundMap[i][j] == 1){
-                collisionMap[i][j] = -1;
+                    collisionMap[i][j] = -1;
+                }
             }
         }
     }
@@ -118,36 +121,38 @@ int Player::isArrowColliding(){
 int Player::isArrowCollided(){
 
     int collidedID = 0;
+    bool obstacle = false;
     if(previousDirection == LEFT || previousDirection == RIGHT){
-
         int i = (((arrowY + arrowHeight) / 4) - 1) - (((arrowHeight / 4)) / 2);
-        for(int j = arrowX / 4; j < (arrowX + arrowWidth) / 4; j++){
+        for(int j = arrowX / 4; j < (arrowX + arrowWidth) / 4 && !obstacle; j++){
             if(j > 0 && j < 14 * 4 - 1){
-                if(collisionMap[i][j] != 0 && collisionMap[i][j] != -1 && collisionMap[i][j] != STONE && groundMap[i][j] == 1){
-                    collidedID = collisionMap[i][j];
+                if(groundMap[i][j] == STONE || groundMap[i][j] == 0){
+                    obstacle = true;
+                } else {
+                    if(collisionMap[i][j] != 0 && collisionMap[i][j] != -1 && collisionMap[i][j] != STONE){
+                        collidedID = collisionMap[i][j];
+                    }
+
+                    collisionMap[i][j] = 0;
                 }
-            }
+                
+            } 
         }
 
-        for(int j = arrowX / 4; j < (arrowX + arrowWidth) / 4; j++){
-            if(j > 0 && j < 14 * 4 - 1 && groundMap[i][j] == 1){
-                collisionMap[i][j] = 0;
-            }
-        }
     } else {
 
         int j = (((arrowX + arrowWidth) / 4) - 1) - (((arrowWidth / 4)) / 2);
-        for(int i = arrowY / 4; i < (arrowY + arrowHeight) / 4; i++){
-            if(i >= 6 && groundMap[i][j] == 1){
-                if(collisionMap[i][j] != 0 && collisionMap[i][j] != STONE && collisionMap[i][j] != -1 && groundMap[i][j] == 1){
-                    collidedID = collisionMap[i][j];
-                }
-            }
-        }
+        for(int i = arrowY / 4; i < (arrowY + arrowHeight) / 4 && !obstacle; i++){
+            if(i >= 6){
+                if(groundMap[i][j] == STONE || groundMap[i][j] == 0){
+                    obstacle = true;
+                } else {
+                    if(collisionMap[i][j] != 0 && collisionMap[i][j] != -1 && collisionMap[i][j] != STONE){
+                        collidedID = collisionMap[i][j];
+                    }
 
-        for(int i = arrowY / 4; i < (arrowY + arrowHeight) / 4; i++){
-            if(i >= 6 && groundMap[i][j] == 1){
-                collisionMap[i][j] = 0;
+                    collisionMap[i][j] = 0;
+                }
             }
         }
     }
@@ -424,7 +429,7 @@ void Player::drawOnScreen(){
             if(previousAnimation == ALLEGRO_KEY_D)
                 arrowFree();
             
-            arrowCounter = 4;  
+            arrowCounter = 5;  
         }
     
         int collID = isCollided();
@@ -466,6 +471,7 @@ void Player::drawOnScreen(){
                     }
                     
                     animationLimit = alternativeSprites.size();
+                    score++;
                 
                 } else {
 
@@ -498,6 +504,7 @@ void Player::drawOnScreen(){
                         al_draw_rotated_bitmap(alternativeSprites[actualFrame], width / 2, height / 2, x + (width / 2), y + (height / 2), 1.5708, 0);
                     }
 
+                    score++;
                     animationLimit = alternativeSprites.size();
                 
                 } else {
@@ -525,6 +532,7 @@ void Player::drawOnScreen(){
                 if(!checkDigged()){
                     al_draw_bitmap(alternativeSprites[actualFrame], x, y, 0);
                     animationLimit = alternativeSprites.size();
+                    score++;
                 } else {
                     al_draw_bitmap(movementSprites[actualFrame], x, y, 0);
                     animationLimit = movementSprites.size();
@@ -545,6 +553,7 @@ void Player::drawOnScreen(){
                 if(!checkDigged()){
                     al_draw_bitmap(alternativeSprites[actualFrame], x, y, ALLEGRO_FLIP_HORIZONTAL);
                     animationLimit = alternativeSprites.size();
+                    score++;
                 } else {
                     al_draw_bitmap(movementSprites[actualFrame], x, y, ALLEGRO_FLIP_HORIZONTAL);
                     animationLimit = movementSprites.size();
@@ -558,27 +567,31 @@ void Player::drawOnScreen(){
                 break;
             case ALLEGRO_KEY_D:
                 animationLimit = attackSprites.size();
-                if(isArrowCollided()){
-                    animationLimit = swallowSprites.size();
-                    actualFrame = 0;
-                    isSwallowing = true;
-                    isSwallowTimerActive = true;
-                    al_start_timer(swallowTimer);
+                if(arrowCounter < 5){
+                    if(isArrowCollided()){
+                        animationLimit = swallowSprites.size();
+                        actualFrame = 0;
+                        isSwallowing = true;
+                        isSwallowTimerActive = true;
+                        al_start_timer(swallowTimer);
+                        arrowTouched = true;
+                    }
                 }
-
-                drawAttack();
                 arrowCounter--;
-                if(arrowCounter == 0)
-                    arrowCounter = 4;
-                actualFrame++;
-                previousAnimation = ALLEGRO_KEY_D;
+                    if(arrowCounter == 0)
+                        arrowCounter = 4;
+                drawAttack();
+                if(!arrowTouched){
+                    actualFrame++;
+                    previousAnimation = ALLEGRO_KEY_D;
 
-                if(isArrowColliding()){
-                    animationLimit = swallowSprites.size();
-                    actualFrame = 0;
-                    isSwallowTimerActive = true;
-                    al_start_timer(swallowTimer);
-                    isSwallowing = true;
+                    if(isArrowColliding()){
+                        animationLimit = swallowSprites.size();
+                        actualFrame = 0;
+                        isSwallowTimerActive = true;
+                        al_start_timer(swallowTimer);
+                        isSwallowing = true;
+                    }
                 }
 
                 break;
@@ -591,26 +604,30 @@ void Player::drawOnScreen(){
             if(itsCrashing() && !isFlatten){
                 isFlatten = true;
                 animationLimit = deathSprites.size();
-                cerr << animationLimit << " ";
                 actualFrame = 0;
                 died = true;
                 al_stop_sample(&ret);
                 al_play_sample(audios[MONSTER_TOUCHED], 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, &ret);
             } else {
                 collID = isColliding();
-                if(collID != -1 && collID != 0&& collID != STONE){
-                animationLimit = deathSprites.size();
-                actualFrame = 0;
-                isDying = true;
-                died = true;
-                drawDying();
-                actualFrame++;
-                al_stop_sample(&ret);
-                al_play_sample(audios[MONSTER_TOUCHED], 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, &ret);
+                if(collID !=-1 && collID !=0 && collID != STONE){
+                    animationLimit = deathSprites.size();
+                    actualFrame = 0;
+                    isDying = true;
+                    died = true;
+                    drawDying();
+                    actualFrame++;
+                    al_stop_sample(&ret);
+                    al_play_sample(audios[MONSTER_TOUCHED], 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, &ret);
+                }
             }
-        }
 
     } else if(isDying && !isFlatten) {
+
+        if(!isArrowFree){
+            arrowFree();
+            isArrowFree = true;
+        }
 
         if(isBackgroundAudioOn)
             al_rest(1.0);
@@ -634,6 +651,11 @@ void Player::drawOnScreen(){
 
     } else if(!isDying && isFlatten){
 
+        if(!isArrowFree){
+            arrowFree();
+            isArrowFree = true;
+        }
+
         if(rallenty < 16){
             al_draw_bitmap(flatten,x,y,0);
             rallenty++;
@@ -651,6 +673,7 @@ void Player::drawOnScreen(){
         if(!isArrowFree){
             arrowFree();
             isArrowFree = true;
+            arrowTouched = false;
         }
 
         int collID = isCollided();
@@ -684,7 +707,7 @@ void Player::drawOnScreen(){
                 isSwallowing = false;
                 isArrowFree = false;
                 actualFrame = 0;
-                arrowCounter = 4;
+                arrowCounter = 5;
                 isBackgroundAudioOn = true;
                 al_stop_sample(&ret);
                 al_play_sample(audios[BACKGROUND_SOUND], 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, &ret);
@@ -694,7 +717,7 @@ void Player::drawOnScreen(){
                 isSwallowing = false;
                 isArrowFree = false;
                 actualFrame = 0;
-                arrowCounter = 4;
+                arrowCounter = 5;
                 isBackgroundAudioOn = true;
                 al_stop_sample(&ret);
                 al_play_sample(audios[BACKGROUND_SOUND], 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, &ret);

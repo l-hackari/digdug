@@ -17,3 +17,4 @@ int swallowValue = 0;
 int playerX;
 int playerY;
 int enemiesCounter;
+bool isEnemySwallowing = false;

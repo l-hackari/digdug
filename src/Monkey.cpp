@@ -607,12 +607,13 @@ void Monkey::drawOnScreen(){
             actualFrame = 0;
         }
 
-        if(isCollided() == -1){
+        if(isCollided() == -1 && !isEnemySwallowing){
             animationLimit = deathSprites.size();
             actualFrame = 0;
             isDying = true;
             isSwallowTimerActive = true;
             al_start_timer(swallowTimer);
+            isEnemySwallowing = true;
         }
 
         if(itsCrashing() && !isFlatten)
@@ -625,29 +626,35 @@ void Monkey::drawOnScreen(){
             
         
 
-        if(isColliding() == -1){
+        if(isColliding() == -1 && !isEnemySwallowing){
             animationLimit = deathSprites.size();
             actualFrame = 0;
             isDying = true;
             isSwallowTimerActive = true;
             al_start_timer(swallowTimer);
+            isEnemySwallowing = true;
         }
 
     } else if(isDying && !isFlatten) {
 
         if(swallowValue >= 6){
+            isEnemySwallowing = false;
             drawDying();
             isVisible = false;
             enemiesCounter--;
             al_stop_sample(&ret);
             al_play_sample(audios[MONSTER_DIED], 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, &ret);
             freeCollisionMap();
+            score += 200;
         } else {
             isCollided();
-            if(!isSwallowTimerActive)
+            if(!isSwallowTimerActive){
+                isEnemySwallowing = true;
                 isDying = false;
-            else
+            } else {
                 drawDying();
+            }
+                
             isColliding();
         }
 
@@ -658,6 +665,7 @@ void Monkey::drawOnScreen(){
         } else{
             isDying = true;
             isVisible = false;
+            score += 1000;
             enemiesCounter--;
         }
 
