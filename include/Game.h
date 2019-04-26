@@ -102,11 +102,10 @@ class Game {
         int bestScore;
         bool isRunning;
         bool lastEnemySong = false;
-        const int FPS = 8;
         float scale;
         bool redraw;
         int mapScore = 0;
-        int round = 1;
+        int round = 0;
 
 
 };

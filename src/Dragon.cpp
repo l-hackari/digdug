@@ -2,6 +2,7 @@
 
 Dragon::Dragon(int _id, int _x, int _y, int _width, int _height): AnimatedSprite(_id, _x, _y, _width, _height){
 
+    scoreValue = 300;
     speed = 4;
     alternativeMode = false;
     previousDirection = LEFT;
@@ -675,7 +676,7 @@ void Dragon::drawNormal(){
 
 void Dragon::drawOnScreen(){
 
-    if(!isDying && !died && !isFlatten){
+    if(!isDying && !died && !isFlatten && !showScore){
 
         if(actualFrame >= animationLimit){
             actualFrame = 0;
@@ -725,12 +726,14 @@ void Dragon::drawOnScreen(){
         if(swallowValue >= 6){
             isEnemySwallowing = false;
             drawDying();
-            isVisible = false;
+            showScore = true;
             enemiesCounter--;
             al_stop_sample(&ret);
             al_play_sample(audios[MONSTER_DIED], 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, &ret);
-            score += 300;
+            score += scoreValue;
             freeCollisionMap();
+            isDying = false;
+            isFlatten = false;
         } else {
             isCollided();
             if(!isSwallowTimerActive){
@@ -748,14 +751,25 @@ void Dragon::drawOnScreen(){
             al_draw_bitmap(flatten,x,y,0);
             rallenty++;
         } else{
-            isDying = true;
-            isVisible = false;
-            score += 1000;
+            isDying = false;
+            isFlatten = false;
+            showScore = true;
+            scoreValue = (scoreValue*3) + 100;
+            score += scoreValue;
             enemiesCounter--;
+            rallenty = 0;
         }
 
-    } else if(died){
+    } else if(died && !showScore){
         drawIdle();
+    } else if(showScore){
+         if(rallenty < FPS*2){
+             drawScoreValue();
+             rallenty++;
+            } else {
+                isVisible = false;
+                rallenty = 0;
+            }
     }
 
 }

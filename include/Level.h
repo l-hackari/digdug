@@ -5,6 +5,7 @@
 #include "Monkey.h"
 #include "Dragon.h"
 #include "Stone.h"
+#include "Powerups.h"
 
 class Level
 {

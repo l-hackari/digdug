@@ -2,6 +2,7 @@
 
 Monkey::Monkey(int _id, int _x, int _y, int _width, int _height):AnimatedSprite(_id,_x,_y,_width,_height){
     
+    scoreValue = 200;
     speed = 4;
     alternativeMode = false;
     previousDirection = LEFT;
@@ -601,7 +602,7 @@ void Monkey::drawNormal(){
 
 void Monkey::drawOnScreen(){
 
-    if(!isDying && !died && !isFlatten){
+    if(!isDying && !died && !isFlatten && !showScore){
 
         if(actualFrame >= animationLimit){
             actualFrame = 0;
@@ -640,12 +641,14 @@ void Monkey::drawOnScreen(){
         if(swallowValue >= 6){
             isEnemySwallowing = false;
             drawDying();
-            isVisible = false;
+            showScore = true;
             enemiesCounter--;
             al_stop_sample(&ret);
             al_play_sample(audios[MONSTER_DIED], 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, &ret);
             freeCollisionMap();
-            score += 200;
+            isDying = false;
+            isFlatten = false;
+            score += scoreValue;
         } else {
             isCollided();
             if(!isSwallowTimerActive){
@@ -664,12 +667,22 @@ void Monkey::drawOnScreen(){
             rallenty++;
         } else{
             isDying = true;
-            isVisible = false;
-            score += 1000;
+            showScore = true;
+            scoreValue *= 5;
+            score += scoreValue;
             enemiesCounter--;
+            rallenty = 0;
         }
 
-    } else if(died){
+    } else if(died && !showScore){
         drawIdle();
+    } else if(showScore){
+         if(rallenty < FPS*2){
+             drawScoreValue();
+             rallenty++;
+            } else {
+                isVisible = false;
+                rallenty = 0;
+            }
     }
 }

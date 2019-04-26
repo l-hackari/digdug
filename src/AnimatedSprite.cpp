@@ -2,6 +2,14 @@
 
 AnimatedSprite::AnimatedSprite(int _id, int _x, int _y, int _width, int _height): StaticSprite(_id, _x, _y, _width, _height), actualFrame(0), previousDirection(RIGHT), orientation(RIGHT), isDying(false){}
 
+void AnimatedSprite::drawScoreValue(){
+
+    if(text == nullptr)
+        text = new Text(5,10,al_map_rgb(255,255,255),x,y,scoreValue);
+    else
+        text -> drawOnScreen ();
+}
+
 void AnimatedSprite::drawOnScreen(){}
 
 

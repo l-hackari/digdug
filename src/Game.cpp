@@ -141,6 +141,7 @@ bool Game::isGameRunning(){
 
 void Game::loadLevel(){
     actualLevel = new Level(1);
+    round++;
     gameObjs = actualLevel->getGameObjects();
     enemiesCounter = actualLevel->getEnemiesNumber();
 }
@@ -149,8 +150,9 @@ void Game::initGameOjects(){
 
     gameObjs.push_back(new LifePoints(2,0,274,16,16));
     gameObjs.push_back(new Text(2, 10, al_map_rgb(255,0,0), 110, 0, "HIGH SCORE"));
-    gameObjs.push_back(new Score(3, 10, al_map_rgb(255,255,255), 110, 12));
-    gameObjs.push_back(new Text(4, 10, al_map_rgb(255,255,255), 110, 274, mapScore));
+    gameObjs.push_back(new Text(3, 10, al_map_rgb(255,255,255), 110, 12,bestScore));
+    gameObjs.push_back(new Text(3, 10, al_map_rgb(255,255,255), 100, 274,"SCORE"));
+    gameObjs.push_back(new Score(3, 10, al_map_rgb(255,255,255), 142, 274));
     gameObjs.push_back(new Text(5, 10, al_map_rgb(255,255,255), 200, 274, "ROUND "));
     gameObjs.push_back(new Text(6, 10, al_map_rgb(255,255,255), 220, 274, round));
     al_play_sample(audios[BACKGROUND_SOUND], 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, &ret);
@@ -258,6 +260,11 @@ void Game::drawScene(){
 
     } 
 
+    if(score >= scoreBonusLimit){
+        gameObjs.push_back(new Powerups(POWER_UP, 104, 132, 16 , 16));
+        scoreBonusLimit+=scoreBonusLimit*2;
+    }
+
 }
 
 void Game::drawFinalScene(){
@@ -346,6 +353,7 @@ void Game::saveBestScore(){
         bScoreFile << score;
     }
 }
+
 
 Game::~Game(){
     deleteGameObjects();

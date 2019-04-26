@@ -1,6 +1,7 @@
 #ifndef ANIMATED_SPRITE_H
 #define ANIMATED_SPRITE_H
 #include "StaticSprite.h"
+#include "Text.h"
 
 enum objective {PLAYER = 0, EXIT};
 
@@ -28,6 +29,8 @@ class AnimatedSprite : public StaticSprite{
 
         bool itsCrashing();
 
+        void drawScoreValue();
+
     protected:
         vector<ALLEGRO_BITMAP*> movementSprites;
         vector<ALLEGRO_BITMAP*> alternativeSprites;
@@ -43,6 +46,9 @@ class AnimatedSprite : public StaticSprite{
         int speed;
         bool isFlatten = false;
         bool loop = false;
+        int scoreValue;
+        Text *text = nullptr;
+        bool showScore = false;
 };
 
 #endif
