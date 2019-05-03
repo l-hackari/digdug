@@ -232,7 +232,137 @@ void Dragon::nearestDirections(int _start_x, int _start_y, int _arrive_x, int _a
     }
 }
 
-int Dragon::findPath(direction prevDiretion, int _x, int _y, objective objectiveToReach){
+direction Dragon::findPath(int startX, int startY, objective objectiveToReach){
+
+    vector<Node> visited;
+    list<Node> toVisit;
+
+    visited.push_back(Node(startX, startY, NONE));
+    toVisit.push_back(Node(startX, startY, NONE));
+
+    while(!toVisit.empty()){
+
+        Node actual = toVisit.front();
+        toVisit.pop_front();
+
+        if(objectiveToReach == PLAYER){
+            for(int i = actual.getY() / 4; i < ((actual.getY() + height) / 4 ); i++)
+                for(int j = actual.getX() / 4; j < ((actual.getX() + width) / 4); j++)
+                    if(collisionMap[i][j] == 1)
+                        return actual.getFirstChooseDirection();
+        } else if(objectiveToReach == EXIT){
+            if(actual.getX() == 0 && actual.getY() == 24)
+                return actual.getFirstChooseDirection();
+        }
+
+        bool rightDir = true;
+        int j = (actual.getX() + width) / 4;
+        if(j < 14 * 4 && j >= 0 && find(visited.begin(), visited.end(), Node(actual.getX() + speed, actual.getY(), actual.getFirstChooseDirection())) == visited.end()){
+            for(int i = actual.getY() / 4; i < ((actual.getY() + height) / 4) && rightDir; i++){
+                if(!(i >= 6 && i < 68))
+                    rightDir = false;
+                else if(groundMap[i][j] == 0 || groundMap[i][j] == STONE)
+                    rightDir = false;
+            }
+
+            if(rightDir){
+                bool change = false;
+                if(actual.getFirstChooseDirection() == NONE){
+                    actual.setFirstChooseDirection(RIGHT);
+                    change = true;
+                }
+                
+                toVisit.push_back(Node(actual.getX() + speed, actual.getY(), actual.getFirstChooseDirection()));
+                visited.push_back(Node(actual.getX() + speed, actual.getY(), actual.getFirstChooseDirection()));
+                
+                if(change)
+                    actual.setFirstChooseDirection(NONE);
+            }
+        }
+
+        bool leftDir = true;
+        j = (actual.getX() / 4) - 1;
+        if(j < 14 * 4 && j >= 0 && find(visited.begin(), visited.end(), Node(actual.getX() - speed, actual.getY(), actual.getFirstChooseDirection())) == visited.end()){
+            for(int i = actual.getY() / 4; i < ((actual.getY() + height) / 4) && leftDir; i++){
+                if(!(i >= 6 && i < 68))
+                    leftDir = false;
+                else if(groundMap[i][j] == 0 || groundMap[i][j] == STONE)
+                    leftDir = false;
+            }
+
+            if(leftDir){
+                bool change = false;
+                if(actual.getFirstChooseDirection() == NONE){
+                    actual.setFirstChooseDirection(LEFT);
+                    change = true;
+                }
+                
+                toVisit.push_back(Node(actual.getX() - speed, actual.getY(), actual.getFirstChooseDirection()));
+                visited.push_back(Node(actual.getX() - speed, actual.getY(), actual.getFirstChooseDirection()));
+                
+                if(change)
+                    actual.setFirstChooseDirection(NONE);
+            }
+
+        }
+
+        bool upDir = true;
+        int i = (actual.getY() / 4) - 1;
+        if(i >= 6 && i < 68 && find(visited.begin(), visited.end(), Node(actual.getX(), actual.getY() - speed, actual.getFirstChooseDirection())) == visited.end()){
+            for(int j = actual.getX() / 4; j < ((actual.getX() + width) / 4) && upDir; j++){
+                if(!(j < 14 * 4 && j >= 0))
+                    upDir = false;
+                else if(groundMap[i][j] == 0 || groundMap[i][j] == STONE)
+                    upDir = false;
+            }
+
+            if(upDir){
+                bool change = false;
+                if(actual.getFirstChooseDirection() == NONE){
+                    actual.setFirstChooseDirection(UP);
+                    change = true;
+                }
+                
+                toVisit.push_back(Node(actual.getX(), actual.getY() - speed, actual.getFirstChooseDirection()));
+                visited.push_back(Node(actual.getX(), actual.getY() - speed, actual.getFirstChooseDirection()));
+                
+                if(change)
+                    actual.setFirstChooseDirection(NONE);
+            }
+        }
+
+        bool downDir = true;
+        i = (actual.getY() + height) / 4;
+        if(i >= 6 && i < 68 && find(visited.begin(), visited.end(), Node(actual.getX(), actual.getY() + speed, actual.getFirstChooseDirection())) == visited.end()){
+            for(int j = actual.getX() / 4; j < ((actual.getX() + width) / 4 ) && downDir; j++){
+                if(!(j < 14 * 4 && j >= 0))
+                    downDir = false;
+                else if(groundMap[i][j] == 0 || groundMap[i][j] == STONE)
+                    downDir = false;
+            }
+
+            if(downDir){
+                bool change = false;
+                if(actual.getFirstChooseDirection() == NONE){
+                    actual.setFirstChooseDirection(DOWN);
+                    change = true;
+                }
+                
+                toVisit.push_back(Node(actual.getX(), actual.getY() + speed, actual.getFirstChooseDirection()));
+                visited.push_back(Node(actual.getX(), actual.getY() + speed, actual.getFirstChooseDirection()));
+                
+                if(change)
+                    actual.setFirstChooseDirection(NONE);
+            }
+        }
+
+    }
+
+    return NONE;
+}
+
+//ALTERNATIVE VERSION OF findPath (DFS)
+/*int Dragon::findPath(direction prevDiretion, int _x, int _y, objective objectiveToReach){
 
     if(objectiveToReach == PLAYER){
         for(int i = _y / 4; i < ((_y + height) / 4 ); i++)
@@ -387,13 +517,15 @@ int Dragon::findPath(direction prevDiretion, int _x, int _y, objective objective
 
     return 0;
     
-}
+}*/
 
 void Dragon::calculateDirection(objective objectiveToReach){
 
-    initPathMap();
+    //Used in alternative findPath (DFS)
+    //initPathMap();
 
-    if(findPath(previousDirection, x, y, objectiveToReach) == 0){
+    direction directionToTake = findPath(x, y, objectiveToReach);
+    if(directionToTake == NONE){
         lockedPathCounter++;
         bool rightDir = true, leftDir = true, upDir = true, downDir = true, chosed = false;
         int j = (x + width) / 4;
@@ -460,6 +592,8 @@ void Dragon::calculateDirection(objective objectiveToReach){
             else if(upDir)
                 previousDirection = UP;
         }
+    } else {
+        previousDirection = directionToTake; 
     }
 
     if(lockedPathCounter > 30){

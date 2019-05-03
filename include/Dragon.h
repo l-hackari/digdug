@@ -36,9 +36,9 @@ class Dragon : public AnimatedSprite{
         
         
     private:
-        //funzione ricorsiva che calcola il costo di tutti i percorsi disponibili per arrivare all'obiettivo passato come parametro
-        //recursive function that calculates the cost of all available paths to arrive to the objective passed as parameter
-        int findPath(direction prevDirection, int x, int y, objective objectiveToReach);
+        //funzione che calcola il costo di tutti i percorsi disponibili per arrivare all'obiettivo passato come parametro
+        //function that calculates the cost of all available paths to arrive to the objective passed as parameter
+        direction findPath(int startX, int startY, objective objectiveToReach);
 
         //calcola le direzioni da prendere per raggiungere l'obiettivo in modalità alternatva
         //calculates directions to take to reach the objective in alternative mode

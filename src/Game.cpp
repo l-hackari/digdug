@@ -85,8 +85,8 @@ void Game::checkendGame(){
 
 }
 
-bool Game::checkStopGame(){
-    Text pauseText(6,40,al_map_rgb(255,255,255), nativeScreenWidth / 2, (nativeScreenHeight / 2)-40, "PAUSE");
+void Game::checkStopGame(){
+    Text pauseText(6,40,al_map_rgb(255,255,255), nativeScreenWidth / 2, (nativeScreenHeight / 2) - 20, "PAUSE");
     pauseText.drawOnScreen();
     al_stop_sample(&ret);
     isGameInPause = true;

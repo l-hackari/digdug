@@ -24,7 +24,9 @@ class Game {
         //if "ESC" key is pressed terminates game execution
         void checkendGame();
 
-        bool checkStopGame();
+        //disegna la scritta "Pausa" e stoppa le operazioni di disegno
+        //draws "Pause" text and stops graphic routines
+        void checkStopGame();
 
         //termina l'esecuzione del gioco
         //terminates game executon

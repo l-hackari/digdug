@@ -2,6 +2,7 @@
 #define ANIMATED_SPRITE_H
 #include "StaticSprite.h"
 #include "Text.h"
+#include "Node.h"
 
 enum objective {PLAYER = 0, EXIT};
 

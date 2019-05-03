@@ -9,6 +9,7 @@
 #include <string>
 #include <ctime>
 #include <vector>
+#include <list>
 #include <climits>
 #include <fstream>
 #include <iostream>
