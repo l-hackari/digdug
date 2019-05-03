@@ -85,6 +85,14 @@ void Game::checkendGame(){
 
 }
 
+bool Game::checkStopGame(){
+    Text pauseText(6,40,al_map_rgb(255,255,255), nativeScreenWidth / 2, (nativeScreenHeight / 2)-40, "PAUSE");
+    pauseText.drawOnScreen();
+    al_stop_sample(&ret);
+    isGameInPause = true;
+
+}
+
 void Game::eventManager(){
 
     al_wait_for_event(eventQueue, &actualEvent);
@@ -108,7 +116,6 @@ void Game::eventManager(){
         }
 
     } else if(actualEvent.type == ALLEGRO_EVENT_KEY_DOWN){
-
         switch (actualEvent.keyboard.keycode)
         {
             case ALLEGRO_KEY_ESCAPE:
@@ -129,6 +136,15 @@ void Game::eventManager(){
             case ALLEGRO_KEY_D:
                 actualPressedKey = ALLEGRO_KEY_D;
                 break;
+            case ALLEGRO_KEY_V:
+                if(!setPause){
+                    setPause = true;
+                } else {
+                    isGameInPause = false;
+                    setPause = false;
+                    al_play_sample(audios[BACKGROUND_SOUND], 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, &ret);
+                }
+                    
             default:
                 break;
         }
@@ -230,7 +246,7 @@ void Game::updateGround(){
 
 void Game::drawScene(){
 
-    if(redraw && al_is_event_queue_empty(eventQueue)){
+    if(redraw && al_is_event_queue_empty(eventQueue) && !isGameInPause){
         al_set_target_bitmap(buffer);
         al_clear_to_color(al_map_rgb(0, 0, 0));
         al_draw_bitmap(background, 0, 0, 0);
@@ -241,6 +257,8 @@ void Game::drawScene(){
                 gameObjs[i]->drawOnScreen();                
         }
 
+        if(setPause)
+            checkStopGame();
         al_set_target_backbuffer(mainDisplay);
         al_clear_to_color(al_map_rgb(0, 0, 0));
         al_draw_scaled_bitmap(buffer, 0, 0, nativeScreenWidth, nativeScreenHeight, (displayMode.width - (nativeScreenWidth * scale)) / 2, (displayMode.height - (nativeScreenHeight * scale)) / 2, nativeScreenWidth * scale, nativeScreenHeight * scale, 0);
@@ -258,7 +276,8 @@ void Game::drawScene(){
             lastEnemySong = true;
         }
 
-    } 
+    }
+
 
     if(score >= scoreBonusLimit){
         gameObjs.push_back(new Powerups(POWER_UP, 104, 132, 16 , 16));

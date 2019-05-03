@@ -24,6 +24,8 @@ class Game {
         //if "ESC" key is pressed terminates game execution
         void checkendGame();
 
+        bool checkStopGame();
+
         //termina l'esecuzione del gioco
         //terminates game executon
         void quit();
@@ -106,7 +108,8 @@ class Game {
         bool redraw;
         int mapScore = 0;
         int round = 0;
-
+        bool isGameInPause = false;
+        bool setPause = false;
 
 };
 
