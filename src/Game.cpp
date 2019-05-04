@@ -18,6 +18,7 @@ Game::Game(){
     loadBestScore();
     loadAudios();
     initGameOjects();
+    al_rest(1.0);
     mainTimer = al_create_timer(1.0 / FPS);
     swallowTimer = al_create_timer(3);
     al_start_timer(mainTimer);
@@ -41,6 +42,10 @@ void Game::createDisplay(){
     float scaleH = static_cast<float>(displayMode.height) / static_cast<float>(nativeScreenHeight);
     scale = min(scaleW, scaleH);
    
+}
+
+void Game::createMenu(){
+    al_draw_bitmap(al_load_bitmap("../res/images/menu/menu.png") ,0,0,0);
 }
 
 void Game::loadBestScore(){
@@ -144,6 +149,11 @@ void Game::eventManager(){
                     setPause = false;
                     al_play_sample(audios[BACKGROUND_SOUND], 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, &ret);
                 }
+                break;
+            case ALLEGRO_KEY_ENTER:
+                showMenu = false;
+                al_play_sample(audios[BACKGROUND_SOUND], 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, &ret);
+                break;
                     
             default:
                 break;
@@ -171,7 +181,8 @@ void Game::initGameOjects(){
     gameObjs.push_back(new Score(3, 10, al_map_rgb(255,255,255), 142, 274));
     gameObjs.push_back(new Text(5, 10, al_map_rgb(255,255,255), 200, 274, "ROUND "));
     gameObjs.push_back(new Text(6, 10, al_map_rgb(255,255,255), 220, 274, round));
-    al_play_sample(audios[BACKGROUND_SOUND], 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, &ret);
+    if(!showMenu)
+        al_play_sample(audios[BACKGROUND_SOUND], 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, &ret);
 
 }
 
@@ -249,16 +260,20 @@ void Game::drawScene(){
     if(redraw && al_is_event_queue_empty(eventQueue) && !isGameInPause){
         al_set_target_bitmap(buffer);
         al_clear_to_color(al_map_rgb(0, 0, 0));
-        al_draw_bitmap(background, 0, 0, 0);
-        updateGround();
+        if(showMenu){
+            createMenu();
+        } else {
+            al_draw_bitmap(background, 0, 0, 0);
+            updateGround();
 
-        for(int i = 0; i < gameObjs.size(); i++){
-            if(gameObjs[i]->getVisible())
-                gameObjs[i]->drawOnScreen();                
+            for(int i = 0; i < gameObjs.size(); i++){
+                if(gameObjs[i]->getVisible())
+                    gameObjs[i]->drawOnScreen();                
+            }
+
+            if(setPause)
+                checkStopGame();
         }
-
-        if(setPause)
-            checkStopGame();
         al_set_target_backbuffer(mainDisplay);
         al_clear_to_color(al_map_rgb(0, 0, 0));
         al_draw_scaled_bitmap(buffer, 0, 0, nativeScreenWidth, nativeScreenHeight, (displayMode.width - (nativeScreenWidth * scale)) / 2, (displayMode.height - (nativeScreenHeight * scale)) / 2, nativeScreenWidth * scale, nativeScreenHeight * scale, 0);

@@ -16,6 +16,8 @@ class Game {
         //creates a display (fullscreen) and sets it as main display
         void createDisplay();
 
+        void createMenu();
+
         //inizializza tutte le celle delle matrici che rappresentano mappa di gioco e del terreno di gioco
         //initializes all cells of the matrices that represent the game's map and the game's ground
         void initGameMaps();
@@ -87,6 +89,7 @@ class Game {
         //ripristina la posizione iniziale degli oggetti di gioco
         //restores the initial position of game objects
         void resetGameObjects();
+
         
     private:
         ALLEGRO_DISPLAY *mainDisplay;
@@ -112,6 +115,7 @@ class Game {
         int round = 0;
         bool isGameInPause = false;
         bool setPause = false;
+        bool showMenu = true;
 
 };
 
