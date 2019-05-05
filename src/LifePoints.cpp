@@ -1,6 +1,6 @@
 #include "../include/LifePoints.h"
 
-LifePoints::LifePoints(int _id, int _x, int _y, int _width, int _height): StaticSprite(_id, _x, _y, _width,_height){
+LifePoints::LifePoints(int _x, int _y, int _width, int _height): StaticSprite(_x, _y, _width,_height){
     bitmap = al_load_bitmap("../res/images/player/al1.png");
 }
 

@@ -1,7 +1,8 @@
 #include "../include/Stone.h"
 
-Stone::Stone(int _id, int _x, int _y, int _width, int _height): AnimatedSprite(_id, _x, _y, _width, _height){
+Stone::Stone(int _x, int _y, int _width, int _height): AnimatedSprite(_x, _y, _width, _height){
     
+    id = STONE;
     initStone();
     speed = 8;
     stoneBitMap = al_load_bitmap("../res/images/stone/stone1.png");

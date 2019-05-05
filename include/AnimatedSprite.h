@@ -4,13 +4,12 @@
 #include "Text.h"
 #include "Node.h"
 
-enum objective {PLAYER = 0, EXIT};
-
 class AnimatedSprite : public StaticSprite{
 
     public:
         AnimatedSprite() {}
-        AnimatedSprite(int _id, int _x, int _y, int _width, int _height);
+
+        AnimatedSprite(int _x, int _y, int _width, int _height);
         
         //disegna su schermo l'oggetto di gioco
         //draws the game objects on screen
@@ -28,9 +27,15 @@ class AnimatedSprite : public StaticSprite{
         //sets to '0' all collisionMatrix's cells that were set to 'id' (isColliding function)
         void freeCollisionMap();
 
+        //controlla se l'oggetto di gioco è stato colliso da un masso
+        //checks if game object was collided by a stone
         bool itsCrashing();
 
+        //disegna il punteggio ottenuto dall'uccisione del nemico o da un bonus
+        //draws the score obtained from killing enemy or obtained from a bonus
         void drawScoreValue();
+
+        ~AnimatedSprite();
 
     protected:
         vector<ALLEGRO_BITMAP*> movementSprites;

@@ -5,7 +5,7 @@ class Player : public AnimatedSprite{
 
     public:
         Player() {}
-        Player(int _id, int _x, int _y, int _width, int _height);
+        Player(int _x, int _y, int _width, int _height);
         
         //disegna su schermo l'oggetto di gioco
         //draws the game objects on screen

@@ -15,9 +15,16 @@ class Level
         int monkeysNumber;
         int stonesNumber;
 
-        void setDragonsPosition();
-        void setMonkeysPosition();
+        //funzione che genera in modo randomico la posizione dei nemici
+        //function that generates randomly enemies' position
+        void setEnemiesPosition(object enemyToPosition);
+
+        //funzione che genera in modo randomico la posizione del player
+        //function that generates randomly player's position
         void setPlayerPosition();
+
+        //funzione che genera in modo randomico la posizione delle pietre
+        //function that generates randomly stones' position
         void setStonesPosition();
     public:
         Level(const int &difficulty);

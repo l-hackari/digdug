@@ -19,7 +19,7 @@ using namespace std;
 
 extern const int FPS;
 enum direction {NONE = 0, LEFT, RIGHT, UP, DOWN};
-enum object {PLAYER_ = 1, DRAGON, MONKEY, STONE, POWER_UP};
+enum object {PLAYER = 1, DRAGON, MONKEY, STONE, POWER_UP};
 enum audio {BACKGROUND_SOUND = 0, ATTACK = 1, SWALLOW = 2, MONSTER_TOUCHED = 3, DIED = 4, MONSTER_DIED = 5, GAME_OVER = 6, LAST_ENEMY = 7, ROUND_WIN = 8};
 extern vector<ALLEGRO_SAMPLE*> audios;
 extern bool died;

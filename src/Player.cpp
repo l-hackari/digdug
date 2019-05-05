@@ -1,6 +1,8 @@
 #include "../include/Player.h"
 
-Player::Player(int _id, int _x, int _y, int _width, int _height): AnimatedSprite(_id, _x, _y, _width, _height){
+Player::Player(int _x, int _y, int _width, int _height): AnimatedSprite(_x, _y, _width, _height){
+    
+    id = PLAYER;
     speed = 4;
     flatten = al_load_bitmap("../res/images/player/fl.png");
     varrow = al_load_bitmap("../res/images/arrow/varrow.png");
@@ -567,6 +569,8 @@ void Player::drawOnScreen(){
                 break;
             case ALLEGRO_KEY_D:
                 animationLimit = attackSprites.size();
+                previousAnimation = ALLEGRO_KEY_D;
+
                 if(arrowCounter < 5){
                     if(isArrowCollided()){
                         animationLimit = swallowSprites.size();
@@ -577,14 +581,15 @@ void Player::drawOnScreen(){
                         arrowTouched = true;
                     }
                 }
-                arrowCounter--;
-                    if(arrowCounter == 0)
-                        arrowCounter = 4;
-                drawAttack();
-                if(!arrowTouched){
-                    actualFrame++;
-                    previousAnimation = ALLEGRO_KEY_D;
 
+                arrowCounter--;
+
+                if(arrowCounter == 0)
+                    arrowCounter = 4;
+                        
+                drawAttack();
+                actualFrame++;
+                if(!arrowTouched){
                     if(isArrowColliding()){
                         animationLimit = swallowSprites.size();
                         actualFrame = 0;
@@ -713,7 +718,7 @@ void Player::drawOnScreen(){
                 al_play_sample(audios[BACKGROUND_SOUND], 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, &ret);
             }
 
-            if(actualPressedKey != ALLEGRO_KEY_D && actualPressedKey != ALLEGRO_KEY_ESCAPE){
+            if(actualPressedKey != ALLEGRO_KEY_D && actualPressedKey != ALLEGRO_KEY_SPACE){
                 isSwallowing = false;
                 isArrowFree = false;
                 actualFrame = 0;

@@ -14,7 +14,7 @@ Game::Game(){
     al_init_acodec_addon();
     al_install_audio();
     initGameMaps();
-    loadLevel();
+    loadLevel(1);
     loadBestScore();
     loadAudios();
     initGameOjects();
@@ -91,7 +91,7 @@ void Game::checkendGame(){
 }
 
 void Game::checkStopGame(){
-    Text pauseText(6,40,al_map_rgb(255,255,255), nativeScreenWidth / 2, (nativeScreenHeight / 2) - 20, "PAUSE");
+    Text pauseText(40,al_map_rgb(255,255,255), nativeScreenWidth / 2, (nativeScreenHeight / 2) - 20, "PAUSE");
     pauseText.drawOnScreen();
     al_stop_sample(&ret);
     isGameInPause = true;
@@ -118,6 +118,7 @@ void Game::eventManager(){
         } else if(actualEvent.any.source == al_get_timer_event_source(swallowTimer)) {
             isSwallowTimerActive = false;
             al_stop_timer(swallowTimer);
+            swallowValue = 0;
         }
 
     } else if(actualEvent.type == ALLEGRO_EVENT_KEY_DOWN){
@@ -165,22 +166,21 @@ bool Game::isGameRunning(){
     return isRunning;
 }
 
-void Game::loadLevel(){
-    actualLevel = new Level(1);
-    round++;
+void Game::loadLevel(int difficulty){
+    actualLevel = new Level(difficulty);
     gameObjs = actualLevel->getGameObjects();
     enemiesCounter = actualLevel->getEnemiesNumber();
 }
 
 void Game::initGameOjects(){
 
-    gameObjs.push_back(new LifePoints(2,0,274,16,16));
-    gameObjs.push_back(new Text(2, 10, al_map_rgb(255,0,0), 110, 0, "HIGH SCORE"));
-    gameObjs.push_back(new Text(3, 10, al_map_rgb(255,255,255), 110, 12,bestScore));
-    gameObjs.push_back(new Text(3, 10, al_map_rgb(255,255,255), 100, 274,"SCORE"));
-    gameObjs.push_back(new Score(3, 10, al_map_rgb(255,255,255), 142, 274));
-    gameObjs.push_back(new Text(5, 10, al_map_rgb(255,255,255), 200, 274, "ROUND "));
-    gameObjs.push_back(new Text(6, 10, al_map_rgb(255,255,255), 220, 274, round));
+    gameObjs.push_back(new LifePoints(0,274,16,16));
+    gameObjs.push_back(new Text(10, al_map_rgb(255,0,0), 110, 0, "HIGH SCORE"));
+    gameObjs.push_back(new Text(10, al_map_rgb(255,255,255), 110, 12,bestScore));
+    gameObjs.push_back(new Text(10, al_map_rgb(255,255,255), 100, 274,"SCORE"));
+    gameObjs.push_back(new Score(10, al_map_rgb(255,255,255), 142, 274));
+    gameObjs.push_back(new Text(10, al_map_rgb(255,255,255), 200, 274, "ROUND "));
+    gameObjs.push_back(new Text(10, al_map_rgb(255,255,255), 220, 274, round));
     if(!showMenu)
         al_play_sample(audios[BACKGROUND_SOUND], 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, &ret);
 
@@ -295,7 +295,7 @@ void Game::drawScene(){
 
 
     if(score >= scoreBonusLimit){
-        gameObjs.push_back(new Powerups(POWER_UP, 104, 132, 16 , 16));
+        gameObjs.push_back(new Powerups(104, 132, 16 , 16));
         scoreBonusLimit+=scoreBonusLimit*2;
     }
 
@@ -306,7 +306,7 @@ void Game::drawFinalScene(){
     al_clear_to_color(al_map_rgb(0, 0, 0));
     al_draw_bitmap(background, 0, 0, 0);
     updateGround();
-    Text gameOver(1, 20, al_map_rgb(255,255,255), nativeScreenWidth / 2, nativeScreenHeight / 2, "GAME OVER");
+    Text gameOver(20, al_map_rgb(255,255,255), nativeScreenWidth / 2, nativeScreenHeight / 2, "GAME OVER");
     gameOver.drawOnScreen();
     al_set_target_backbuffer(mainDisplay);
     al_clear_to_color(al_map_rgb(0, 0, 0));
@@ -323,7 +323,8 @@ void Game::resetGameScene(){
         al_rest(3.0);
         deleteGameObjects();
         initGameMaps();
-        loadLevel();
+        round++;
+        loadLevel(round);
         ALLEGRO_SAMPLE* temp = audios[LAST_ENEMY];
         audios[LAST_ENEMY] = audios[BACKGROUND_SOUND];
         audios[BACKGROUND_SOUND] = temp;

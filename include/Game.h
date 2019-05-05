@@ -11,7 +11,9 @@ class Game {
 
     public:
         Game();
-        ~Game();       
+        ~Game();
+
+
         //crea un display (fullscreen) e lo imposta come display principale
         //creates a display (fullscreen) and sets it as main display
         void createDisplay();
@@ -68,7 +70,7 @@ class Game {
 
         //carica tutte le impostazioni generate dal livello creato
         //loads all settings generted by created level
-        void loadLevel();
+        void loadLevel(int difficulty);
 
         //carica il punteggio migliore registrato
         //loads the best registered score
@@ -112,7 +114,7 @@ class Game {
         float scale;
         bool redraw;
         int mapScore = 0;
-        int round = 0;
+        int round = 1;
         bool isGameInPause = false;
         bool setPause = false;
         bool showMenu = true;

@@ -5,7 +5,7 @@
 class LifePoints : public StaticSprite {
     public:
         LifePoints() {}
-        LifePoints(int _id, int _x, int _y, int _width, int _height);
+        LifePoints(int _x, int _y, int _width, int _height);
         
         //disegna su schermo l'oggetto di gioco
         //draws the game objects on screen

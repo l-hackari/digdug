@@ -6,7 +6,7 @@ class Stone : public AnimatedSprite{
 
     public:
         Stone(){}
-        Stone(int _id, int _x, int _y, int _width, int _height);
+        Stone(int _x, int _y, int _width, int _height);
 
         //disegna su schermo l'oggetto di gioco
         //draws the game objects on screen

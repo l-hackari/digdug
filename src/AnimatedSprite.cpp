@@ -1,13 +1,13 @@
 #include "../include/AnimatedSprite.h"
 
-AnimatedSprite::AnimatedSprite(int _id, int _x, int _y, int _width, int _height): StaticSprite(_id, _x, _y, _width, _height), actualFrame(0), previousDirection(RIGHT), orientation(RIGHT), isDying(false){}
+AnimatedSprite::AnimatedSprite(int _x, int _y, int _width, int _height): StaticSprite(_x, _y, _width, _height), actualFrame(0), previousDirection(RIGHT), orientation(RIGHT), isDying(false){}
 
 void AnimatedSprite::drawScoreValue(){
 
     if(text == nullptr)
-        text = new Text(5,10,al_map_rgb(255,255,255),x,y,scoreValue);
+        text = new Text(10,al_map_rgb(255,255,255),x,y,scoreValue);
     else
-        text -> drawOnScreen ();
+        text -> drawOnScreen();
 }
 
 void AnimatedSprite::drawOnScreen(){}
@@ -15,8 +15,8 @@ void AnimatedSprite::drawOnScreen(){}
 
 bool AnimatedSprite::itsCrashing(){
     
-    int i = (y-1)/4;
-    for(int j = x/4; j < (x+width)/4; j++){
+    int i = (y / 4) - 1;
+    for(int j = x / 4; j < (x + width) / 4; j++){
         if(collisionMap[i][j] == STONE){
             return true;
         }
@@ -85,5 +85,9 @@ int AnimatedSprite::isColliding(){
     }
 
     return collidedID;
+}
+
+AnimatedSprite::~AnimatedSprite(){
+    delete text;
 }
 
