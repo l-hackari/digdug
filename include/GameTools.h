@@ -27,13 +27,13 @@ extern int nativeScreenWidth;
 extern int nativeScreenHeight;
 extern int actualPressedKey;
 extern int score;
-extern int scoreBonusLimit;
 extern int collisionMap[18*4][14*4];
 extern int groundMap[18*4][14*4];
 extern int lifePoints;
 extern ALLEGRO_SAMPLE_ID ret;
 extern bool isBackgroundAudioOn;
 extern ALLEGRO_TIMER *swallowTimer;
+extern ALLEGRO_TIMER *bonusTimer;
 extern bool isSwallowTimerActive;
 extern int swallowValue;
 extern int playerX;
@@ -41,6 +41,7 @@ extern int playerY;
 extern int enemiesCounter;
 extern bool stoneIsFalling;
 extern bool isEnemySwallowing;
+extern int killedEnemy;
 
 
 #endif

@@ -4,21 +4,21 @@ Player::Player(int _x, int _y, int _width, int _height): AnimatedSprite(_x, _y, 
     
     id = PLAYER;
     speed = 4;
-    flatten = al_load_bitmap("../res/images/player/fl.png");
-    varrow = al_load_bitmap("../res/images/arrow/varrow.png");
-    harrow = al_load_bitmap("../res/images/arrow/harrow.png");
-    movementSprites.push_back(al_load_bitmap("../res/images/player/run2.png"));
-    movementSprites.push_back(al_load_bitmap("../res/images/player/run1.png"));
-    swallowSprites.push_back(al_load_bitmap("../res/images/player/sw1.png"));
-    swallowSprites.push_back(al_load_bitmap("../res/images/player/sw2.png")); 
-    deathSprites.push_back(al_load_bitmap("../res/images/player/dei.png"));
-    deathSprites.push_back(al_load_bitmap("../res/images/player/de1.png"));
-    deathSprites.push_back(al_load_bitmap("../res/images/player/de2.png"));
-    deathSprites.push_back(al_load_bitmap("../res/images/player/de3.png"));
-    deathSprites.push_back(al_load_bitmap("../res/images/player/de4.png"));
-    alternativeSprites.push_back(al_load_bitmap("../res/images/player/al1.png"));
-    alternativeSprites.push_back(al_load_bitmap("../res/images/player/al2.png"));
-    attackSprites.push_back(al_load_bitmap("../res/images/player/at.png"));
+    flatten = al_load_bitmap("res/images/player/fl.png");
+    varrow = al_load_bitmap("res/images/arrow/varrow.png");
+    harrow = al_load_bitmap("res/images/arrow/harrow.png");
+    movementSprites.push_back(al_load_bitmap("res/images/player/run2.png"));
+    movementSprites.push_back(al_load_bitmap("res/images/player/run1.png"));
+    swallowSprites.push_back(al_load_bitmap("res/images/player/sw1.png"));
+    swallowSprites.push_back(al_load_bitmap("res/images/player/sw2.png")); 
+    deathSprites.push_back(al_load_bitmap("res/images/player/dei.png"));
+    deathSprites.push_back(al_load_bitmap("res/images/player/de1.png"));
+    deathSprites.push_back(al_load_bitmap("res/images/player/de2.png"));
+    deathSprites.push_back(al_load_bitmap("res/images/player/de3.png"));
+    deathSprites.push_back(al_load_bitmap("res/images/player/de4.png"));
+    alternativeSprites.push_back(al_load_bitmap("res/images/player/al1.png"));
+    alternativeSprites.push_back(al_load_bitmap("res/images/player/al2.png"));
+    attackSprites.push_back(al_load_bitmap("res/images/player/at.png"));
 }
 
 

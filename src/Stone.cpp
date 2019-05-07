@@ -5,12 +5,12 @@ Stone::Stone(int _x, int _y, int _width, int _height): AnimatedSprite(_x, _y, _w
     id = STONE;
     initStone();
     speed = 8;
-    stoneBitMap = al_load_bitmap("../res/images/stone/stone1.png");
-    alternativeSprites.push_back(al_load_bitmap("../res/images/stone/stone2.png"));
-    alternativeSprites.push_back(al_load_bitmap("../res/images/stone/stone1.png"));
-    alternativeSprites.push_back(al_load_bitmap("../res/images/stone/stone2.png"));
-    deathSprites.push_back(al_load_bitmap("../res/images/stone/stone3.png"));
-    deathSprites.push_back(al_load_bitmap("../res/images/stone/stone4.png"));
+    stoneBitMap = al_load_bitmap("res/images/stone/stone1.png");
+    alternativeSprites.push_back(al_load_bitmap("res/images/stone/stone2.png"));
+    alternativeSprites.push_back(al_load_bitmap("res/images/stone/stone1.png"));
+    alternativeSprites.push_back(al_load_bitmap("res/images/stone/stone2.png"));
+    deathSprites.push_back(al_load_bitmap("res/images/stone/stone3.png"));
+    deathSprites.push_back(al_load_bitmap("res/images/stone/stone4.png"));
 
 }
 

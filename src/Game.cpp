@@ -3,6 +3,7 @@
 Game::Game(){
 
     isRunning = true;
+    srand(time(NULL));
     redraw = false;
     actualPressedKey = ALLEGRO_KEY_SPACE;
     al_init();
@@ -21,16 +22,19 @@ Game::Game(){
     al_rest(1.0);
     mainTimer = al_create_timer(1.0 / FPS);
     swallowTimer = al_create_timer(3);
+    bonusTimer = al_create_timer(30);
     al_start_timer(mainTimer);
+    al_start_timer(bonusTimer);
     eventQueue = al_create_event_queue();
     al_register_event_source(eventQueue, al_get_display_event_source(mainDisplay));
     al_register_event_source(eventQueue, al_get_keyboard_event_source());
     al_register_event_source(eventQueue, al_get_timer_event_source(mainTimer));
     al_register_event_source(eventQueue, al_get_timer_event_source(swallowTimer));
-    centerGround = al_load_bitmap("../res/images/ground/ground2.png");
-    middleGround = al_load_bitmap("../res/images/ground/ground1.png");
-    cornerGround = al_load_bitmap("../res/images/ground/ground3.png");
-    background = al_load_bitmap("../res/images/background.png");
+    al_register_event_source(eventQueue, al_get_timer_event_source(bonusTimer));
+    centerGround = al_load_bitmap("res/images/ground/ground2.png");
+    middleGround = al_load_bitmap("res/images/ground/ground1.png");
+    cornerGround = al_load_bitmap("res/images/ground/ground3.png");
+    background = al_load_bitmap("res/images/background.png");
 }
 
 void Game::createDisplay(){
@@ -45,12 +49,15 @@ void Game::createDisplay(){
 }
 
 void Game::createMenu(){
-    al_draw_bitmap(al_load_bitmap("../res/images/menu/menu.png") ,0,0,0);
+    if(!showControls)
+        al_draw_bitmap(al_load_bitmap("res/images/menu/menu.png") ,0,0,0);
+    else
+        al_draw_bitmap(al_load_bitmap("res/images/menu/menu2.png") ,0,0,0);
 }
 
 void Game::loadBestScore(){
     ifstream bScoreFile;
-    bScoreFile.open("../score/best_score.txt", ios::in);
+    bScoreFile.open("score/best_score.txt", ios::in);
     bScoreFile >> bestScore;
     if(bestScore < 0)
         bestScore = 0;
@@ -119,6 +126,8 @@ void Game::eventManager(){
             isSwallowTimerActive = false;
             al_stop_timer(swallowTimer);
             swallowValue = 0;
+        } else if(actualEvent.any.source == al_get_timer_event_source(bonusTimer)) {
+            gameObjs.push_back(new Powerups(104, 132, 16, 16));
         }
 
     } else if(actualEvent.type == ALLEGRO_EVENT_KEY_DOWN){
@@ -152,8 +161,12 @@ void Game::eventManager(){
                 }
                 break;
             case ALLEGRO_KEY_ENTER:
-                showMenu = false;
-                al_play_sample(audios[BACKGROUND_SOUND], 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, &ret);
+                if(!showControls){
+                    showControls = true;
+                } else {
+                    showMenu = false;
+                    al_play_sample(audios[BACKGROUND_SOUND], 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, &ret);
+                }
                 break;
                     
             default:
@@ -188,15 +201,15 @@ void Game::initGameOjects(){
 
 void Game::loadAudios(){
     al_reserve_samples(10);
-    audios.push_back(al_load_sample("../res/audio/03-DigDug Walking.wav"));
-    audios.push_back(al_load_sample("../res/audio/22-Harpoon.wav"));
-    audios.push_back(al_load_sample("../res/audio/23-Pumping.wav"));
-    audios.push_back(al_load_sample("../res/audio/09-Monster touched DigDug.wav"));
-    audios.push_back(al_load_sample("../res/audio/10-DidDug Disappearing.wav"));
-    audios.push_back(al_load_sample("../res/audio/17-Monster Squashed.wav"));
-    audios.push_back(al_load_sample("../res/audio/11-Game Over Music.wav"));
-    audios.push_back(al_load_sample("../res/audio/08-DigDug Walking.wav"));
-    audios.push_back(al_load_sample("../res/audio/05-Round Clear Music.wav"));
+    audios.push_back(al_load_sample("res/audio/03-DigDug Walking.wav"));
+    audios.push_back(al_load_sample("res/audio/22-Harpoon.wav"));
+    audios.push_back(al_load_sample("res/audio/23-Pumping.wav"));
+    audios.push_back(al_load_sample("res/audio/09-Monster touched DigDug.wav"));
+    audios.push_back(al_load_sample("res/audio/10-DidDug Disappearing.wav"));
+    audios.push_back(al_load_sample("res/audio/17-Monster Squashed.wav"));
+    audios.push_back(al_load_sample("res/audio/11-Game Over Music.wav"));
+    audios.push_back(al_load_sample("res/audio/08-DigDug Walking.wav"));
+    audios.push_back(al_load_sample("res/audio/05-Round Clear Music.wav"));
 }
 
 void Game::updateGround(){
@@ -293,12 +306,6 @@ void Game::drawScene(){
 
     }
 
-
-    if(score >= scoreBonusLimit){
-        gameObjs.push_back(new Powerups(104, 132, 16 , 16));
-        scoreBonusLimit+=scoreBonusLimit*2;
-    }
-
 }
 
 void Game::drawFinalScene(){
@@ -384,7 +391,7 @@ void Game::deleteGameObjects(){
 void Game::saveBestScore(){
     if(score > bestScore){
         ofstream bScoreFile;
-        bScoreFile.open("../score/best_score.txt", ios::trunc);
+        bScoreFile.open("score/best_score.txt", ios::trunc);
         bScoreFile << score;
     }
 }

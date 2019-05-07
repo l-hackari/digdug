@@ -1,7 +1,6 @@
 #include "../include/Level.h"
 
-Level::Level(const int &difficulty): dragonsNumber(1 * difficulty), monkeysNumber(1.5 * difficulty), stonesNumber(3){
-    srand(time(NULL));
+Level::Level(const int &difficulty): dragonsNumber(difficulty), monkeysNumber(difficulty + 1), stonesNumber(difficulty * 2){
     gameObjs.push_back(new Player(104, 132, 16, 16));
     setPlayerPosition();
     setStonesPosition();

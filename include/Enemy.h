@@ -66,6 +66,7 @@ class Enemy : public AnimatedSprite{
         bool exitReached = false;
         int lockedPathCounter;
         int rallenty = 0;
+        int lockedPathLimit;
 
 
 };

@@ -5,18 +5,18 @@ Monkey::Monkey(int _x, int _y, int _width, int _height):Enemy(_x, _y, _width, _h
     id = MONKEY;
     scoreValue = 200;
     speed = 4;
-    movementSprites.push_back(al_load_bitmap("../res/images/redenemy/m1.png"));
-    movementSprites.push_back(al_load_bitmap("../res/images/redenemy/m2.png"));
+    movementSprites.push_back(al_load_bitmap("res/images/redenemy/m1.png"));
+    movementSprites.push_back(al_load_bitmap("res/images/redenemy/m2.png"));
 
-    deathSprites.push_back(al_load_bitmap("../res/images/redenemy/de1.png"));
-    deathSprites.push_back(al_load_bitmap("../res/images/redenemy/de2.png"));
-    deathSprites.push_back(al_load_bitmap("../res/images/redenemy/de3.png"));
-    deathSprites.push_back(al_load_bitmap("../res/images/redenemy/de4.png"));
+    deathSprites.push_back(al_load_bitmap("res/images/redenemy/de1.png"));
+    deathSprites.push_back(al_load_bitmap("res/images/redenemy/de2.png"));
+    deathSprites.push_back(al_load_bitmap("res/images/redenemy/de3.png"));
+    deathSprites.push_back(al_load_bitmap("res/images/redenemy/de4.png"));
 
-    alternativeSprites.push_back(al_load_bitmap("../res/images/redenemy/al1.png"));
-    alternativeSprites.push_back(al_load_bitmap("../res/images/redenemy/al2.png"));
+    alternativeSprites.push_back(al_load_bitmap("res/images/redenemy/al1.png"));
+    alternativeSprites.push_back(al_load_bitmap("res/images/redenemy/al2.png"));
 
-    flatten = al_load_bitmap("../res/images/redenemy/flatten.png");
+    flatten = al_load_bitmap("res/images/redenemy/flatten.png");
    
 }
 
@@ -69,6 +69,7 @@ void Monkey::drawOnScreen(){
             isDying = false;
             isFlatten = false;
             score += scoreValue;
+            killedEnemy++;
         } else {
             isCollided();
             if(!isSwallowTimerActive){
@@ -87,8 +88,10 @@ void Monkey::drawOnScreen(){
             al_draw_bitmap(flatten,x,y,0);
             rallenty++;
         } else{
-            isDying = true;
+            isDying = false;
+            isFlatten = false;
             showScore = true;
+            killedEnemy++;
             scoreValue *= 5;
             score += scoreValue;
             enemiesCounter--;

@@ -5,10 +5,10 @@ Powerups::Powerups(int _x, int _y, int _width, int _height):AnimatedSprite(_x, _
     id = POWER_UP;
     unsigned int random = rand() % 2;
     if(random == 0) {
-        PowerUpsBitMap = al_load_bitmap("../res/images/powerups/red.png"); 
+        PowerUpsBitMap = al_load_bitmap("res/images/powerups/red.png"); 
         scoreValue = 250;
     } else {
-        PowerUpsBitMap = al_load_bitmap("../res/images/powerups/white.png"); 
+        PowerUpsBitMap = al_load_bitmap("res/images/powerups/white.png"); 
         scoreValue = 500;
     }
 }

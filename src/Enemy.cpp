@@ -6,6 +6,7 @@ Enemy::Enemy(int _x, int _y, int _width, int _height):AnimatedSprite(_x, _y, _wi
     previousDirection = LEFT;
     orientation = LEFT;
     lockedPathCounter = 0;
+    lockedPathLimit = rand() % 30 + 60;
 }
 
 void Enemy::drawDying(){
@@ -496,7 +497,7 @@ void Enemy::calculateDirection(objective objectiveToReach){
         previousDirection = directionToTake; 
     }
 
-    if(lockedPathCounter > 30){
+    if(lockedPathCounter > lockedPathLimit){
         lockedPathCounter = 0;
         alternativeMode = true;
     }
@@ -523,7 +524,7 @@ void Enemy::drawAlternative(){
     else
         nearestDirections(x, y, 0, 24);
     if(find(availableDirections.begin(), availableDirections.end(), RIGHT) != availableDirections.end()){
-            x ++;
+            x++;
             if(find(availableDirections.begin(), availableDirections.end(), UP) != availableDirections.end())
                 y--;
             else if(find(availableDirections.begin(), availableDirections.end(), DOWN) != availableDirections.end())

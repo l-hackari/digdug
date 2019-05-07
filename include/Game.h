@@ -18,6 +18,8 @@ class Game {
         //creates a display (fullscreen) and sets it as main display
         void createDisplay();
 
+        //mostra il menu prima dell'avvio del gioco
+        //shows the menu before starting the game
         void createMenu();
 
         //inizializza tutte le celle delle matrici che rappresentano mappa di gioco e del terreno di gioco
@@ -101,7 +103,6 @@ class Game {
         ALLEGRO_BITMAP *centerGround;
         ALLEGRO_BITMAP *middleGround;
         ALLEGRO_BITMAP *cornerGround;
-        ALLEGRO_BITMAP *blueGround;
         ALLEGRO_TIMER *mainTimer;
         ALLEGRO_EVENT actualEvent;
         ALLEGRO_EVENT_QUEUE *eventQueue;
@@ -113,12 +114,11 @@ class Game {
         bool lastEnemySong = false;
         float scale;
         bool redraw;
-        int mapScore = 0;
         int round = 1;
         bool isGameInPause = false;
         bool setPause = false;
         bool showMenu = true;
-
+        bool showControls = false;
 };
 
 #endif
