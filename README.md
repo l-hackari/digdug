@@ -4,7 +4,7 @@
 
 This is a remake of **Dig Dug**, an historical game developed in '80s. It is developed in C/C++, using [*Allegro*](https://liballeg.org/), a simple cross platform 2D graphic library.
 
-[DigDug](https://i.imgur.com/gr4Xwyt.png)
+[DigDug](res/images/screenshot.png)
 
 ## Game rules
 ### *Source: Wikipedia*
