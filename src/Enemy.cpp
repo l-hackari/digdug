@@ -584,6 +584,8 @@ void Enemy::drawAlternative(){
         animationLimit = alternativeSprites.size();
     }
 
+    alternativeSteps++;
+
     int count = 0;
     for(int i = y / 4; i < (y + height) / 4; i++){
         for(int j = x / 4; j < (x + width) / 4; j++){
@@ -592,8 +594,9 @@ void Enemy::drawAlternative(){
         }
     }
 
-    if(count == 16){
+    if(count == 16 && alternativeSteps > 80){
         alternativeMode = false;
+        alternativeSteps = 0;
         int rem = static_cast<int>(x) % 4;
         if(rem != 0){
             x += 4 - rem;

@@ -22,9 +22,8 @@ Game::Game(){
     al_rest(1.0);
     mainTimer = al_create_timer(1.0 / FPS);
     swallowTimer = al_create_timer(3);
-    bonusTimer = al_create_timer(30);
+    bonusTimer = al_create_timer(60);
     al_start_timer(mainTimer);
-    al_start_timer(bonusTimer);
     eventQueue = al_create_event_queue();
     al_register_event_source(eventQueue, al_get_display_event_source(mainDisplay));
     al_register_event_source(eventQueue, al_get_keyboard_event_source());
@@ -166,6 +165,7 @@ void Game::eventManager(){
                 } else {
                     showMenu = false;
                     al_play_sample(audios[BACKGROUND_SOUND], 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, &ret);
+                    al_start_timer(bonusTimer);
                 }
                 break;
                     
