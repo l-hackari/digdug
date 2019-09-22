@@ -305,8 +305,8 @@ direction Enemy::findPath(int startX, int startY, objective objectiveToReach){
         toVisit.pop_front();
 
         if(objectiveToReach == OBJ_PLAYER){
-            for(int i = actual.getY() / 4; i < ((actual.getY() + height) / 4 ); i++)
-                for(int j = actual.getX() / 4; j < ((actual.getX() + width) / 4); j++)
+            for(int i = actual.getY() / collisionCellDivider; i < ((actual.getY() + height) / collisionCellDivider); i++)
+                for(int j = actual.getX() / collisionCellDivider; j < ((actual.getX() + width) / collisionCellDivider); j++)
                     if(collisionMap[i][j] == 1)
                         return actual.getFirstChooseDirection();
         } else if(objectiveToReach == OBJ_EXIT){
@@ -315,10 +315,10 @@ direction Enemy::findPath(int startX, int startY, objective objectiveToReach){
         }
 
         bool rightDir = true;
-        int j = (actual.getX() + width) / 4;
-        if(j < 14 * 4 && j >= 0 && find(visited.begin(), visited.end(), Node(actual.getX() + speed, actual.getY(), actual.getFirstChooseDirection())) == visited.end()){
-            for(int i = actual.getY() / 4; i < ((actual.getY() + height) / 4) && rightDir; i++){
-                if(!(i >= 6 && i < 68))
+        int j = (actual.getX() + width) / collisionCellDivider;
+        if(j < originalCollisionMapWidth * collisionCellDivider && j >= 0 && find(visited.begin(), visited.end(), Node(actual.getX() + speed, actual.getY(), actual.getFirstChooseDirection())) == visited.end()){
+            for(int i = actual.getY() / collisionCellDivider; i < ((actual.getY() + height) / collisionCellDivider) && rightDir; i++){
+                if(!(i >= groundIndexStart && i < groundIndexEnd))
                     rightDir = false;
                 else if(groundMap[i][j] == 0 || groundMap[i][j] == STONE)
                     rightDir = false;
@@ -340,10 +340,10 @@ direction Enemy::findPath(int startX, int startY, objective objectiveToReach){
         }
 
         bool leftDir = true;
-        j = (actual.getX() / 4) - 1;
-        if(j < 14 * 4 && j >= 0 && find(visited.begin(), visited.end(), Node(actual.getX() - speed, actual.getY(), actual.getFirstChooseDirection())) == visited.end()){
-            for(int i = actual.getY() / 4; i < ((actual.getY() + height) / 4) && leftDir; i++){
-                if(!(i >= 6 && i < 68))
+        j = (actual.getX() / collisionCellDivider) - 1;
+        if(j < originalCollisionMapWidth * collisionCellDivider && j >= 0 && find(visited.begin(), visited.end(), Node(actual.getX() - speed, actual.getY(), actual.getFirstChooseDirection())) == visited.end()){
+            for(int i = actual.getY() / collisionCellDivider; i < ((actual.getY() + height) / collisionCellDivider) && leftDir; i++){
+                if(!(i >= groundIndexStart && i < groundIndexEnd))
                     leftDir = false;
                 else if(groundMap[i][j] == 0 || groundMap[i][j] == STONE)
                     leftDir = false;
@@ -366,10 +366,10 @@ direction Enemy::findPath(int startX, int startY, objective objectiveToReach){
         }
 
         bool upDir = true;
-        int i = (actual.getY() / 4) - 1;
-        if(i >= 6 && i < 68 && find(visited.begin(), visited.end(), Node(actual.getX(), actual.getY() - speed, actual.getFirstChooseDirection())) == visited.end()){
-            for(int j = actual.getX() / 4; j < ((actual.getX() + width) / 4) && upDir; j++){
-                if(!(j < 14 * 4 && j >= 0))
+        int i = (actual.getY() / collisionCellDivider) - 1;
+        if(i >= groundIndexStart && i < groundIndexEnd && find(visited.begin(), visited.end(), Node(actual.getX(), actual.getY() - speed, actual.getFirstChooseDirection())) == visited.end()){
+            for(int j = actual.getX() / collisionCellDivider; j < ((actual.getX() + width) / collisionCellDivider) && upDir; j++){
+                if(!(j < originalCollisionMapWidth * collisionCellDivider && j >= 0))
                     upDir = false;
                 else if(groundMap[i][j] == 0 || groundMap[i][j] == STONE)
                     upDir = false;
@@ -391,10 +391,10 @@ direction Enemy::findPath(int startX, int startY, objective objectiveToReach){
         }
 
         bool downDir = true;
-        i = (actual.getY() + height) / 4;
-        if(i >= 6 && i < 68 && find(visited.begin(), visited.end(), Node(actual.getX(), actual.getY() + speed, actual.getFirstChooseDirection())) == visited.end()){
-            for(int j = actual.getX() / 4; j < ((actual.getX() + width) / 4 ) && downDir; j++){
-                if(!(j < 14 * 4 && j >= 0))
+        i = (actual.getY() + height) / collisionCellDivider;
+        if(i >= groundIndexStart && i < groundIndexEnd && find(visited.begin(), visited.end(), Node(actual.getX(), actual.getY() + speed, actual.getFirstChooseDirection())) == visited.end()){
+            for(int j = actual.getX() / collisionCellDivider; j < ((actual.getX() + width) / 4 ) && downDir; j++){
+                if(!(j < originalCollisionMapWidth * collisionCellDivider && j >= 0))
                     downDir = false;
                 else if(groundMap[i][j] == 0 || groundMap[i][j] == STONE)
                     downDir = false;
@@ -429,36 +429,36 @@ void Enemy::calculateDirection(objective objectiveToReach){
     if(directionToTake == NONE){
         lockedPathCounter++;
         bool rightDir = true, leftDir = true, upDir = true, downDir = true, chosed = false;
-        int j = (x + width) / 4;
-        if(j <= 14 * 4){
-            for(int i = y / 4; i < ((y + height) / 4 ) && rightDir; i++){
+        int j = (x + width) / collisionCellDivider;
+        if(j <= originalCollisionMapWidth * collisionCellDivider){
+            for(int i = y / collisionCellDivider; i < ((y + height) / collisionCellDivider) && rightDir; i++){
                 if(groundMap[i][j] == 0)
                     rightDir = false;
             }
         }
 
         
-        j = (x / 4) - 1;
+        j = (x / collisionCellDivider) - 1;
         if(j >= 0){
-            for(int i = y / 4; i < ((y + height) / 4 ) && leftDir; i++){
+            for(int i = y / collisionCellDivider; i < ((y + height) / collisionCellDivider) && leftDir; i++){
                 if(groundMap[i][j] == 0)
                     leftDir = false;
             }
         }
 
         
-        int i = (y / 4) - 1;
-        if(i >= 6){
-            for(int j = x / 4; j < ((x + width) / 4 ) && upDir; j++){
+        int i = (y / collisionCellDivider) - 1;
+        if(i >= groundIndexStart){
+            for(int j = x / collisionCellDivider; j < ((x + width) / collisionCellDivider) && upDir; j++){
                 if(groundMap[i][j] == 0)
                     upDir = false;
             }
         }
 
                 
-        i = (y + height) / 4;
-        if(i >= 6){
-            for(int j = x / 4; j < ((x + width) / 4 ) && downDir; j++){
+        i = (y + height) / collisionCellDivider;
+        if(i >= groundIndexStart){
+            for(int j = x / collisionCellDivider; j < ((x + width) / collisionCellDivider) && downDir; j++){
                 if(groundMap[i][j] == 0)
                     downDir = false;
             }
@@ -587,8 +587,8 @@ void Enemy::drawAlternative(){
     alternativeSteps++;
 
     int count = 0;
-    for(int i = y / 4; i < (y + height) / 4; i++){
-        for(int j = x / 4; j < (x + width) / 4; j++){
+    for(int i = y / collisionCellDivider; i < (y + height) / collisionCellDivider; i++){
+        for(int j = x / collisionCellDivider; j < (x + width) / collisionCellDivider; j++){
             if(groundMap[i][j] == 1)
                 count++;
         }

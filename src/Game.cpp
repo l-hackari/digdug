@@ -66,20 +66,20 @@ void Game::loadBestScore(){
 
 void Game::initGameMaps(){
 
-    for(int i = 0; i < 18 * 4; i++){
-        for(int j = 0; j < 14 * 4; j++){
+    for(int i = 0; i < originalCollisionMapHeight * collisionCellDivider; i++){
+        for(int j = 0; j < originalCollisionMapWidth * collisionCellDivider; j++){
             collisionMap[i][j] = 0;
         }
     }
 
-    for(int i = 0; i < 18 * 4; i++){
-        for(int j = 0; j < 14 * 4; j++){
+    for(int i = 0; i < originalCollisionMapHeight * collisionCellDivider; i++){
+        for(int j = 0; j < originalCollisionMapWidth * collisionCellDivider; j++){
             groundMap[i][j] = 0;
         }
     }
 
-    for(int i = 0; i < 10; i++){
-        for(int j = 0; j < 14 * 4; j++){
+    for(int i = 0; i < initialDiggedGroundIndex; i++){
+        for(int j = 0; j < originalCollisionMapWidth * collisionCellDivider; j++){
             groundMap[i][j] = 1;
         }
     }
@@ -116,7 +116,7 @@ void Game::eventManager(){
             if(!al_key_down(&keyboardState, actualPressedKey))
                 actualPressedKey = ALLEGRO_KEY_SPACE;
 
-            if(swallowValue >= 6){
+            if(swallowValue >= groundIndexStart){
                 isSwallowTimerActive = false;
                 al_stop_timer(swallowTimer);
                 swallowValue = 0;
@@ -213,56 +213,56 @@ void Game::loadAudios(){
 }
 
 void Game::updateGround(){
-    for(int i = 10; i < 18 * 4; i++){
-        for(int j = 1; j < 14 * 4 - 1; j++){
+    for(int i = initialDiggedGroundIndex; i < originalCollisionMapHeight * collisionCellDivider; i++){
+        for(int j = 1; j < originalCollisionMapWidth * collisionCellDivider - 1; j++){
             if(groundMap[i][j] == 1 && (groundMap[i + 1][j] == 0 || groundMap[i + 1][j] == STONE)){
                 if(groundMap[i][j + 1] == 1 && groundMap[i][j - 1] == 1)
-                    al_draw_bitmap(middleGround, j * 4, i * 4, 0);
+                    al_draw_bitmap(middleGround, j * collisionCellDivider, i * collisionCellDivider, 0);
                 else if(groundMap[i][j + 1] == 0 || groundMap[i][j + 1] == STONE)
-                    al_draw_bitmap(cornerGround, j * 4, i * 4, 0);
+                    al_draw_bitmap(cornerGround, j * collisionCellDivider, i * collisionCellDivider, 0);
                 else if(groundMap[i][j - 1] == 0 || groundMap[i][j - 1] == STONE)
-                    al_draw_bitmap(cornerGround, j * 4, i * 4, ALLEGRO_FLIP_HORIZONTAL);
+                    al_draw_bitmap(cornerGround, j * collisionCellDivider, i * collisionCellDivider, ALLEGRO_FLIP_HORIZONTAL);
             } else if(groundMap[i][j] == 1 && (groundMap[i - 1][j] == 0 || groundMap[i - 1][j] == STONE)){
                 if(groundMap[i][j + 1] == 1 && groundMap[i][j - 1] == 1)
-                    al_draw_bitmap(middleGround, j * 4, i * 4, ALLEGRO_FLIP_VERTICAL);
+                    al_draw_bitmap(middleGround, j * collisionCellDivider, i * collisionCellDivider, ALLEGRO_FLIP_VERTICAL);
                 else if(groundMap[i][j + 1] == 0 || groundMap[i][j + 1] == STONE)
-                    al_draw_bitmap(cornerGround, j * 4, i * 4, ALLEGRO_FLIP_VERTICAL);
+                    al_draw_bitmap(cornerGround, j * collisionCellDivider, i * collisionCellDivider, ALLEGRO_FLIP_VERTICAL);
                 else if(groundMap[i][j - 1] == 0 || groundMap[i][j - 1] == STONE)
-                    al_draw_bitmap(cornerGround, j * 4, i * 4, 3);
+                    al_draw_bitmap(cornerGround, j * collisionCellDivider, i * collisionCellDivider, 3);
             } else if(groundMap[i][j] == 1 && groundMap[i + 1][j] == 1 && groundMap[i - 1][j] == 1){
                 if(groundMap[i][j - 1] == 0 || groundMap[i][j - 1] == STONE)
-                    al_draw_rotated_bitmap(middleGround, 2, 2, j * 4 + 2, i * 4 + 2, 1.5708, 0);
+                    al_draw_rotated_bitmap(middleGround, (groundSpiteSize / 2), (groundSpiteSize / 2), j * collisionCellDivider + (groundSpiteSize / 2), i * collisionCellDivider + (groundSpiteSize / 2), radiantFor90Degrees, 0);
                 else if(groundMap[i][j + 1] == 0 || groundMap[i][j + 1] == STONE)
-                    al_draw_rotated_bitmap(middleGround, 2, 2, j * 4 + 2, i * 4 + 2, 4.71239, 0);
+                    al_draw_rotated_bitmap(middleGround, (groundSpiteSize / 2), (groundSpiteSize / 2), j * collisionCellDivider + (groundSpiteSize / 2), i * collisionCellDivider + (groundSpiteSize / 2), radiantFor270Degrees, 0);
                 else if(groundMap[i][j + 1] == 1 && groundMap[i][j - 1] == 1)
-                    al_draw_bitmap(centerGround, j * 4, i * 4, 0);
+                    al_draw_bitmap(centerGround, j * collisionCellDivider, i * collisionCellDivider, 0);
             }
         }
     }
 
-    for(int j = 0; j < 14 * 4; j++){
-        if(groundMap[10][j] == 1){
-            al_draw_bitmap(centerGround, j * 4, 9 * 4 + 2, 0);
-            al_draw_bitmap(centerGround, j * 4, 10 * 4, 0);
+    for(int j = 0; j < originalCollisionMapWidth * collisionCellDivider; j++){
+        if(groundMap[initialDiggedGroundIndex][j] == 1){
+            al_draw_bitmap(centerGround, j * collisionCellDivider, (initialDiggedGroundIndex - 1) * collisionCellDivider + (groundSpiteSize / 2), 0);
+            al_draw_bitmap(centerGround, j * collisionCellDivider, initialDiggedGroundIndex * collisionCellDivider, 0);
         }
     }
 
-    for(int i = 10; i < 18 * 4; i++){
+    for(int i = initialDiggedGroundIndex; i < originalCollisionMapHeight * collisionCellDivider; i++){
         if(groundMap[i][0] == 1){
             if(groundMap[i + 1][0] == 1){
-                al_draw_rotated_bitmap(middleGround, 2, 2, 0 + 2, i * 4 + 2, 1.5708, 0);
+                al_draw_rotated_bitmap(middleGround, groundSpiteSize / 2, groundSpiteSize / 2, 0 + (groundSpiteSize / 2), i * collisionCellDivider + (groundSpiteSize / 2), radiantFor90Degrees, 0);
             } else if(groundMap[i + 1][0] == 0){
-                al_draw_bitmap(cornerGround, 0, i * 4, ALLEGRO_FLIP_HORIZONTAL);
+                al_draw_bitmap(cornerGround, 0, i * collisionCellDivider, ALLEGRO_FLIP_HORIZONTAL);
             }
         }
     }
 
-    for(int i = 10; i < 18 * 4; i++){
-        if(groundMap[i][14 * 4 - 1] == 1){
-            if(groundMap[i + 1][14 * 4 - 1] == 1){
-                al_draw_rotated_bitmap(middleGround, 2, 2, (14 * 4 - 1) * 4 + 2, i * 4 + 2, 4.71239, 0);
-            } else if(groundMap[i + 1][14 * 4 - 1] == 0){
-                al_draw_bitmap(cornerGround, (14 * 4 - 1) * 4, i * 4, 0);
+    for(int i = initialDiggedGroundIndex; i < originalCollisionMapHeight * collisionCellDivider; i++){
+        if(groundMap[i][originalCollisionMapWidth * collisionCellDivider - 1] == 1){
+            if(groundMap[i + 1][originalCollisionMapWidth * collisionCellDivider - 1] == 1){
+                al_draw_rotated_bitmap(middleGround, (groundSpiteSize / 2), (groundSpiteSize / 2), (originalCollisionMapWidth * collisionCellDivider - 1) * collisionCellDivider + (groundSpiteSize / 2), i * collisionCellDivider + (groundSpiteSize / 2), radiantFor270Degrees, 0);
+            } else if(groundMap[i + 1][originalCollisionMapWidth * collisionCellDivider - 1] == 0){
+                al_draw_bitmap(cornerGround, (originalCollisionMapWidth * collisionCellDivider - 1) * collisionCellDivider, i * collisionCellDivider, 0);
             }
         }
     }
@@ -365,8 +365,8 @@ void Game::updateGameScene(){
 
 void Game::resetGameObjects(){
 
-    for(int i = 0; i < 18 * 4; i++){
-        for(int j = 0; j < 14 * 4; j++){
+    for(int i = 0; i < originalCollisionMapHeight * collisionCellDivider; i++){
+        for(int j = 0; j < originalCollisionMapWidth * collisionCellDivider; j++){
             collisionMap[i][j] = 0;
         }
     }

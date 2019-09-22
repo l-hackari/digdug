@@ -24,9 +24,9 @@ Dragon::Dragon(int _x, int _y, int _width, int _height): Enemy(_x, _y, _width, _
 }
 
 void Dragon::clearFlameCollisionMap(){
-    for(int i = flameY / 4; i < (flameY + flameHeight) / 4; i++){
-        for(int j = flameX / 4; j < (flameX + flameWidth) / 4; j++){
-            if(j > 0 && j < 14 * 4 - 1 && i >= 6){
+    for(int i = flameY / collisionCellDivider; i < (flameY + flameHeight) / collisionCellDivider; i++){
+        for(int j = flameX / collisionCellDivider; j < (flameX + flameWidth) / collisionCellDivider; j++){
+            if(j > 0 && j < originalCollisionMapWidth * collisionCellDivider - 1 && i >= 6){
                 collisionMap[i][j] = 0;
             }
         }
@@ -34,9 +34,9 @@ void Dragon::clearFlameCollisionMap(){
 }
 
 bool Dragon::fillFlameCollisionMap(){
-    for(int i = flameY / 4; i < (flameY + flameHeight) / 4; i++){
-        for(int j = flameX / 4; j < (flameX + flameWidth) / 4; j++){
-            if(j > 0 && j < 14 * 4 - 1 && i >= 6){
+    for(int i = flameY / collisionCellDivider; i < (flameY + flameHeight) / collisionCellDivider; i++){
+        for(int j = flameX / collisionCellDivider; j < (flameX + flameWidth) / collisionCellDivider; j++){
+            if(j > 0 && j < originalCollisionMapWidth * collisionCellDivider - 1 && i >= 6){
                 if(groundMap[i][j] == 0 || groundMap[i][j] == STONE)
                     return false;
                 
@@ -58,7 +58,7 @@ void Dragon::drawAttackIdle(){
 
 void Dragon::drawAttack(){
 
-    if(attackCounter < 8){
+    if(attackCounter < dragonAttackPreparingCounter){
         if(attackCounter % 2 == 0)
             drawAttackIdle();
         else
@@ -70,7 +70,7 @@ void Dragon::drawAttack(){
         switch (previousDirection)
         {
             case LEFT:
-                flameWidth = 16 * flameCounter;
+                flameWidth = spriteWidth * flameCounter;
                 flameX = x - flameWidth;
                 flameY = y;
                 al_draw_bitmap(attackSprites[actualFrame], x, y, ALLEGRO_FLIP_HORIZONTAL);
@@ -132,7 +132,7 @@ void Dragon::drawOnScreen(){
         if(alternativeMode){
             drawAlternative();
         } else{
-            if((previousDirection == LEFT && y == playerY && (x - playerX) <= 48 && x > playerX) || (previousDirection == RIGHT && y == playerY && (playerX - x) <= 48 && x < playerX)){
+            if((previousDirection == LEFT && y == playerY && (x - playerX) <= distanceToAttack && x > playerX) || (previousDirection == RIGHT && y == playerY && (playerX - x) <= distanceToAttack && x < playerX)){
                 drawAttack();
             } else {
                 flameCounter = 1;

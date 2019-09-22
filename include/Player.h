@@ -69,6 +69,8 @@ class Player : public AnimatedSprite{
         bool isSwallowing = false;
         bool isArrowFree = false;
         bool arrowTouched = false;
+        const int arrowSpriteWidth = 32;
+        const int arrowSpriteHeight = 16;
         int arrowX = 0;
         int arrowY = 0;
         int arrowCounter = 5;

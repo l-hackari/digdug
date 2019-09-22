@@ -15,8 +15,8 @@ Stone::Stone(int _x, int _y, int _width, int _height): AnimatedSprite(_x, _y, _w
 }
 
 void Stone::initStone(){
-    for(int i = y / 4; i < (y + height) / 4; i++){
-        for(int j = x / 4; j < (x + width) / 4; j++){
+    for(int i = y / collisionCellDivider; i < (y + height) / collisionCellDivider; i++){
+        for(int j = x / collisionCellDivider; j < (x + width) / collisionCellDivider; j++){
             groundMap[i][j] = id;
         }
     }
@@ -25,8 +25,8 @@ void Stone::initStone(){
 
 bool Stone::isFallen(){
     
-    int i = (y+height)/ 4;
-    for(int j = x / 4; j < (x + width) / 4; j++){
+    int i = (y+height)/ collisionCellDivider;
+    for(int j = x / collisionCellDivider; j < (x + width) / collisionCellDivider; j++){
         if(groundMap[i][j] == 0)
             return false;
         }
@@ -69,8 +69,8 @@ void Stone::drawOnScreen(){
 
         drawAlternative();
         if(actualFrame == alternativeSprites.size()){
-            for(int i = y / 4; i < (y + height) / 4; i++){
-                for(int j = x / 4; j < (x + width) / 4; j++){
+            for(int i = y / collisionCellDivider; i < (y + height) / collisionCellDivider; i++){
+                for(int j = x / collisionCellDivider; j < (x + width) / collisionCellDivider; j++){
                     groundMap[i][j] = 0;
                 }
             }

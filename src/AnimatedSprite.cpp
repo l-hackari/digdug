@@ -15,8 +15,8 @@ void AnimatedSprite::drawOnScreen(){}
 
 bool AnimatedSprite::itsCrashing(){
     
-    int i = (y / 4) - 1;
-    for(int j = x / 4; j < (x + width) / 4; j++){
+    int i = (y / collisionCellDivider) - 1;
+    for(int j = x / collisionCellDivider; j < (x + width) / collisionCellDivider; j++){
         if(collisionMap[i][j] == STONE){
             return true;
         }
@@ -27,8 +27,8 @@ bool AnimatedSprite::itsCrashing(){
 
 
 void AnimatedSprite::freeCollisionMap(){
-    for(int i = 0; i < 18 * 4; i++){
-        for(int j = 0; j < 14 * 4; j++){
+    for(int i = 0; i < originalCollisionMapHeight * collisionCellDivider; i++){
+        for(int j = 0; j < originalCollisionMapWidth * collisionCellDivider; j++){
             if(collisionMap[i][j] == id)
                 collisionMap[i][j] = 0;
         }
@@ -37,9 +37,9 @@ void AnimatedSprite::freeCollisionMap(){
 int AnimatedSprite::isCollided(){
 
     int collidedID = 0;
-    for(int i = y / 4; i < (y + height) / 4; i++){
-        for(int j = x / 4; j < (x + width) / 4; j++){
-            if(j < 14 * 4 - 1){
+    for(int i = y / collisionCellDivider; i < (y + height) / collisionCellDivider; i++){
+        for(int j = x / collisionCellDivider; j < (x + width) / collisionCellDivider; j++){
+            if(j < originalCollisionMapWidth * collisionCellDivider - 1){
                 if(collisionMap[i][j] != 0 && collisionMap[i][j] != id){
                     if(collidedID == 0)
                         collidedID = collisionMap[i][j];
@@ -51,9 +51,9 @@ int AnimatedSprite::isCollided(){
         }
     }
 
-    for(int i = y / 4; i < (y + height) / 4; i++){
-        for(int j = x / 4; j < (x + width) / 4; j++){
-            if(j < 14 * 4 - 1)
+    for(int i = y / collisionCellDivider; i < (y + height) / collisionCellDivider; i++){
+        for(int j = x / collisionCellDivider; j < (x + width) / collisionCellDivider; j++){
+            if(j < originalCollisionMapWidth * collisionCellDivider - 1)
                 collisionMap[i][j] = 0;
         }
     }
@@ -64,9 +64,9 @@ int AnimatedSprite::isCollided(){
 int AnimatedSprite::isColliding(){
     int collidedID = 0;
 
-    for(int i = y / 4; i < (y + height) / 4; i++){
-        for(int j = x / 4; j < (x + width) / 4; j++){
-            if(j < 14 * 4 - 1){
+    for(int i = y / collisionCellDivider; i < (y + height) / collisionCellDivider; i++){
+        for(int j = x / collisionCellDivider; j < (x + width) / collisionCellDivider; j++){
+            if(j < originalCollisionMapWidth * collisionCellDivider - 1){
                 if(collisionMap[i][j] != 0 && collisionMap[i][j] != id){
                     if(collidedID == 0)
                         collidedID = collisionMap[i][j];
@@ -77,9 +77,9 @@ int AnimatedSprite::isColliding(){
         }
     }
 
-    for(int i = y / 4; i < (y + height) / 4; i++){
-        for(int j = x / 4; j < (x + width) / 4; j++){
-            if(j < 14 * 4 - 1)
+    for(int i = y / collisionCellDivider; i < (y + height) / collisionCellDivider; i++){
+        for(int j = x / collisionCellDivider; j < (x + width) / collisionCellDivider; j++){
+            if(j < originalCollisionMapWidth * collisionCellDivider - 1)
                 collisionMap[i][j] = id;
         }
     }

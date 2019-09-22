@@ -39,14 +39,14 @@ void Level::setStonesPosition(){
             y_end = y + 16;
 
             bool obstacles = false; //if there is an obstacle (another object or excaveted ground)
-            for(int i = (y_start / 4) - 1; i <= y_end / 4 && !obstacles; i++)
-                for(int j = (x_start / 4) - 1; j <= x_end / 4 && !obstacles; j++)
+            for(int i = (y_start / collisionCellDivider) - 1; i <= y_end / collisionCellDivider && !obstacles; i++)
+                for(int j = (x_start / collisionCellDivider) - 1; j <= x_end / collisionCellDivider && !obstacles; j++)
                     if(groundMap[i][j] == 1 || groundMap[i][j] == STONE)
                         obstacles = true;
 
 
-            for(int i = y_start / 4; i < y_end / 4 && !obstacles; i++)
-                for(int j = x_start / 4; j < x_end / 4 && !obstacles; j++)
+            for(int i = y_start / collisionCellDivider; i < y_end / collisionCellDivider && !obstacles; i++)
+                for(int j = x_start / collisionCellDivider; j < x_end / collisionCellDivider && !obstacles; j++)
                     groundMap[i][j] = STONE;
 
             if(!obstacles){
@@ -114,14 +114,14 @@ void Level::setEnemiesPosition(object enemyToPosition){
             bool obstacles = false; //if there is an obstacle (another object or excaveted ground)
 
             if(x_start >= 0 && x_end <= 224 && y_start >= 32 && y_end <= 288){
-                for(int i = (y_start / 4) - 1; i <=  y_end / 4 && !obstacles; i++)
-                    for(int j = (x_start / 4) - 1; j <= x_end / 4 && !obstacles; j++)
+                for(int i = (y_start / collisionCellDivider) - 1; i <=  y_end / collisionCellDivider && !obstacles; i++)
+                    for(int j = (x_start / collisionCellDivider) - 1; j <= x_end / collisionCellDivider && !obstacles; j++)
                         if(groundMap[i][j] == 1 || groundMap[i][j] == STONE)
                             obstacles = true;
 
     
-                for(int i = y_start / 4; i < y_end / 4 && !obstacles; i++)
-                    for(int j = x_start / 4; j < x_end / 4 && !obstacles; j++)
+                for(int i = y_start / collisionCellDivider; i < y_end / collisionCellDivider && !obstacles; i++)
+                    for(int j = x_start / collisionCellDivider; j < x_end / collisionCellDivider && !obstacles; j++)
                         groundMap[i][j] = 1;
 
                 if(!obstacles){
@@ -145,15 +145,15 @@ void Level::setPlayerPosition(){
     int x_end = x_start + 16;
     int y_start = 24;
     int y_end = y_start + 124;
-    for(int i = y_start / 4; i < y_end / 4; i++)
-        for(int j = x_start / 4; j < x_end / 4; j++)
+    for(int i = y_start / collisionCellDivider; i < y_end / collisionCellDivider; i++)
+        for(int j = x_start / collisionCellDivider; j < x_end / collisionCellDivider; j++)
             groundMap[i][j] = 1;
 
     x_start -= 32;
     x_end = x_start + 16 + 64; //16 is the width of a block
     y_start = y_end - 16;
-    for(int i = y_start / 4; i < y_end / 4; i++)
-        for(int j = x_start / 4; j < x_end / 4; j++)
+    for(int i = y_start / collisionCellDivider; i < y_end / collisionCellDivider; i++)
+        for(int j = x_start / collisionCellDivider; j < x_end / collisionCellDivider; j++)
             groundMap[i][j] = 1;
 
 }
