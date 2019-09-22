@@ -97,7 +97,7 @@ class Game {
         
     private:
         ALLEGRO_DISPLAY *mainDisplay;
-        ALLEGRO_DISPLAY_MODE displayMode;
+        ALLEGRO_MONITOR_INFO monitorInfos;
         ALLEGRO_BITMAP *background;
         ALLEGRO_BITMAP *buffer;
         ALLEGRO_BITMAP *centerGround;

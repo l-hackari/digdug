@@ -38,11 +38,11 @@ Game::Game(){
 
 void Game::createDisplay(){
     al_set_new_display_flags(ALLEGRO_FULLSCREEN_WINDOW);
-    al_get_display_mode(0, &displayMode);
-    mainDisplay = al_create_display(displayMode.width, displayMode.height);
+    al_get_monitor_info(0, &monitorInfos);
+    mainDisplay = al_create_display(monitorInfos.x2, monitorInfos.y2);
     buffer = al_create_bitmap(nativeScreenHeight, nativeScreenHeight);
-    float scaleW = static_cast<float>(displayMode.width) / static_cast<float>(nativeScreenWidth);
-    float scaleH = static_cast<float>(displayMode.height) / static_cast<float>(nativeScreenHeight);
+    float scaleW = static_cast<float>(monitorInfos.x2) / static_cast<float>(nativeScreenWidth);
+    float scaleH = static_cast<float>(monitorInfos.y2) / static_cast<float>(nativeScreenHeight);
     scale = min(scaleW, scaleH);
    
 }
@@ -289,7 +289,7 @@ void Game::drawScene(){
         }
         al_set_target_backbuffer(mainDisplay);
         al_clear_to_color(al_map_rgb(0, 0, 0));
-        al_draw_scaled_bitmap(buffer, 0, 0, nativeScreenWidth, nativeScreenHeight, (displayMode.width - (nativeScreenWidth * scale)) / 2, (displayMode.height - (nativeScreenHeight * scale)) / 2, nativeScreenWidth * scale, nativeScreenHeight * scale, 0);
+        al_draw_scaled_bitmap(buffer, 0, 0, nativeScreenWidth, nativeScreenHeight, (monitorInfos.x2 - (nativeScreenWidth * scale)) / 2, (monitorInfos.y2 - (nativeScreenHeight * scale)) / 2, nativeScreenWidth * scale, nativeScreenHeight * scale, 0);
         al_flip_display();
         redraw = false;
 
@@ -317,7 +317,7 @@ void Game::drawFinalScene(){
     gameOver.drawOnScreen();
     al_set_target_backbuffer(mainDisplay);
     al_clear_to_color(al_map_rgb(0, 0, 0));
-    al_draw_scaled_bitmap(buffer, 0, 0, nativeScreenWidth, nativeScreenHeight, (displayMode.width - (nativeScreenWidth * scale)) / 2, (displayMode.height - (nativeScreenHeight * scale)) / 2, nativeScreenWidth * scale, nativeScreenHeight * scale, 0);
+    al_draw_scaled_bitmap(buffer, 0, 0, nativeScreenWidth, nativeScreenHeight, (monitorInfos.x2 - (nativeScreenWidth * scale)) / 2, (monitorInfos.y2 - (nativeScreenHeight * scale)) / 2, nativeScreenWidth * scale, nativeScreenHeight * scale, 0);
     al_flip_display();
 }
 
